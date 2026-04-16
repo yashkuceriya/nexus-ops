@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\WorkOrderStatusChanged;
 use App\Models\AuditLog;
 use App\Models\Project;
 use App\Models\Tenant;
@@ -33,7 +34,7 @@ beforeEach(function () {
     $this->actingAs($this->admin);
 
     // Prevent broadcast events from triggering tenant-aware job checks
-    Event::fake([\App\Events\WorkOrderStatusChanged::class]);
+    Event::fake([WorkOrderStatusChanged::class]);
 });
 
 it('completes full work order lifecycle: create -> assign -> start -> complete -> verify', function () {

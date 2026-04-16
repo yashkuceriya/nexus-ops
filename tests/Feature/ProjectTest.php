@@ -13,7 +13,9 @@ class ProjectTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $user;
+
     private Project $project;
 
     protected function setUp(): void
@@ -63,12 +65,13 @@ class ProjectTest extends TestCase
 
     public function test_project_readiness_score_calculation_is_correct(): void
     {
-        // Issues: (20-4)/20 * 100 = 80, weighted 0.4 = 32
-        // Tests: 40/50 * 100 = 80, weighted 0.3 = 24
-        // Docs: 7/10 * 100 = 70, weighted 0.3 = 21
-        // Total = 77
+        // Issues: (20-4)/20 * 100 = 80, weighted 0.30 = 24
+        // Tests: 40/50 * 100       = 80, weighted 0.20 = 16
+        // Docs:  7/10 * 100        = 70, weighted 0.20 = 14
+        // FPT:   no executions → 100 (neutral), weighted 0.30 = 30
+        // Total = 84
         $score = $this->project->calculateReadinessScore();
-        $this->assertEquals(77.0, $score);
+        $this->assertEquals(84.0, $score);
     }
 
     public function test_project_handover_blockers_are_computed_correctly(): void

@@ -16,7 +16,9 @@ class VendorTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $user;
+
     private Vendor $vendor;
 
     protected function setUp(): void
@@ -97,7 +99,7 @@ class VendorTest extends TestCase
             'vendor_id' => $this->vendor->id,
             'wo_number' => WorkOrder::generateWoNumber(),
             'title' => 'HVAC repair via vendor',
-            'status' => 'open',
+            'status' => 'pending',
             'priority' => 'medium',
             'type' => 'corrective',
             'source' => 'manual',

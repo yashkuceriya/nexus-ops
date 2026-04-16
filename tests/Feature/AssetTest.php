@@ -15,8 +15,11 @@ class AssetTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $user;
+
     private Project $project;
+
     private Asset $asset;
 
     protected function setUp(): void

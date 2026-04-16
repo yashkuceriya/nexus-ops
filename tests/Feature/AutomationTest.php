@@ -16,7 +16,9 @@ class AutomationTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $user;
+
     private Project $project;
 
     protected function setUp(): void
@@ -65,7 +67,7 @@ class AutomationTest extends TestCase
             'project_id' => $this->project->id,
             'wo_number' => WorkOrder::generateWoNumber(),
             'title' => 'Leaking pipe',
-            'status' => 'open',
+            'status' => 'pending',
             'priority' => 'low',
             'type' => 'corrective',
             'source' => 'manual',
@@ -85,7 +87,7 @@ class AutomationTest extends TestCase
             'execution_count' => 0,
         ]);
 
-        $engine = new AutomationEngine();
+        $engine = new AutomationEngine;
 
         // Should NOT fire - priority is 'low', not 'critical'
         $engine->evaluateRules('work_order_created', [
@@ -109,7 +111,7 @@ class AutomationTest extends TestCase
 
     public function test_conditions_with_equals_operator_work(): void
     {
-        $engine = new AutomationEngine();
+        $engine = new AutomationEngine;
 
         $this->assertTrue($engine->checkConditions(
             [['field' => 'status', 'operator' => 'equals', 'value' => 'open']],
@@ -124,7 +126,7 @@ class AutomationTest extends TestCase
 
     public function test_conditions_with_greater_than_operator_work(): void
     {
-        $engine = new AutomationEngine();
+        $engine = new AutomationEngine;
 
         $this->assertTrue($engine->checkConditions(
             [['field' => 'value', 'operator' => 'greater_than', 'value' => 50]],
@@ -149,7 +151,7 @@ class AutomationTest extends TestCase
             'execution_count' => 0,
         ]);
 
-        $engine = new AutomationEngine();
+        $engine = new AutomationEngine;
 
         $engine->evaluateRules('sensor_alert', [], $this->tenant->id);
         $rule->refresh();

@@ -16,7 +16,9 @@ class SensorTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $user;
+
     private SensorSource $sensor;
 
     protected function setUp(): void

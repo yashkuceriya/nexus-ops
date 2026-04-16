@@ -3,13 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Asset;
-use App\Models\Issue;
 use App\Models\Project;
 use App\Models\StatusMapping;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\WorkOrder;
-use App\Services\WorkOrder\WorkOrderService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,9 +16,13 @@ class WorkOrderTest extends TestCase
     use RefreshDatabase;
 
     private Tenant $tenant;
+
     private User $admin;
+
     private User $tech;
+
     private Project $project;
+
     private Asset $asset;
 
     protected function setUp(): void
@@ -124,11 +126,12 @@ class WorkOrderTest extends TestCase
 
         $score = $this->project->calculateReadinessScore();
 
-        // Issues: (10-2)/10 * 100 = 80, weighted 0.4 = 32
-        // Tests: 15/20 * 100 = 75, weighted 0.3 = 22.5
-        // Docs: 8/10 * 100 = 80, weighted 0.3 = 24
-        // Total = 78.5
-        $this->assertEquals(78.5, $score);
+        // Issues: (10-2)/10 * 100 = 80, weighted 0.30 = 24
+        // Tests:  15/20 * 100      = 75, weighted 0.20 = 15
+        // Docs:   8/10 * 100       = 80, weighted 0.20 = 16
+        // FPT:    no executions → 100 (neutral), weighted 0.30 = 30
+        // Total = 85
+        $this->assertEquals(85.0, $score);
     }
 
     public function test_project_handover_blockers(): void
