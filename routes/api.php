@@ -22,65 +22,66 @@ use Illuminate\Support\Facades\Route;
 // All API routes are rate-limited and versioned
 Route::middleware('throttle:api')->prefix('v1')->group(function (): void {
 
-// Public auth routes
-Route::post('/auth/login', [AuthController::class, 'login'])
-    ->name('api.auth.login');
+    // Public auth routes
+    Route::post('/auth/login', [AuthController::class, 'login'])
+        ->name('api.auth.login');
 
-// Authenticated routes (Sanctum)
-Route::middleware('auth:sanctum')->group(function (): void {
+    // Authenticated routes (Sanctum). `tenant.active.api` blocks traffic from
+    // deactivated tenants with a JSON 403 rather than a web redirect.
+    Route::middleware(['auth:sanctum', 'tenant.active.api'])->group(function (): void {
 
-    // Auth
-    Route::get('/auth/me', [AuthController::class, 'me'])->name('api.auth.me');
-    Route::post('/auth/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
+        // Auth
+        Route::get('/auth/me', [AuthController::class, 'me'])->name('api.auth.me');
+        Route::post('/auth/logout', [AuthController::class, 'logout'])->name('api.auth.logout');
 
-    // Dashboard
-    Route::prefix('dashboard')->name('api.dashboard.')->group(function (): void {
-        Route::get('/', [DashboardController::class, 'index'])->name('index');
-        Route::get('/projects/{projectId}/readiness', [DashboardController::class, 'projectReadiness'])
-            ->where('projectId', '[0-9]+')
-            ->name('project-readiness');
-        Route::get('/kpis', [DashboardController::class, 'kpis'])->name('kpis');
-        Route::get('/sensors', [DashboardController::class, 'sensorOverview'])->name('sensor-overview');
+        // Dashboard
+        Route::prefix('dashboard')->name('api.dashboard.')->group(function (): void {
+            Route::get('/', [DashboardController::class, 'index'])->name('index');
+            Route::get('/projects/{projectId}/readiness', [DashboardController::class, 'projectReadiness'])
+                ->where('projectId', '[0-9]+')
+                ->name('project-readiness');
+            Route::get('/kpis', [DashboardController::class, 'kpis'])->name('kpis');
+            Route::get('/sensors', [DashboardController::class, 'sensorOverview'])->name('sensor-overview');
+        });
+
+        // Work Orders
+        Route::prefix('work-orders')->name('api.work-orders.')->group(function (): void {
+            Route::get('/', [WorkOrderController::class, 'index'])->name('index');
+            Route::post('/', [WorkOrderController::class, 'store'])->name('store');
+            Route::get('/{id}', [WorkOrderController::class, 'show'])
+                ->where('id', '[0-9]+')
+                ->name('show');
+            Route::put('/{id}', [WorkOrderController::class, 'update'])
+                ->where('id', '[0-9]+')
+                ->name('update');
+            Route::patch('/{id}/status', [WorkOrderController::class, 'updateStatus'])
+                ->where('id', '[0-9]+')
+                ->name('update-status');
+        });
+
+        // Assets
+        Route::prefix('assets')->name('api.assets.')->group(function (): void {
+            Route::get('/', [AssetController::class, 'index'])->name('index');
+            Route::get('/qr/{code}', [AssetController::class, 'qrLookup'])->name('qr-lookup');
+            Route::get('/{id}', [AssetController::class, 'show'])
+                ->where('id', '[0-9]+')
+                ->name('show');
+        });
+
+        // Sensors
+        Route::prefix('sensors')->name('api.sensors.')->group(function (): void {
+            Route::get('/', [SensorController::class, 'index'])->name('index');
+            Route::post('/ingest', [SensorController::class, 'ingest'])->name('ingest');
+            Route::get('/{sensorSourceId}/readings', [SensorController::class, 'readings'])
+                ->where('sensorSourceId', '[0-9]+')
+                ->name('readings');
+        });
+
+        // Sync
+        Route::prefix('sync')->name('api.sync.')->group(function (): void {
+            Route::post('/trigger', [SyncController::class, 'triggerSync'])->name('trigger');
+            Route::get('/status', [SyncController::class, 'status'])->name('status');
+        });
     });
-
-    // Work Orders
-    Route::prefix('work-orders')->name('api.work-orders.')->group(function (): void {
-        Route::get('/', [WorkOrderController::class, 'index'])->name('index');
-        Route::post('/', [WorkOrderController::class, 'store'])->name('store');
-        Route::get('/{id}', [WorkOrderController::class, 'show'])
-            ->where('id', '[0-9]+')
-            ->name('show');
-        Route::put('/{id}', [WorkOrderController::class, 'update'])
-            ->where('id', '[0-9]+')
-            ->name('update');
-        Route::patch('/{id}/status', [WorkOrderController::class, 'updateStatus'])
-            ->where('id', '[0-9]+')
-            ->name('update-status');
-    });
-
-    // Assets
-    Route::prefix('assets')->name('api.assets.')->group(function (): void {
-        Route::get('/', [AssetController::class, 'index'])->name('index');
-        Route::get('/qr/{code}', [AssetController::class, 'qrLookup'])->name('qr-lookup');
-        Route::get('/{id}', [AssetController::class, 'show'])
-            ->where('id', '[0-9]+')
-            ->name('show');
-    });
-
-    // Sensors
-    Route::prefix('sensors')->name('api.sensors.')->group(function (): void {
-        Route::get('/', [SensorController::class, 'index'])->name('index');
-        Route::post('/ingest', [SensorController::class, 'ingest'])->name('ingest');
-        Route::get('/{sensorSourceId}/readings', [SensorController::class, 'readings'])
-            ->where('sensorSourceId', '[0-9]+')
-            ->name('readings');
-    });
-
-    // Sync
-    Route::prefix('sync')->name('api.sync.')->group(function (): void {
-        Route::post('/trigger', [SyncController::class, 'triggerSync'])->name('trigger');
-        Route::get('/status', [SyncController::class, 'status'])->name('status');
-    });
-});
 
 }); // end throttle:api + v1 prefix
