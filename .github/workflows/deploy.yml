@@ -1,0 +1,171 @@
+name: Deploy to AWS Fargate
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY || 'facility-grid-bridge' }}
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER || 'facility-grid-bridge' }}
+  ECS_SERVICE_WEB: ${{ vars.ECS_SERVICE_WEB || 'facility-grid-bridge-web' }}
+  ECS_SERVICE_WORKER: ${{ vars.ECS_SERVICE_WORKER || 'facility-grid-bridge-worker' }}
+  TASK_FAMILY_WEB: ${{ vars.TASK_FAMILY_WEB || 'facility-grid-bridge-web' }}
+  TASK_FAMILY_WORKER: ${{ vars.TASK_FAMILY_WORKER || 'facility-grid-bridge-worker' }}
+  EXECUTION_ROLE_ARN: ${{ vars.EXECUTION_ROLE_ARN }}
+  TASK_ROLE_ARN: ${{ vars.TASK_ROLE_ARN }}
+  SECRETS_ARN: ${{ vars.SECRETS_ARN }}
+  SUBNET_IDS: ${{ vars.SUBNET_IDS }}
+  SECURITY_GROUP_IDS: ${{ vars.SECURITY_GROUP_IDS }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    name: Build, Push, and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/arm64
+          tags: |
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Set image URI
+        id: image
+        run: echo "uri=${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare web task definition
+        id: taskdef-web
+        run: |
+          sed -e "s|\${ECR_IMAGE}|${{ steps.image.outputs.uri }}|g" \
+              -e "s|\${EXECUTION_ROLE_ARN}|${{ env.EXECUTION_ROLE_ARN }}|g" \
+              -e "s|\${TASK_ROLE_ARN}|${{ env.TASK_ROLE_ARN }}|g" \
+              -e "s|\${SECRETS_ARN}|${{ env.SECRETS_ARN }}|g" \
+              -e "s|\${AWS_REGION}|${{ env.AWS_REGION }}|g" \
+              deploy/taskdef-web.json > /tmp/taskdef-web.json
+
+      - name: Prepare worker task definition
+        id: taskdef-worker
+        run: |
+          sed -e "s|\${ECR_IMAGE}|${{ steps.image.outputs.uri }}|g" \
+              -e "s|\${EXECUTION_ROLE_ARN}|${{ env.EXECUTION_ROLE_ARN }}|g" \
+              -e "s|\${TASK_ROLE_ARN}|${{ env.TASK_ROLE_ARN }}|g" \
+              -e "s|\${SECRETS_ARN}|${{ env.SECRETS_ARN }}|g" \
+              -e "s|\${AWS_REGION}|${{ env.AWS_REGION }}|g" \
+              deploy/taskdef-worker.json > /tmp/taskdef-worker.json
+
+      - name: Register web task definition
+        id: register-web
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file:///tmp/taskdef-web.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "arn=$TASK_DEF_ARN" >> "$GITHUB_OUTPUT"
+
+      - name: Register worker task definition
+        id: register-worker
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file:///tmp/taskdef-worker.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "arn=$TASK_DEF_ARN" >> "$GITHUB_OUTPUT"
+
+      - name: Run database migrations
+        run: |
+          TASK_ARN=$(aws ecs run-task \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --task-definition ${{ steps.register-web.outputs.arn }} \
+            --launch-type FARGATE \
+            --platform-version LATEST \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ env.SUBNET_IDS }}],securityGroups=[${{ env.SECURITY_GROUP_IDS }}],assignPublicIp=DISABLED}" \
+            --overrides '{
+              "containerOverrides": [{
+                "name": "web",
+                "command": ["php", "artisan", "migrate", "--force"]
+              }]
+            }' \
+            --query 'tasks[0].taskArn' \
+            --output text)
+
+          echo "Waiting for migration task to complete: $TASK_ARN"
+          aws ecs wait tasks-stopped \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --tasks "$TASK_ARN"
+
+          EXIT_CODE=$(aws ecs describe-tasks \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --tasks "$TASK_ARN" \
+            --query 'tasks[0].containers[0].exitCode' \
+            --output text)
+
+          if [ "$EXIT_CODE" != "0" ]; then
+            echo "Migration failed with exit code $EXIT_CODE"
+            exit 1
+          fi
+          echo "Migrations completed successfully"
+
+      - name: Deploy web service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_SERVICE_WEB }} \
+            --task-definition ${{ steps.register-web.outputs.arn }} \
+            --force-new-deployment \
+            --no-cli-pager
+
+      - name: Deploy worker service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_SERVICE_WORKER }} \
+            --task-definition ${{ steps.register-worker.outputs.arn }} \
+            --force-new-deployment \
+            --no-cli-pager
+
+      - name: Wait for web service stability
+        run: |
+          echo "Waiting for web service to stabilize..."
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE_WEB }}
+          echo "Web service is stable"
+
+      - name: Wait for worker service stability
+        run: |
+          echo "Waiting for worker service to stabilize..."
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE_WORKER }}
+          echo "Worker service is stable"

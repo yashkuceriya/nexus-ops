@@ -1,0 +1,95 @@
+{
+  "family": "facility-grid-bridge-worker",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "${EXECUTION_ROLE_ARN}",
+  "taskRoleArn": "${TASK_ROLE_ARN}",
+  "containerDefinitions": [
+    {
+      "name": "worker",
+      "image": "${ECR_IMAGE}",
+      "essential": true,
+      "command": [
+        "php",
+        "artisan",
+        "queue:work",
+        "redis",
+        "--sleep=3",
+        "--tries=3",
+        "--max-time=3600",
+        "--max-jobs=500",
+        "--memory=768"
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "php artisan queue:monitor redis --max=100 || true"],
+        "interval": 60,
+        "timeout": 10,
+        "retries": 3,
+        "startPeriod": 15
+      },
+      "environment": [
+        { "name": "APP_ENV", "value": "production" },
+        { "name": "APP_DEBUG", "value": "false" },
+        { "name": "LOG_CHANNEL", "value": "stderr" },
+        { "name": "LOG_LEVEL", "value": "info" },
+        { "name": "DB_CONNECTION", "value": "mysql" },
+        { "name": "DB_PORT", "value": "3306" },
+        { "name": "CACHE_STORE", "value": "redis" },
+        { "name": "QUEUE_CONNECTION", "value": "redis" }
+      ],
+      "secrets": [
+        {
+          "name": "APP_KEY",
+          "valueFrom": "${SECRETS_ARN}:APP_KEY::"
+        },
+        {
+          "name": "DB_HOST",
+          "valueFrom": "${SECRETS_ARN}:DB_HOST::"
+        },
+        {
+          "name": "DB_DATABASE",
+          "valueFrom": "${SECRETS_ARN}:DB_DATABASE::"
+        },
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "${SECRETS_ARN}:DB_USERNAME::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "${SECRETS_ARN}:DB_PASSWORD::"
+        },
+        {
+          "name": "REDIS_HOST",
+          "valueFrom": "${SECRETS_ARN}:REDIS_HOST::"
+        },
+        {
+          "name": "REDIS_PASSWORD",
+          "valueFrom": "${SECRETS_ARN}:REDIS_PASSWORD::"
+        },
+        {
+          "name": "APP_URL",
+          "valueFrom": "${SECRETS_ARN}:APP_URL::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/facility-grid-bridge-worker",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "worker",
+          "awslogs-create-group": "true"
+        }
+      },
+      "stopTimeout": 120,
+      "linuxParameters": {
+        "initProcessEnabled": true
+      }
+    }
+  ]
+}

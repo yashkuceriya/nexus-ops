@@ -1,0 +1,90 @@
+{
+  "family": "facility-grid-bridge-web",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "${EXECUTION_ROLE_ARN}",
+  "taskRoleArn": "${TASK_ROLE_ARN}",
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "${ECR_IMAGE}",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost/up || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      },
+      "environment": [
+        { "name": "APP_ENV", "value": "production" },
+        { "name": "APP_DEBUG", "value": "false" },
+        { "name": "LOG_CHANNEL", "value": "stderr" },
+        { "name": "LOG_LEVEL", "value": "info" },
+        { "name": "DB_CONNECTION", "value": "mysql" },
+        { "name": "DB_PORT", "value": "3306" },
+        { "name": "CACHE_STORE", "value": "redis" },
+        { "name": "SESSION_DRIVER", "value": "redis" },
+        { "name": "QUEUE_CONNECTION", "value": "redis" }
+      ],
+      "secrets": [
+        {
+          "name": "APP_KEY",
+          "valueFrom": "${SECRETS_ARN}:APP_KEY::"
+        },
+        {
+          "name": "DB_HOST",
+          "valueFrom": "${SECRETS_ARN}:DB_HOST::"
+        },
+        {
+          "name": "DB_DATABASE",
+          "valueFrom": "${SECRETS_ARN}:DB_DATABASE::"
+        },
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "${SECRETS_ARN}:DB_USERNAME::"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "${SECRETS_ARN}:DB_PASSWORD::"
+        },
+        {
+          "name": "REDIS_HOST",
+          "valueFrom": "${SECRETS_ARN}:REDIS_HOST::"
+        },
+        {
+          "name": "REDIS_PASSWORD",
+          "valueFrom": "${SECRETS_ARN}:REDIS_PASSWORD::"
+        },
+        {
+          "name": "APP_URL",
+          "valueFrom": "${SECRETS_ARN}:APP_URL::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/facility-grid-bridge-web",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "web",
+          "awslogs-create-group": "true"
+        }
+      },
+      "linuxParameters": {
+        "initProcessEnabled": true
+      }
+    }
+  ]
+}
