@@ -100,7 +100,8 @@ class ReportsPage extends Component
     {
         $openWos = WorkOrder::whereNotIn('status', ['completed', 'verified', 'cancelled'])
             ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
-            ->get(['created_at']);
+            ->select(['id', 'created_at'])
+            ->get();
 
         $buckets = ['0-7 days' => 0, '8-14 days' => 0, '15-30 days' => 0, '30+ days' => 0];
 
@@ -148,6 +149,11 @@ class ReportsPage extends Component
             $months->push(now()->subMonths($i));
         }
 
+        // Load all active PM schedules once instead of 24 queries (2 per month)
+        $allSchedules = MaintenanceSchedule::where('is_active', true)
+            ->select(['id', 'created_at', 'last_completed_date'])
+            ->get();
+
         $labels = [];
         $values = [];
 
@@ -155,15 +161,15 @@ class ReportsPage extends Component
             $labels[] = $month->format('M Y');
             $endOfMonth = $month->copy()->endOfMonth();
 
-            $totalPm = MaintenanceSchedule::where('is_active', true)
-                ->where('created_at', '<=', $endOfMonth)
-                ->count();
+            $activeByMonth = $allSchedules->filter(
+                fn ($s) => $s->created_at <= $endOfMonth
+            );
 
-            $completedPm = MaintenanceSchedule::where('is_active', true)
-                ->where('created_at', '<=', $endOfMonth)
-                ->whereNotNull('last_completed_date')
-                ->where('last_completed_date', '<=', $endOfMonth)
-                ->count();
+            $totalPm = $activeByMonth->count();
+
+            $completedPm = $activeByMonth->filter(
+                fn ($s) => $s->last_completed_date !== null && $s->last_completed_date <= $endOfMonth
+            )->count();
 
             $values[] = $totalPm > 0 ? round(($completedPm / $totalPm) * 100, 1) : 100;
         }
@@ -181,6 +187,13 @@ class ReportsPage extends Component
             $months->push(now()->subMonths($i));
         }
 
+        // Load all WOs with SLA data once instead of 24 queries (2 per month)
+        $slaWorkOrders = WorkOrder::whereNotNull('sla_deadline')
+            ->where('created_at', '>=', now()->subMonths(12)->startOfMonth())
+            ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
+            ->select(['id', 'created_at', 'sla_deadline', 'sla_breached'])
+            ->get();
+
         $labels = [];
         $values = [];
 
@@ -189,16 +202,12 @@ class ReportsPage extends Component
             $start = $month->copy()->startOfMonth();
             $end = $month->copy()->endOfMonth();
 
-            $total = WorkOrder::whereNotNull('sla_deadline')
-                ->whereBetween('created_at', [$start, $end])
-                ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
-                ->count();
+            $monthWos = $slaWorkOrders->filter(
+                fn ($wo) => $wo->created_at >= $start && $wo->created_at <= $end
+            );
 
-            $breached = WorkOrder::whereNotNull('sla_deadline')
-                ->where('sla_breached', true)
-                ->whereBetween('created_at', [$start, $end])
-                ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
-                ->count();
+            $total = $monthWos->count();
+            $breached = $monthWos->where('sla_breached', true)->count();
 
             $values[] = $total > 0 ? round((($total - $breached) / $total) * 100, 1) : 100;
         }

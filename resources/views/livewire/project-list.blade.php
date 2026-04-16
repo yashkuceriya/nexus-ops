@@ -2,8 +2,8 @@
     {{-- Header --}}
     <div class="sm:flex sm:items-start sm:justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Projects</h1>
-            <p class="mt-1 text-sm text-gray-500">Manage and track high-priority facility handovers</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-zinc-100">Projects</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">Manage and track high-priority facility handovers</p>
         </div>
         <div class="mt-4 sm:mt-0 flex items-center gap-3">
             {{-- Search --}}
@@ -71,7 +71,7 @@
             $typeKey = strtolower($project->project_type ?? 'general');
             $badgeClasses = $typeColors[$typeKey] ?? ['bg-gray-100', 'text-gray-700', 'border-gray-200'];
         @endphp
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700 hover:shadow-md transition-shadow">
             <div class="p-6">
                 {{-- Top Row: Badge + Readiness Score --}}
                 <div class="flex items-start justify-between mb-4">
@@ -85,7 +85,7 @@
                 </div>
 
                 {{-- Project Name & Location --}}
-                <h3 class="text-lg font-semibold text-gray-900">{{ $project->name }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-zinc-100">{{ $project->name }}</h3>
                 <p class="text-sm text-gray-500 mt-0.5 flex items-center gap-1">
                     <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />

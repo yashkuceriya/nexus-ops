@@ -6,10 +6,15 @@
     <div class="mb-8">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Portfolio Readiness Dashboard</h1>
-                <p class="mt-1 text-sm text-gray-500">Operational readiness across all active projects</p>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-zinc-100">Portfolio Readiness Dashboard</h1>
+                <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">Operational readiness across all active projects</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-gray-400">
+                    Updated {{ \Carbon\Carbon::parse($lastUpdated)->diffForHumans() }}
+                    &middot;
+                    <button wire:click="refreshKpis" class="text-emerald-600 hover:text-emerald-700 font-medium hover:underline">Refresh</button>
+                </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
                     <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                     Live
@@ -30,7 +35,7 @@
     <div wire:loading.remove class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
 
         {{-- Open Work Orders --}}
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
             <div class="p-5">
                 <div class="flex items-center gap-4">
                     <div class="flex-shrink-0 w-11 h-11 rounded-full bg-amber-100 flex items-center justify-center">
@@ -39,9 +44,9 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Open Work Orders</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Open Work Orders</p>
                         <div class="flex items-center gap-3 mt-0.5">
-                            <p class="text-3xl font-bold text-gray-900"
+                            <p class="text-3xl font-bold text-gray-900 dark:text-zinc-100"
                                x-data="{ value: 0, target: {{ $this->kpis['open_work_orders'] }} }"
                                x-init="let start = performance.now();
                                        function animate(now) {
@@ -69,7 +74,7 @@
         </div>
 
         {{-- Avg. MTTR --}}
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
             <div class="p-5">
                 <div class="flex items-center gap-4">
                     <div class="flex-shrink-0 w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center">
@@ -78,9 +83,9 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Avg. MTTR</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Avg. MTTR</p>
                         <div class="flex items-center gap-3 mt-0.5">
-                            <p class="text-3xl font-bold text-gray-900">
+                            <p class="text-3xl font-bold text-gray-900 dark:text-zinc-100">
                                 <span x-data="{ value: 0, target: {{ $this->kpis['mttr_hours'] }} }"
                                       x-init="let start = performance.now();
                                               function animate(now) {
@@ -92,7 +97,7 @@
                                       x-text="value"
                                       style="font-variant-numeric: tabular-nums">
                                 </span>
-                                <span class="text-lg font-semibold text-gray-400"> hrs</span>
+                                <span class="text-lg font-semibold text-gray-400 dark:text-zinc-400"> hrs</span>
                             </p>
                             <svg width="60" height="24" viewBox="0 0 60 24" class="flex-shrink-0">
                                 <polyline points="0,12 10,16 20,10 30,14 40,8 50,12 60,6" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -110,7 +115,7 @@
         </div>
 
         {{-- PM Compliance --}}
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
             <div class="p-5">
                 <div class="flex items-center gap-4">
                     <div class="flex-shrink-0 w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center">
@@ -119,9 +124,9 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">PM Compliance</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wide">PM Compliance</p>
                         <div class="flex items-center gap-3 mt-0.5">
-                            <p class="text-3xl font-bold text-gray-900">
+                            <p class="text-3xl font-bold text-gray-900 dark:text-zinc-100">
                                 <span x-data="{ value: 0, target: {{ $this->kpis['pm_compliance'] }} }"
                                       x-init="let start = performance.now();
                                               function animate(now) {
@@ -154,7 +159,7 @@
             $hasAnomalies = $this->kpis['anomaly_sensors'] > 0;
             $sensorColor = $hasAnomalies ? 'red' : 'emerald';
         @endphp
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
             <div class="p-5">
                 <div class="flex items-center gap-4">
                     <div class="flex-shrink-0 w-11 h-11 rounded-full bg-{{ $sensorColor }}-100 flex items-center justify-center">
@@ -163,9 +168,9 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Active IoT Sensors</p>
+                        <p class="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wide">Active IoT Sensors</p>
                         <div class="flex items-center gap-3 mt-0.5">
-                            <p class="text-3xl font-bold text-gray-900"
+                            <p class="text-3xl font-bold text-gray-900 dark:text-zinc-100"
                                x-data="{ value: 0, target: {{ $this->kpis['active_sensors'] }} }"
                                x-init="let start = performance.now();
                                        function animate(now) {
@@ -199,7 +204,7 @@
     {{-- Project Readiness Overview --}}
     <div class="mb-8">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-semibold text-gray-900">Project Readiness Overview</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-zinc-100">Project Readiness Overview</h2>
             <a href="{{ route('projects.index') }}" class="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors">View All Projects &rarr;</a>
         </div>
 
@@ -221,7 +226,7 @@
                 $typeKey = strtolower($project->project_type ?? 'general');
                 $badgeClasses = $typeColors[$typeKey] ?? ['bg-gray-100', 'text-gray-700', 'border-gray-200'];
             @endphp
-            <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700 hover:shadow-md transition-shadow">
                 <div class="p-6">
                     {{-- Status Badge --}}
                     <div class="mb-4">
@@ -231,8 +236,8 @@
                     </div>
 
                     {{-- Project Name & Location --}}
-                    <h3 class="text-base font-semibold text-gray-900">{{ $project->name }}</h3>
-                    <p class="text-sm text-gray-500 mt-0.5">{{ $project->city }}, {{ $project->state }}</p>
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-zinc-100">{{ $project->name }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-zinc-400 mt-0.5">{{ $project->city }}, {{ $project->state }}</p>
 
                     {{-- Readiness Ring --}}
                     <div class="flex items-center justify-center my-6">
@@ -299,12 +304,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-semibold text-gray-900">Recent Work Orders</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-zinc-100">Recent Work Orders</h2>
             <a href="{{ route('work-orders.index') }}" class="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors">View All &rarr;</a>
         </div>
 
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100">
-            <table class="min-w-full divide-y divide-gray-200">
+        <div class="overflow-hidden rounded-xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
                 <thead>
                     <tr class="bg-gray-50">
                         <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">WO #</th>
@@ -315,7 +320,7 @@
                         <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Project</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 bg-white">
+                <tbody class="divide-y divide-gray-100 dark:divide-zinc-700 bg-white dark:bg-zinc-800">
                     @foreach($this->recentWorkOrders as $wo)
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap">

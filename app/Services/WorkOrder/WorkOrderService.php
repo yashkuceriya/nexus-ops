@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\WorkOrder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -70,6 +71,8 @@ final class WorkOrderService
                 source: 'system',
             );
 
+            $this->clearDashboardCache($workOrder->tenant_id);
+
             return $workOrder;
         });
     }
@@ -122,6 +125,8 @@ final class WorkOrderService
                 source: 'system',
             );
 
+            $this->clearDashboardCache($workOrder->tenant_id);
+
             return $workOrder;
         });
     }
@@ -161,6 +166,8 @@ final class WorkOrderService
                 ],
                 source: 'system',
             );
+
+            $this->clearDashboardCache($workOrder->tenant_id);
 
             return $workOrder;
         });
@@ -233,6 +240,8 @@ final class WorkOrderService
                 updatedBy: auth()->user()?->name,
             );
 
+            $this->clearDashboardCache($workOrder->tenant_id);
+
             return $workOrder;
         });
     }
@@ -270,6 +279,8 @@ final class WorkOrderService
                 oldValues: ['assigned_to' => $previousAssignee],
                 newValues: ['assigned_to' => $user->id, 'assignee_name' => $user->name],
             );
+
+            $this->clearDashboardCache($workOrder->tenant_id);
 
             return $workOrder;
         });
@@ -369,6 +380,8 @@ final class WorkOrderService
             ],
         );
 
+        $this->clearDashboardCache($tenantId);
+
         return $workOrder;
     }
 
@@ -397,6 +410,8 @@ final class WorkOrderService
             newValues: $data,
         );
 
+        $this->clearDashboardCache($tenantId);
+
         return $workOrder;
     }
 
@@ -416,6 +431,19 @@ final class WorkOrderService
         } catch (InvalidArgumentException) {
             return null;
         }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Cache invalidation
+    // ────────────────────────────────────────────────────────────────
+
+    /**
+     * Clear cached dashboard KPIs and project data for a tenant.
+     */
+    private function clearDashboardCache(int $tenantId): void
+    {
+        Cache::forget("dashboard_kpis_{$tenantId}");
+        Cache::forget("dashboard_projects_{$tenantId}");
     }
 
 }

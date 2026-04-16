@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\ReportPdfController;
 use App\Livewire\ApiDocs;
 use App\Livewire\AssetDetail;
 use App\Livewire\AssetHealthMatrix;
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
     Route::get('/assets/{id}', AssetDetail::class)->name('assets.show');
     Route::get('/sensors', SensorDashboard::class)->name('sensors.index');
     Route::get('/reports', ReportsPage::class)->name('reports.index');
+    Route::get('/reports/export-pdf', [ReportPdfController::class, 'export'])->name('reports.export-pdf');
     Route::get('/audit-log', AuditLogViewer::class)->name('audit-log.index');
     Route::get('/floor-plan', FloorPlan::class)->name('floor-plan.index');
     Route::get('/health-matrix', AssetHealthMatrix::class)->name('health-matrix.index');

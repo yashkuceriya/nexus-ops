@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-gray-50" wire:poll.15s>
+<div class="min-h-screen bg-gray-50 dark:bg-zinc-900" wire:poll.15s>
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
         <div class="mb-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Work Orders</h1>
-                    <p class="mt-1 text-sm text-gray-500">Manage and track facility maintenance tasks</p>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-zinc-100 tracking-tight">Work Orders</h1>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-zinc-400">Manage and track facility maintenance tasks</p>
                 </div>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
                     <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
@@ -76,12 +76,12 @@
 
             {{-- Table Rows --}}
             @forelse($workOrders as $wo)
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 hover:shadow-md hover:border-gray-300/80 transition-all duration-150 {{ $wo->isSlaBreached() ? 'ring-1 ring-red-200 border-red-200' : '' }}">
+            <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200/80 dark:border-zinc-700 hover:shadow-md hover:border-gray-300/80 dark:hover:border-zinc-600 transition-all duration-150 {{ $wo->isSlaBreached() ? 'ring-1 ring-red-200 border-red-200' : '' }}">
                 <div class="grid grid-cols-1 md:grid-cols-[80px_1fr_110px_110px_130px_150px_60px] gap-4 items-center px-5 py-4">
 
                     {{-- WO # --}}
                     <div>
-                        <span class="text-sm font-mono font-semibold text-gray-900">{{ $wo->wo_number }}</span>
+                        <span class="text-sm font-mono font-semibold text-gray-900 dark:text-zinc-100">{{ $wo->wo_number }}</span>
                         @if($wo->isSlaBreached())
                         <span class="ml-1 inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold bg-red-100 text-red-700">SLA</span>
                         @endif
@@ -89,7 +89,7 @@
 
                     {{-- Title + Asset --}}
                     <div class="min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">{{ $wo->title }}</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-zinc-100 truncate">{{ $wo->title }}</p>
                         @if($wo->asset)
                         <p class="text-xs text-gray-400 mt-0.5 truncate">{{ $wo->asset->name }}</p>
                         @endif
