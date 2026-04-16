@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class AuditLog extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'user_id', 'action', 'auditable_type', 'auditable_id',
         'old_values', 'new_values', 'ip_address', 'user_agent', 'source',

@@ -9,9 +9,13 @@ use Livewire\Component;
 class AutomationRuleBuilder extends Component
 {
     public ?int $ruleId = null;
+
     public string $name = '';
+
     public string $description = '';
+
     public string $triggerType = 'work_order_created';
+
     public bool $isActive = true;
 
     /** @var array<int, array{field: string, operator: string, value: string}> */
@@ -114,13 +118,13 @@ class AutomationRuleBuilder extends Component
         $this->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'triggerType' => 'required|in:' . implode(',', array_keys($this->triggerTypes)),
+            'triggerType' => 'required|in:'.implode(',', array_keys($this->triggerTypes)),
             'conditions' => 'array',
             'conditions.*.field' => 'required|string',
             'conditions.*.operator' => 'required|string',
             'conditions.*.value' => 'required|string',
             'actions' => 'required|array|min:1',
-            'actions.*.type' => 'required|in:' . implode(',', array_keys($this->actionTypes)),
+            'actions.*.type' => 'required|in:'.implode(',', array_keys($this->actionTypes)),
         ]);
 
         // Clean action data — remove empty optional fields
@@ -137,6 +141,7 @@ class AutomationRuleBuilder extends Component
                 'escalate_to_manager' => $clean['message'] = $action['message'] ?? '',
                 default => null,
             };
+
             return $clean;
         })->toArray();
 

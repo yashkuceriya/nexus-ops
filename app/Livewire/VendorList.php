@@ -8,10 +8,13 @@ use Livewire\Component;
 class VendorList extends Component
 {
     public string $search = '';
+
     public string $tradeFilter = '';
+
     public string $activeFilter = '';
 
     public bool $showForm = false;
+
     public ?int $editingVendorId = null;
 
     protected $listeners = ['vendorSaved' => 'closeForm', 'closeModal' => 'closeForm'];
@@ -37,14 +40,14 @@ class VendorList extends Component
     public function render()
     {
         $query = Vendor::withCount(['contracts as active_contracts_count' => function ($q) {
-                $q->where('status', 'active');
-            }]);
+            $q->where('status', 'active');
+        }]);
 
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('contact_name', 'like', "%{$this->search}%")
-                  ->orWhere('email', 'like', "%{$this->search}%");
+                    ->orWhere('contact_name', 'like', "%{$this->search}%")
+                    ->orWhere('email', 'like', "%{$this->search}%");
             });
         }
 

@@ -11,7 +11,9 @@ class AutomationRuleList extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $triggerFilter = '';
+
     public string $statusFilter = '';
 
     public function updatingSearch(): void

@@ -8,11 +8,15 @@ use Livewire\Component;
 class RequestTracker extends Component
 {
     public string $token = '';
+
     public ?OccupantRequest $request = null;
+
     public bool $searched = false;
 
     public int $rating = 0;
+
     public string $comment = '';
+
     public bool $surveySubmitted = false;
 
     public function mount(?string $token = null): void

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class OccupantRequest extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'work_order_id', 'tracking_token', 'requester_name',
         'requester_email', 'requester_phone', 'project_id', 'location_id',

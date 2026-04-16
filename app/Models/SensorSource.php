@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SensorSource extends Model
 {
     use BelongsToTenant, HasFactory;
+
     protected $fillable = [
         'tenant_id', 'asset_id', 'location_id', 'external_id',
         'name', 'sensor_type', 'unit',

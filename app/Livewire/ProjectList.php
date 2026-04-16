@@ -8,6 +8,7 @@ use Livewire\Component;
 class ProjectList extends Component
 {
     public string $statusFilter = '';
+
     public string $search = '';
 
     public function getProjectsProperty()

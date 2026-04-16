@@ -29,8 +29,10 @@ final class SyncFacilityGridData implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int $tries   = 3;
+    public int $tries = 3;
+
     public int $backoff = 60;
+
     public int $timeout = 300;
 
     public function __construct(
@@ -57,16 +59,16 @@ final class SyncFacilityGridData implements ShouldQueue
     {
         Log::info('FacilityGrid sync started.', ['tenant_id' => $this->tenant->id]);
 
-        $client  = new FacilityGridClient($this->tenant);
+        $client = new FacilityGridClient($this->tenant);
         $service = new FacilityGridSyncService($client, $this->tenant);
 
         try {
             $service->syncAll();
         } catch (FacilityGridException $e) {
             Log::error('FacilityGrid sync failed.', [
-                'tenant_id'  => $this->tenant->id,
+                'tenant_id' => $this->tenant->id,
                 'error_type' => $e->errorType,
-                'detail'     => $e->detail,
+                'detail' => $e->detail,
             ]);
 
             throw $e; // Let the queue worker handle retry / dead-lettering.

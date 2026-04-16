@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Asset;
 use App\Models\SensorReading;
-use App\Models\WorkOrder;
 use Carbon\Carbon;
 
 class AssetHealthService
@@ -69,8 +68,10 @@ class AssetHealthService
             $ageFactor = $this->calculateAgeFactor($asset, $monthEnd);
 
             // WO frequency for the 90-day window ending at that month
+            // (Work order types are corrective|preventive|inspection|emergency;
+            //  'reactive' was a stale label that silently always returned 0.)
             $woCount = $asset->workOrders()
-                ->where('type', 'reactive')
+                ->whereIn('type', ['corrective', 'emergency'])
                 ->whereBetween('created_at', [$monthEnd->copy()->subDays(90), $monthEnd])
                 ->count();
             $woFactor = max(0, 100 - ($woCount * 15));
@@ -148,7 +149,7 @@ class AssetHealthService
     private function calculateWorkOrderFrequencyFactor(Asset $asset): float
     {
         $woCount = $asset->workOrders()
-            ->where('type', 'reactive')
+            ->whereIn('type', ['corrective', 'emergency'])
             ->where('created_at', '>=', now()->subDays(90))
             ->count();
 

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services\Dashboard;
 
-use App\Models\AuditLog;
 use App\Models\Asset;
+use App\Models\AuditLog;
 use App\Models\Project;
 use App\Models\SensorSource;
 use App\Models\WorkOrder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 final class DashboardService
 {
@@ -27,26 +26,31 @@ final class DashboardService
 
         $woStats = WorkOrder::where('tenant_id', $tenantId)
             ->selectRaw(
-                'COUNT(*) as total_work_orders, ' .
+                'COUNT(*) as total_work_orders, '.
                 "SUM(CASE WHEN status NOT IN ('completed', 'verified', 'cancelled') THEN 1 ELSE 0 END) as open_work_orders",
             )->first();
 
+        // Projects table uses status values: planning|commissioning|closeout|
+        // operational|archived. "Active" encompasses everything except archived
+        // (i.e. projects that still need operational attention).
+        $activeStatuses = ['planning', 'commissioning', 'closeout', 'operational'];
+
         return [
-            'total_projects'    => $projects->count(),
-            'active_projects'   => $projects->where('status', 'active')->count(),
+            'total_projects' => $projects->count(),
+            'active_projects' => $projects->whereIn('status', $activeStatuses)->count(),
             'average_readiness' => round($projects->avg('readiness_score') ?? 0, 2),
-            'total_assets'      => $assetCount,
+            'total_assets' => $assetCount,
             'total_work_orders' => (int) $woStats->total_work_orders,
-            'open_work_orders'  => (int) $woStats->open_work_orders,
-            'total_issues'      => (int) $projects->sum('total_issues'),
-            'open_issues'       => (int) $projects->sum('open_issues'),
-            'projects'          => $projects->map(fn (Project $p) => [
-                'id'                    => $p->id,
-                'name'                  => $p->name,
-                'status'                => $p->status,
-                'readiness_score'       => $p->readiness_score,
-                'open_issues'           => $p->open_issues,
-                'target_handover_date'  => $p->target_handover_date?->toDateString(),
+            'open_work_orders' => (int) $woStats->open_work_orders,
+            'total_issues' => (int) $projects->sum('total_issues'),
+            'open_issues' => (int) $projects->sum('open_issues'),
+            'projects' => $projects->map(fn (Project $p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'status' => $p->status,
+                'readiness_score' => $p->readiness_score,
+                'open_issues' => $p->open_issues,
+                'target_handover_date' => $p->target_handover_date?->toDateString(),
             ])->all(),
         ];
     }
@@ -65,27 +69,27 @@ final class DashboardService
         }
 
         return [
-            'id'                    => $project->id,
-            'name'                  => $project->name,
-            'readiness_score'       => (float) $project->readiness_score,
-            'calculated_score'      => $project->calculateReadinessScore(),
-            'blockers'              => $project->getHandoverBlockers(),
-            'issue_completion'      => $project->total_issues > 0
+            'id' => $project->id,
+            'name' => $project->name,
+            'readiness_score' => (float) $project->readiness_score,
+            'calculated_score' => $project->calculateReadinessScore(),
+            'blockers' => $project->getHandoverBlockers(),
+            'issue_completion' => $project->total_issues > 0
                 ? round((($project->total_issues - $project->open_issues) / $project->total_issues) * 100, 2)
                 : 100.0,
-            'test_completion'       => $project->total_tests > 0
+            'test_completion' => $project->total_tests > 0
                 ? round(($project->completed_tests / $project->total_tests) * 100, 2)
                 : 100.0,
-            'doc_completion'        => $project->total_closeout_docs > 0
+            'doc_completion' => $project->total_closeout_docs > 0
                 ? round(($project->completed_closeout_docs / $project->total_closeout_docs) * 100, 2)
                 : 100.0,
-            'total_issues'          => $project->total_issues,
-            'open_issues'           => $project->open_issues,
-            'total_tests'           => $project->total_tests,
-            'completed_tests'       => $project->completed_tests,
-            'total_closeout_docs'   => $project->total_closeout_docs,
+            'total_issues' => $project->total_issues,
+            'open_issues' => $project->open_issues,
+            'total_tests' => $project->total_tests,
+            'completed_tests' => $project->completed_tests,
+            'total_closeout_docs' => $project->total_closeout_docs,
             'completed_closeout_docs' => $project->completed_closeout_docs,
-            'target_handover_date'  => $project->target_handover_date?->toDateString(),
+            'target_handover_date' => $project->target_handover_date?->toDateString(),
         ];
     }
 
@@ -128,7 +132,7 @@ final class DashboardService
         $pmStats = WorkOrder::where('tenant_id', $tenantId)
             ->where('type', 'preventive')
             ->selectRaw(
-                'COUNT(*) as total_pm, ' .
+                'COUNT(*) as total_pm, '.
                 "SUM(CASE WHEN status IN ('completed', 'verified') AND (sla_breached = 0 OR sla_breached IS NULL) THEN 1 ELSE 0 END) as on_time_pm",
             )->first();
 
@@ -165,16 +169,16 @@ final class DashboardService
             ->count();
 
         return [
-            'mttr_minutes'          => $avgTimeToRepair !== null ? round((float) $avgTimeToRepair, 2) : null,
-            'mtbf_hours'            => $mtbf,
-            'pm_compliance_rate'    => $pmComplianceRate,
-            'backlog_ratio'         => $backlogRatio,
-            'open_work_orders'      => $openCount,
-            'sla_breached'          => $slaBreachedCount,
-            'completed_this_month'  => $completedThisMonth->count(),
-            'total_assets'          => $totalAssets,
-            'critical_assets'       => $criticalAssets,
-            'active_sensors'        => $activeSensors,
+            'mttr_minutes' => $avgTimeToRepair !== null ? round((float) $avgTimeToRepair, 2) : null,
+            'mtbf_hours' => $mtbf,
+            'pm_compliance_rate' => $pmComplianceRate,
+            'backlog_ratio' => $backlogRatio,
+            'open_work_orders' => $openCount,
+            'sla_breached' => $slaBreachedCount,
+            'completed_this_month' => $completedThisMonth->count(),
+            'total_assets' => $totalAssets,
+            'critical_assets' => $criticalAssets,
+            'active_sensors' => $activeSensors,
             'sensors_with_anomalies' => $anomalySensors,
         ];
     }
@@ -204,19 +208,19 @@ final class DashboardService
             ->get();
 
         return [
-            'total'               => $sensors->count(),
-            'active'              => $active->count(),
-            'inactive'            => $inactive->count(),
-            'with_anomalies_24h'  => $anomalies->count(),
-            'anomalies'           => $anomalies->map(fn (SensorSource $s) => [
-                'sensor_id'        => $s->id,
-                'sensor_name'      => $s->name,
-                'sensor_type'      => $s->sensor_type,
-                'asset_name'       => $s->asset?->name,
+            'total' => $sensors->count(),
+            'active' => $active->count(),
+            'inactive' => $inactive->count(),
+            'with_anomalies_24h' => $anomalies->count(),
+            'anomalies' => $anomalies->map(fn (SensorSource $s) => [
+                'sensor_id' => $s->id,
+                'sensor_name' => $s->name,
+                'sensor_type' => $s->sensor_type,
+                'asset_name' => $s->asset?->name,
                 'recent_anomalies' => $s->readings->map(fn ($r) => [
-                    'value'        => $r->value,
+                    'value' => $r->value,
                     'anomaly_type' => $r->anomaly_type,
-                    'recorded_at'  => $r->recorded_at->toIso8601String(),
+                    'recorded_at' => $r->recorded_at->toIso8601String(),
                 ])->all(),
             ])->all(),
         ];
@@ -256,35 +260,47 @@ final class DashboardService
 
     /**
      * Calculate Mean Time Between Failures across all assets for a tenant.
-     * Uses window functions to compute intervals between consecutive corrective WO completions.
+     *
+     * Uses pure PHP to compute intervals between consecutive corrective /
+     * emergency WO completions per asset. This avoids driver-specific SQL
+     * (TIMESTAMPDIFF exists in MySQL but not SQLite/PostgreSQL) so the same
+     * code path works in tests, CI, and production.
      */
     private function calculateMtbf(int $tenantId): ?float
     {
-        $intervals = DB::select(
-            <<<'SQL'
-            SELECT AVG(interval_hours) as avg_mtbf
-            FROM (
-                SELECT
-                    asset_id,
-                    TIMESTAMPDIFF(
-                        HOUR,
-                        LAG(completed_at) OVER (PARTITION BY asset_id ORDER BY completed_at),
-                        completed_at
-                    ) as interval_hours
-                FROM work_orders
-                WHERE tenant_id = ?
-                  AND type = 'corrective'
-                  AND completed_at IS NOT NULL
-                  AND asset_id IS NOT NULL
-            ) intervals
-            WHERE interval_hours IS NOT NULL
-              AND interval_hours > 0
-            SQL,
-            [$tenantId],
-        );
+        $rows = WorkOrder::where('tenant_id', $tenantId)
+            ->whereIn('type', ['corrective', 'emergency'])
+            ->whereNotNull('completed_at')
+            ->whereNotNull('asset_id')
+            ->orderBy('asset_id')
+            ->orderBy('completed_at')
+            ->get(['asset_id', 'completed_at']);
 
-        $result = $intervals[0]->avg_mtbf ?? null;
+        if ($rows->isEmpty()) {
+            return null;
+        }
 
-        return $result !== null ? round((float) $result, 2) : null;
+        $intervalsHours = [];
+        $previousByAsset = [];
+
+        foreach ($rows as $row) {
+            $assetId = (int) $row->asset_id;
+            $completedAt = $row->completed_at;
+
+            if (isset($previousByAsset[$assetId])) {
+                $hours = $previousByAsset[$assetId]->diffInMinutes($completedAt) / 60;
+                if ($hours > 0) {
+                    $intervalsHours[] = $hours;
+                }
+            }
+
+            $previousByAsset[$assetId] = $completedAt;
+        }
+
+        if (count($intervalsHours) === 0) {
+            return null;
+        }
+
+        return round(array_sum($intervalsHours) / count($intervalsHours), 2);
     }
 }

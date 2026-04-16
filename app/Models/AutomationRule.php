@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AutomationRule extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'name', 'description', 'is_active',
         'trigger_type', 'conditions', 'actions',
@@ -25,5 +25,4 @@ class AutomationRule extends Model
             'last_executed_at' => 'datetime',
         ];
     }
-
 }

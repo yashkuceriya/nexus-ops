@@ -26,13 +26,15 @@ final class ReportPdfGenerator
         $dateFromParsed = Carbon::parse($dateFrom);
         $dateToParsed = Carbon::parse($dateTo)->endOfDay();
 
-        // KPI Summary
-        $query = WorkOrder::whereBetween('created_at', [$dateFromParsed, $dateToParsed]);
+        // KPI Summary — always scope by tenant to prevent data leaks across orgs.
+        $query = WorkOrder::where('tenant_id', $tenantId)
+            ->whereBetween('created_at', [$dateFromParsed, $dateToParsed]);
 
         $totalWo = (clone $query)->count();
 
         $completed = (clone $query)->whereNotNull('completed_at')
             ->whereNotNull('started_at')
+            ->select(['id', 'started_at', 'completed_at'])
             ->get();
 
         $avgMttr = $completed->count() > 0
@@ -41,8 +43,11 @@ final class ReportPdfGenerator
 
         $totalCost = (clone $query)->sum('actual_cost') ?: 0;
 
-        $totalPm = MaintenanceSchedule::where('is_active', true)->count();
-        $completedPm = MaintenanceSchedule::where('is_active', true)
+        $totalPm = MaintenanceSchedule::where('tenant_id', $tenantId)
+            ->where('is_active', true)
+            ->count();
+        $completedPm = MaintenanceSchedule::where('tenant_id', $tenantId)
+            ->where('is_active', true)
             ->whereNotNull('last_completed_date')
             ->count();
         $pmCompliance = $totalPm > 0 ? round(($completedPm / $totalPm) * 100, 1) : 100;
@@ -55,7 +60,8 @@ final class ReportPdfGenerator
         ];
 
         // Work Orders by Type
-        $woByType = WorkOrder::whereBetween('created_at', [$dateFromParsed, $dateToParsed])
+        $woByType = WorkOrder::where('tenant_id', $tenantId)
+            ->whereBetween('created_at', [$dateFromParsed, $dateToParsed])
             ->selectRaw('type, COUNT(*) as count')
             ->groupBy('type')
             ->orderByDesc('count')

@@ -32,10 +32,10 @@ class WorkOrderAssigned extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject("Work Order Assigned: {$this->workOrder->wo_number}")
             ->greeting("Hello {$notifiable->name},")
-            ->line("A work order has been assigned to you.")
+            ->line('A work order has been assigned to you.')
             ->line("**WO Number:** {$this->workOrder->wo_number}")
             ->line("**Title:** {$this->workOrder->title}")
-            ->line("**Priority:** " . ucfirst($this->workOrder->priority))
+            ->line('**Priority:** '.ucfirst($this->workOrder->priority))
             ->line("**Assigned By:** {$this->assignedByName}")
             ->action('View Work Order', $url)
             ->line('Please review and begin work as soon as possible.');

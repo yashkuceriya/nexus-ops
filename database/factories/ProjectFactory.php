@@ -17,7 +17,7 @@ class ProjectFactory extends Factory
     {
         return [
             'tenant_id' => Tenant::factory(),
-            'name' => fake()->words(3, true) . ' Project',
+            'name' => fake()->words(3, true).' Project',
             'status' => 'commissioning',
             'total_issues' => 20,
             'open_issues' => 5,

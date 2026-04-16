@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StatusMapping extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'source_system', 'source_entity', 'source_status',
         'target_entity', 'target_status', 'auto_transition', 'is_active',

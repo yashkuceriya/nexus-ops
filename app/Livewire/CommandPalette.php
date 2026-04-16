@@ -7,11 +7,11 @@ use App\Models\Project;
 use App\Models\SensorSource;
 use App\Models\WorkOrder;
 use Livewire\Component;
-use Livewire\Attributes\On;
 
 class CommandPalette extends Component
 {
     public string $search = '';
+
     public int $selectedIndex = 0;
 
     public function updatedSearch(): void
@@ -30,9 +30,9 @@ class CommandPalette extends Component
 
         // Work Orders
         $workOrders = WorkOrder::where(function ($q) use ($query) {
-                $q->where('wo_number', 'like', "%{$query}%")
-                  ->orWhere('title', 'like', "%{$query}%");
-            })
+            $q->where('wo_number', 'like', "%{$query}%")
+                ->orWhere('title', 'like', "%{$query}%");
+        })
             ->limit(5)
             ->get();
 
@@ -40,7 +40,7 @@ class CommandPalette extends Component
             $results[] = [
                 'type' => 'Work Orders',
                 'icon' => 'clipboard',
-                'title' => $wo->wo_number . ' - ' . $wo->title,
+                'title' => $wo->wo_number.' - '.$wo->title,
                 'subtitle' => ucfirst($wo->status ?? 'open'),
                 'url' => route('work-orders.show', $wo->id),
                 'hint' => 'WO',
@@ -49,9 +49,9 @@ class CommandPalette extends Component
 
         // Assets
         $assets = Asset::where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('qr_code', 'like', "%{$query}%");
-            })
+            $q->where('name', 'like', "%{$query}%")
+                ->orWhere('qr_code', 'like', "%{$query}%");
+        })
             ->limit(5)
             ->get();
 

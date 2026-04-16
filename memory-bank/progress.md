@@ -57,10 +57,20 @@
 - [x] ECS task definitions (web + worker, ARM64 Graviton)
 - [x] GitHub Actions CI/CD (test + deploy with OIDC)
 
+### Commissioning Suite (v3–v5)
+- [x] FPT engine: TestScript/TestStep/TestExecution/TestStepResult, auto-eval (tolerance/GTE/between), witness signatures + tamper detection, parent-child retest chains, PDF reports
+- [x] FPT UI: TestScriptLibrary, TestScriptEditor, TestExecutionRunner, CxTestMatrix
+- [x] PFC (Pre-Functional Checklist): extended checklist templates, multi-session resume, auto-opens deficiency Issues on failure
+- [x] Turnover Packages: full payload builder, signed public share URLs, PDF with inventory + QR
+- [x] Asset Signoff: 4-state workflow, signature hashing, role-based approvers
+- [x] Commissioning Analytics: 6-month trend, aging buckets, top-failing scripts
+- [x] Deficiency Board: kanban with advance/rewind/claim + audit trail
+- [x] Lessons Learned (7 categories) + Closeout Tracker
+- [x] Weekly CX Digest command (`cx:weekly-digest`) with dry-run + per-tenant filter
+- [x] API tenant guard middleware (`tenant.active.api`) for v1 API
+
 ## What Could Be Added
-- [ ] More Pest tests (Livewire components, services)
 - [ ] Laravel Reverb WebSocket (replace polling)
-- [ ] PDF report export
 - [ ] Email notifications for occupant requests
 - [ ] Password reset flow
 - [ ] User management CRUD (admin panel)
@@ -88,13 +98,13 @@
 ## Stats
 | Metric | Count |
 |--------|-------|
-| Models | 21 |
-| Livewire Components | 30 |
+| Models | 27 |
+| Livewire Components | 43 |
 | Domain Objects | 4 |
-| Services | 9 |
+| Services | 13+ (incl. TestExecution, Turnover, Signoff, Checklist) |
 | Form Requests | 3 |
 | Factories | 6 |
 | ADRs | 4 |
-| Tests | 91 passing (259 assertions) |
-| Pages | 22 |
-| PHP files | 93 |
+| Tests | 137 passing (450 assertions, 1 skipped) |
+| Pages | 22+ (plus /fpt/*, /turnover/*) |
+| PHP files | 129 |

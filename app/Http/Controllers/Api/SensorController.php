@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SensorIngestRequest;
 use App\Models\SensorReading;
 use App\Models\SensorSource;
+use App\Rules\BelongsToCurrentTenant;
 use App\Services\Sensor\SensorIngestService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +25,7 @@ final class SensorController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'asset_id' => ['sometimes', 'integer', 'exists:assets,id'],
+            'asset_id' => ['sometimes', 'integer', new BelongsToCurrentTenant('assets')],
             'sensor_type' => ['sometimes', 'string', 'max:100'],
             'is_active' => ['sometimes', 'boolean'],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
@@ -62,20 +64,17 @@ final class SensorController extends Controller
     }
 
     /**
-     * Ingest sensor readings (authenticated via API token).
+     * Ingest sensor readings. Uses SensorIngestRequest for validation.
+     * Tenant isolation is enforced in SensorIngestService::ingestBatch.
      */
-    public function ingest(Request $request): JsonResponse
+    public function ingest(SensorIngestRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'readings' => ['required', 'array', 'min:1', 'max:1000'],
-            'readings.*.sensor_source_id' => ['required', 'integer'],
-            'readings.*.value' => ['required', 'numeric'],
-            'readings.*.recorded_at' => ['nullable', 'date'],
-        ]);
-
         $tenantId = $request->user()->tenant_id;
 
-        $result = $this->sensorIngestService->ingestBatch($tenantId, $validated['readings']);
+        $result = $this->sensorIngestService->ingestBatch(
+            $tenantId,
+            $request->validated()['readings'],
+        );
 
         $statusCode = empty($result['errors']) ? 200 : 207;
 

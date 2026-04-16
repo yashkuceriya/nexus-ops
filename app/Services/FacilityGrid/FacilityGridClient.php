@@ -23,11 +23,15 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class FacilityGridClient
 {
-    private const int MAX_RETRIES          = 5;
+    private const int MAX_RETRIES = 5;
+
     private const int TOTAL_BUDGET_SECONDS = 30;
-    private const int BASE_DELAY_MS        = 200;
-    private const int CONNECT_TIMEOUT      = 10;
-    private const int REQUEST_TIMEOUT      = 30;
+
+    private const int BASE_DELAY_MS = 200;
+
+    private const int CONNECT_TIMEOUT = 10;
+
+    private const int REQUEST_TIMEOUT = 30;
 
     private const array RETRYABLE_STATUSES = [429, 502, 503, 504];
 
@@ -38,11 +42,11 @@ final class FacilityGridClient
         ?Client $client = null,
     ) {
         $this->http = $client ?? new Client([
-            'base_uri'                      => rtrim($this->tenant->facilitygrid_api_url, '/') . '/',
+            'base_uri' => rtrim($this->tenant->facilitygrid_api_url, '/').'/',
             RequestOptions::CONNECT_TIMEOUT => self::CONNECT_TIMEOUT,
-            RequestOptions::TIMEOUT         => self::REQUEST_TIMEOUT,
-            RequestOptions::HTTP_ERRORS     => false,
-            RequestOptions::HEADERS         => $this->buildAuthHeaders(),
+            RequestOptions::TIMEOUT => self::REQUEST_TIMEOUT,
+            RequestOptions::HTTP_ERRORS => false,
+            RequestOptions::HEADERS => $this->buildAuthHeaders(),
         ]);
     }
 
@@ -112,8 +116,8 @@ final class FacilityGridClient
     private function paginatedGet(string $uri, array $params = []): array
     {
         $allData = [];
-        $cursor  = $params['cursor'] ?? null;
-        $meta    = [];
+        $cursor = $params['cursor'] ?? null;
+        $meta = [];
 
         do {
             $query = $params;
@@ -121,10 +125,10 @@ final class FacilityGridClient
                 $query['cursor'] = $cursor;
             }
 
-            $page    = $this->requestWithRetry('GET', $uri, ['query' => $query]);
+            $page = $this->requestWithRetry('GET', $uri, ['query' => $query]);
             $allData = array_merge($allData, $page['data'] ?? []);
-            $meta    = $page['meta'] ?? [];
-            $cursor  = $meta['next_cursor'] ?? null;
+            $meta = $page['meta'] ?? [];
+            $cursor = $meta['next_cursor'] ?? null;
         } while ($cursor !== null);
 
         return ['data' => $allData, 'meta' => $meta];
@@ -141,7 +145,7 @@ final class FacilityGridClient
      */
     private function requestWithRetry(string $method, string $uri, array $options = []): array
     {
-        $attempt  = 0;
+        $attempt = 0;
         $deadline = hrtime(true) + (self::TOTAL_BUDGET_SECONDS * 1_000_000_000);
 
         while (true) {
@@ -158,6 +162,7 @@ final class FacilityGridClient
                 }
 
                 $this->sleep($this->calculateDelay($attempt));
+
                 continue;
             } catch (RequestException $e) {
                 // Guzzle threw without a response (network-level issue).
@@ -170,6 +175,7 @@ final class FacilityGridClient
                     }
 
                     $this->sleep($this->calculateDelay($attempt));
+
                     continue;
                 }
 
@@ -202,10 +208,10 @@ final class FacilityGridClient
 
             Log::warning('FacilityGrid: retrying after transient error', [
                 'tenant_id' => $this->tenant->id,
-                'uri'       => $uri,
-                'status'    => $status,
-                'attempt'   => $attempt,
-                'delay_ms'  => $delay,
+                'uri' => $uri,
+                'status' => $status,
+                'attempt' => $attempt,
+                'delay_ms' => $delay,
             ]);
 
             $this->sleep($delay);
@@ -215,7 +221,7 @@ final class FacilityGridClient
     /**
      * Exponential back-off with full jitter: delay = random(0, base * 2^attempt).
      *
-     * @return int  Delay in milliseconds.
+     * @return int Delay in milliseconds.
      */
     private function calculateDelay(int $attempt): int
     {
@@ -227,7 +233,7 @@ final class FacilityGridClient
     /**
      * Honour `Retry-After` header when present; fall back to exponential back-off.
      *
-     * @return int  Delay in milliseconds.
+     * @return int Delay in milliseconds.
      */
     private function retryAfterDelay(ResponseInterface $response, int $attempt): int
     {
@@ -272,20 +278,19 @@ final class FacilityGridClient
 
     /**
      * @throws FacilityGridException
-     * @return never
      */
     private function throwForStatus(int $status, ResponseInterface $response, string $uri): never
     {
-        $body   = (string) $response->getBody();
+        $body = (string) $response->getBody();
         $detail = $this->extractDetail($body) ?? "HTTP {$status} on {$uri}";
 
         throw match (true) {
-            $status === 401       => FacilityGridException::authentication($detail),
-            $status === 403       => FacilityGridException::forbidden($detail),
-            $status === 404       => FacilityGridException::notFound('resource', $uri),
-            $status === 408       => FacilityGridException::timeout($detail),
-            $status >= 500        => FacilityGridException::serverError($status, $detail),
-            default               => new FacilityGridException(
+            $status === 401 => FacilityGridException::authentication($detail),
+            $status === 403 => FacilityGridException::forbidden($detail),
+            $status === 404 => FacilityGridException::notFound('resource', $uri),
+            $status === 408 => FacilityGridException::timeout($detail),
+            $status >= 500 => FacilityGridException::serverError($status, $detail),
+            default => new FacilityGridException(
                 errorType: 'client_error',
                 status: $status,
                 detail: $detail,
@@ -322,17 +327,17 @@ final class FacilityGridClient
     private function buildAuthHeaders(): array
     {
         $headers = [
-            'Accept'       => 'application/json',
+            'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ];
 
-        $token    = $this->tenant->facilitygrid_api_token;
+        $token = $this->tenant->facilitygrid_api_token;
         $authType = $this->tenant->facilitygrid_auth_type ?? 'bearer';
 
         $headers = match ($authType) {
-            'bearer'  => array_merge($headers, ['Authorization' => "Bearer {$token}"]),
+            'bearer' => array_merge($headers, ['Authorization' => "Bearer {$token}"]),
             'api_key' => array_merge($headers, ['X-API-Key' => $token]),
-            default   => array_merge($headers, ['Authorization' => "Bearer {$token}"]),
+            default => array_merge($headers, ['Authorization' => "Bearer {$token}"]),
         };
 
         return $headers;

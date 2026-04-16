@@ -8,17 +8,27 @@ use Livewire\Component;
 class VendorContractForm extends Component
 {
     public int $vendorId;
+
     public ?int $contractId = null;
 
     public string $title = '';
+
     public string $contract_number = '';
+
     public string $start_date = '';
+
     public string $end_date = '';
+
     public ?string $monthly_cost = null;
+
     public ?string $annual_value = null;
+
     public ?string $nte_limit = null;
+
     public string $scope = '';
+
     public bool $auto_renew = false;
+
     public string $status = 'draft';
 
     protected function rules(): array

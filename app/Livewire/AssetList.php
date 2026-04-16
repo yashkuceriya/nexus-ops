@@ -11,7 +11,9 @@ class AssetList extends Component
     use WithPagination;
 
     public string $systemFilter = '';
+
     public string $conditionFilter = '';
+
     public string $search = '';
 
     public function updatingSearch(): void

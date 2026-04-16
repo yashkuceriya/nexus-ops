@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class VendorContract extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'vendor_id', 'tenant_id', 'title', 'contract_number',
         'start_date', 'end_date', 'auto_renew',
@@ -40,6 +41,6 @@ class VendorContract extends Model
 
     public function isExpiringSoon(): bool
     {
-        return !$this->isExpired() && $this->end_date->diffInDays(now()) <= 30;
+        return ! $this->isExpired() && $this->end_date->diffInDays(now()) <= 30;
     }
 }

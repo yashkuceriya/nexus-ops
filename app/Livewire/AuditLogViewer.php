@@ -12,10 +12,15 @@ class AuditLogViewer extends Component
     use WithPagination;
 
     public string $actionFilter = '';
+
     public string $entityFilter = '';
+
     public string $userFilter = '';
+
     public string $dateFrom = '';
+
     public string $dateTo = '';
+
     public string $search = '';
 
     public function updatingSearch(): void

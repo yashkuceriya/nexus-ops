@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SyncWatermark extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'connector', 'entity', 'cursor',
         'last_successful_sync_at', 'last_attempted_at', 'last_error',

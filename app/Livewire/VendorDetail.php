@@ -3,17 +3,19 @@
 namespace App\Livewire;
 
 use App\Models\Vendor;
-use App\Models\VendorContract;
 use App\Models\WorkOrder;
 use Livewire\Component;
 
 class VendorDetail extends Component
 {
     public Vendor $vendor;
+
     public string $activeTab = 'contracts';
 
     public bool $showVendorForm = false;
+
     public bool $showContractForm = false;
+
     public ?int $editingContractId = null;
 
     protected $listeners = [

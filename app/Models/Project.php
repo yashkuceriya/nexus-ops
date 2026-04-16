@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use BelongsToTenant, HasFactory, SoftDeletes;
+
     protected $fillable = [
         'tenant_id', 'facilitygrid_project_id', 'name', 'description', 'status',
         'project_type', 'address', 'city', 'state', 'zip',
@@ -88,6 +89,36 @@ class Project extends Model
             $blockers[] = ['type' => 'docs', 'count' => $missingDocs, 'label' => "{$missingDocs} missing closeout documents"];
         }
 
+        $failedFpts = $this->testExecutions()
+            ->where('status', TestExecution::STATUS_FAILED)
+            ->whereDoesntHave('retests', fn ($q) => $q->where('status', TestExecution::STATUS_PASSED))
+            ->count();
+
+        if ($failedFpts > 0) {
+            $blockers[] = ['type' => 'fpts', 'count' => $failedFpts, 'label' => "{$failedFpts} failed FPTs without a passing retest"];
+        }
+
+        $openPfcs = ChecklistCompletion::query()
+            ->where('tenant_id', $this->tenant_id)
+            ->where('project_id', $this->id)
+            ->where('type', ChecklistTemplate::TYPE_PFC)
+            ->whereIn('status', [ChecklistCompletion::STATUS_IN_PROGRESS, ChecklistCompletion::STATUS_FAILED])
+            ->count();
+
+        if ($openPfcs > 0) {
+            $blockers[] = ['type' => 'pfcs', 'count' => $openPfcs, 'label' => "{$openPfcs} open/failed PFCs"];
+        }
+
         return $blockers;
+    }
+
+    public function testExecutions(): HasMany
+    {
+        return $this->hasMany(TestExecution::class);
+    }
+
+    public function checklistCompletions(): HasMany
+    {
+        return $this->hasMany(ChecklistCompletion::class);
     }
 }

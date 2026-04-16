@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncFacilityGridData;
 use App\Models\SyncWatermark;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -57,9 +58,11 @@ final class SyncController extends Controller
             ], 422);
         }
 
-        // Dispatch the sync job (class expected to exist in the jobs directory)
-        if (class_exists(\App\Jobs\SyncFacilityGridData::class)) {
-            Bus::dispatch(new \App\Jobs\SyncFacilityGridData($tenantId));
+        // Dispatch the sync job. The job constructor expects the Tenant model
+        // (serialized via SerializesModels) so Bus can reconstruct it on the
+        // worker. Passing an int here previously caused a TypeError.
+        if (class_exists(SyncFacilityGridData::class)) {
+            Bus::dispatch(new SyncFacilityGridData($tenant));
         }
 
         // Mark watermarks as attempted

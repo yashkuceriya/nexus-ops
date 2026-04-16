@@ -150,6 +150,16 @@
                     class="relative px-6 py-3.5 border-b-2 text-sm font-semibold transition-colors focus:outline-none">
                     Documents
                 </button>
+                <button @click="tab = 'fpt'"
+                    :class="tab === 'fpt' ? 'border-emerald-600 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="relative px-6 py-3.5 border-b-2 text-sm font-semibold transition-colors focus:outline-none">
+                    FPTs
+                </button>
+                <button @click="tab = 'signoff'"
+                    :class="tab === 'signoff' ? 'border-emerald-600 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="relative px-6 py-3.5 border-b-2 text-sm font-semibold transition-colors focus:outline-none">
+                    Sign-Off
+                </button>
             </nav>
         </div>
 
@@ -596,6 +606,20 @@
                         Upload Document
                     </button>
                 </div>
+            </div>
+        </div>
+
+        {{-- FPT Tab --}}
+        <div x-show="tab === 'fpt'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-6">
+                @livewire('asset-fpt-panel', ['assetId' => $asset->id], key('fpt-'.$asset->id))
+            </div>
+        </div>
+
+        {{-- Sign-Off Tab --}}
+        <div x-show="tab === 'signoff'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <div class="p-6">
+                @livewire('asset-signoff', ['assetId' => $asset->id], key('signoff-'.$asset->id))
             </div>
         </div>
     </div>

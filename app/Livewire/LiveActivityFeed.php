@@ -24,7 +24,7 @@ class LiveActivityFeed extends Component
             ->get()
             ->map(function (AuditLog $log) {
                 return [
-                    'id' => 'audit_' . $log->id,
+                    'id' => 'audit_'.$log->id,
                     'type' => $this->mapAuditAction($log->action),
                     'description' => $this->describeAuditAction($log),
                     'user_name' => $log->user?->name,
@@ -40,7 +40,7 @@ class LiveActivityFeed extends Component
             ->get()
             ->map(function (OccupantRequest $request) {
                 return [
-                    'id' => 'request_' . $request->id,
+                    'id' => 'request_'.$request->id,
                     'type' => 'request_submitted',
                     'description' => "New {$request->category} request submitted by {$request->requester_name}",
                     'user_name' => $request->requester_name,
@@ -79,9 +79,9 @@ class LiveActivityFeed extends Component
         $newValues = $log->new_values ?? [];
 
         return match ($log->action) {
-            'work_order_created' => "{$userName} created a new work order" . (isset($newValues['source']) ? " (source: {$newValues['source']})" : ''),
-            'work_order_status_changed' => "{$userName} changed status from " . ($log->old_values['status'] ?? '?') . " to " . ($newValues['status'] ?? '?'),
-            'work_order_assigned' => "{$userName} assigned work order to " . ($newValues['assignee_name'] ?? 'a technician'),
+            'work_order_created' => "{$userName} created a new work order".(isset($newValues['source']) ? " (source: {$newValues['source']})" : ''),
+            'work_order_status_changed' => "{$userName} changed status from ".($log->old_values['status'] ?? '?').' to '.($newValues['status'] ?? '?'),
+            'work_order_assigned' => "{$userName} assigned work order to ".($newValues['assignee_name'] ?? 'a technician'),
             'work_order_updated' => "{$userName} updated a work order",
             default => "{$userName} performed {$log->action}",
         };

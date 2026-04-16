@@ -11,8 +11,11 @@ class WorkOrderList extends Component
     use WithPagination;
 
     public string $statusFilter = '';
+
     public string $priorityFilter = '';
+
     public string $typeFilter = '';
+
     public string $search = '';
 
     public function updatingSearch(): void

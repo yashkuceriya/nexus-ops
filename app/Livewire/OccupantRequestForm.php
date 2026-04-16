@@ -12,15 +12,23 @@ use Livewire\Component;
 class OccupantRequestForm extends Component
 {
     public ?int $tenantId = null;
+
     public ?int $projectId = null;
+
     public ?int $locationId = null;
+
     public string $category = '';
+
     public string $description = '';
+
     public string $requesterName = '';
+
     public string $requesterEmail = '';
+
     public string $requesterPhone = '';
 
     public bool $submitted = false;
+
     public string $trackingToken = '';
 
     protected function rules(): array
@@ -105,6 +113,12 @@ class OccupantRequestForm extends Component
             'description' => $this->description,
             'status' => 'submitted',
         ]);
+
+        // Eager-load the location BEFORE dispatching the event. Without this
+        // the `$request->location` lazy-load returns null when the request
+        // had no location_id, and the broadcast payload was inconsistent
+        // between sync and queued listeners.
+        $request->loadMissing('location');
 
         NewOccupantRequest::dispatch(
             tenantId: $request->tenant_id,

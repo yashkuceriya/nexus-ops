@@ -5,43 +5,53 @@ namespace App\Livewire;
 use App\Models\Asset;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\WorkOrder;
 use App\Services\WorkOrder\WorkOrderService;
 use Livewire\Component;
 
 class WorkOrderForm extends Component
 {
     public bool $showModal = false;
+
     public bool $editMode = false;
+
     public ?int $workOrderId = null;
 
     public ?int $projectId = null;
+
     public ?int $assetId = null;
+
     public string $title = '';
+
     public string $description = '';
+
     public string $priority = 'medium';
+
     public string $type = 'corrective';
+
     public ?int $assignedTo = null;
+
     public ?int $slaHours = null;
 
     protected function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:5000',
-            'projectId'   => 'nullable|integer|exists:projects,id',
-            'assetId'     => 'nullable|integer|exists:assets,id',
-            'priority'    => 'required|in:emergency,critical,high,medium,low',
-            'type'        => 'required|in:corrective,preventive,inspection,sensor_alert,request',
-            'assignedTo'  => 'nullable|integer|exists:users,id',
-            'slaHours'    => 'nullable|integer|min:1|max:720',
+            'projectId' => 'nullable|integer|exists:projects,id',
+            'assetId' => 'nullable|integer|exists:assets,id',
+            'priority' => 'required|in:emergency,critical,high,medium,low',
+            'type' => 'required|in:corrective,preventive,inspection,sensor_alert,request',
+            'assignedTo' => 'nullable|integer|exists:users,id',
+            'slaHours' => 'nullable|integer|min:1|max:720',
         ];
     }
 
     protected array $validationAttributes = [
-        'projectId'  => 'project',
-        'assetId'    => 'asset',
+        'projectId' => 'project',
+        'assetId' => 'asset',
         'assignedTo' => 'assignee',
-        'slaHours'   => 'SLA hours',
+        'slaHours' => 'SLA hours',
     ];
 
     public function getProjectsProperty()
@@ -85,7 +95,7 @@ class WorkOrderForm extends Component
         $this->resetForm();
         $this->editMode = true;
 
-        $wo = \App\Models\WorkOrder::findOrFail($id);
+        $wo = WorkOrder::findOrFail($id);
 
         $this->workOrderId = $wo->id;
         $this->projectId = $wo->project_id;
@@ -107,14 +117,14 @@ class WorkOrderForm extends Component
         $tenantId = auth()->user()->tenant_id;
 
         $data = [
-            'project_id'  => $this->projectId,
-            'asset_id'    => $this->assetId,
-            'title'       => $this->title,
+            'project_id' => $this->projectId,
+            'asset_id' => $this->assetId,
+            'title' => $this->title,
             'description' => $this->description,
-            'priority'    => $this->priority,
-            'type'        => $this->type,
+            'priority' => $this->priority,
+            'type' => $this->type,
             'assigned_to' => $this->assignedTo,
-            'sla_hours'   => $this->slaHours,
+            'sla_hours' => $this->slaHours,
         ];
 
         if ($this->editMode && $this->workOrderId) {

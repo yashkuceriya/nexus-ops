@@ -20,10 +20,16 @@ return new class extends Migration
             $table->string('wo_number')->unique();
             $table->string('title');
             $table->text('description')->nullable();
+            // Status, priority, type, and source values must match the code in
+            // App\Services\WorkOrder\WorkOrderService and the WorkOrderStatus /
+            // Priority enums. Previously this migration listed values like
+            // 'sensor_alert' / 'pm_schedule' / 'facility_grid_issue' that the
+            // application never produced, which caused silent divergence
+            // between SQLite (lenient) and MySQL (strict) deployments.
             $table->enum('status', ['pending', 'assigned', 'in_progress', 'on_hold', 'completed', 'verified', 'cancelled'])->default('pending');
             $table->enum('priority', ['emergency', 'critical', 'high', 'medium', 'low'])->default('medium');
-            $table->enum('type', ['corrective', 'preventive', 'inspection', 'sensor_alert', 'request'])->default('corrective');
-            $table->enum('source', ['manual', 'facility_grid_issue', 'sensor_alert', 'pm_schedule', 'occupant_request'])->default('manual');
+            $table->enum('type', ['corrective', 'preventive', 'inspection', 'emergency'])->default('corrective');
+            $table->enum('source', ['manual', 'facilitygrid', 'sensor', 'schedule', 'occupant_request', 'automation'])->default('manual');
             $table->integer('sla_hours')->nullable();
             $table->timestamp('sla_deadline')->nullable();
             $table->boolean('sla_breached')->default(false);

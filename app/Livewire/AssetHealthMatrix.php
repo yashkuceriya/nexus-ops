@@ -65,9 +65,9 @@ class AssetHealthMatrix extends Component
                 'factors' => $breakdown,
             ];
         })
-        ->sortBy('health_score')
-        ->values()
-        ->toArray();
+            ->sortBy('health_score')
+            ->values()
+            ->toArray();
     }
 
     public function getSystemTypeColor(int $index): string

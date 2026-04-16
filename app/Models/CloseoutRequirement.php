@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CloseoutRequirement extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'project_id', 'asset_id', 'name',
         'category', 'status', 'document_id', 'notes', 'due_date',

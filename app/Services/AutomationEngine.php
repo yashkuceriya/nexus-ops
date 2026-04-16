@@ -9,9 +9,8 @@ use App\Models\AutomationRule;
 use App\Models\User;
 use App\Models\WorkOrder;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 final class AutomationEngine
 {
@@ -202,7 +201,7 @@ final class AutomationEngine
         $workOrderId = $context['work_order_id'] ?? null;
 
         $workOrder = $workOrderId ? WorkOrder::find($workOrderId) : null;
-        $message = $action['message'] ?? 'Automation rule triggered for work order ' . ($workOrder->wo_number ?? '#' . $workOrderId);
+        $message = $action['message'] ?? 'Automation rule triggered for work order '.($workOrder->wo_number ?? '#'.$workOrderId);
 
         // Determine recipients
         $recipientId = $action['user_id'] ?? $context['assigned_to'] ?? null;
@@ -211,7 +210,7 @@ final class AutomationEngine
             $user = User::where('tenant_id', $tenantId)->find($recipientId);
 
             if ($user) {
-                $user->notify(new \Illuminate\Notifications\Messages\DatabaseMessage([
+                $user->notify(new DatabaseMessage([
                     'title' => 'Automation Alert',
                     'message' => $message,
                     'work_order_id' => $workOrderId,
@@ -264,10 +263,10 @@ final class AutomationEngine
         $workOrderId = $context['work_order_id'] ?? null;
         $workOrder = $workOrderId ? WorkOrder::find($workOrderId) : null;
 
-        $message = $action['message'] ?? 'Escalation: Work order ' . ($workOrder->wo_number ?? '#' . $workOrderId) . ' requires manager attention.';
+        $message = $action['message'] ?? 'Escalation: Work order '.($workOrder->wo_number ?? '#'.$workOrderId).' requires manager attention.';
 
         foreach ($managers as $manager) {
-            $manager->notify(new \Illuminate\Notifications\Messages\DatabaseMessage([
+            $manager->notify(new DatabaseMessage([
                 'title' => 'Escalation Alert',
                 'message' => $message,
                 'work_order_id' => $workOrderId,

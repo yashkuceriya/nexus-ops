@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Tenant extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name', 'slug', 'domain', 'settings', 'is_active',
         'facilitygrid_api_url', 'facilitygrid_api_token', 'facilitygrid_auth_type',

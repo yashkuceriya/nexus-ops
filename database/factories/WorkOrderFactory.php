@@ -19,7 +19,7 @@ class WorkOrderFactory extends Factory
         return [
             'tenant_id' => Tenant::factory(),
             'project_id' => Project::factory(),
-            'wo_number' => 'WO-' . now()->format('Ym') . '-' . str_pad((string) fake()->unique()->randomNumber(4), 4, '0', STR_PAD_LEFT),
+            'wo_number' => 'WO-'.now()->format('Ym').'-'.str_pad((string) fake()->unique()->randomNumber(4), 4, '0', STR_PAD_LEFT),
             'title' => fake()->sentence(4),
             'status' => 'pending',
             'priority' => 'medium',

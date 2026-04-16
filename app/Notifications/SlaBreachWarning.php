@@ -37,9 +37,9 @@ class SlaBreachWarning extends Notification implements ShouldQueue
             ->greeting("Hello {$notifiable->name},");
 
         if ($this->breached) {
-            $message->line("The SLA deadline for the following work order has been breached.");
+            $message->line('The SLA deadline for the following work order has been breached.');
         } else {
-            $message->line("The SLA deadline for the following work order is approaching (75% elapsed).");
+            $message->line('The SLA deadline for the following work order is approaching (75% elapsed).');
         }
 
         return $message

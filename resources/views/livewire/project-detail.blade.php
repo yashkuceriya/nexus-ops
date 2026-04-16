@@ -28,10 +28,38 @@
         <div class="flex-1 min-w-0 px-6 py-6">
 
             {{-- Project Title --}}
-            <div class="mb-6">
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ $project->name }}</h1>
-                <p class="mt-1 text-base text-gray-500">Full Facility Modernization & Expansion Project</p>
-                <p class="mt-0.5 text-sm text-gray-400">{{ $project->address }}, {{ $project->city }}, {{ $project->state }} {{ $project->zip }}</p>
+            <div class="mb-6 flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ $project->name }}</h1>
+                    <p class="mt-1 text-base text-gray-500">Full Facility Modernization & Expansion Project</p>
+                    <p class="mt-0.5 text-sm text-gray-400">{{ $project->address }}, {{ $project->city }}, {{ $project->state }} {{ $project->zip }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('projects.turnover', $project->id) }}" wire:navigate
+                        class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-9 1V5a2 2 0 012-2h4l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+                        Turnover Package
+                    </a>
+                    <a href="{{ route('projects.pfc', $project->id) }}" wire:navigate
+                        class="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100 transition">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Pre-Functional
+                    </a>
+                    <a href="{{ route('projects.cx-matrix', $project->id) }}" wire:navigate
+                        class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 transition">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                        Cx Test Matrix
+                    </a>
+                    <a href="{{ route('deficiencies.index', ['projectFilter' => $project->id]) }}" wire:navigate
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                        Deficiency Board
+                    </a>
+                    <a href="{{ route('projects.closeout', $project->id) }}" wire:navigate
+                        class="inline-flex items-center gap-2 rounded-lg bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Closeout
+                    </a>
+                </div>
             </div>
 
             {{-- Critical Handover Blockers Banner --}}

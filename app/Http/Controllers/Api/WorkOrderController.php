@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWorkOrderRequest;
 use App\Http\Requests\UpdateWorkOrderRequest;
+use App\Models\WorkOrder;
+use App\Rules\BelongsToCurrentTenant;
 use App\Services\WorkOrder\WorkOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,10 +26,10 @@ final class WorkOrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'status' => ['sometimes', 'string', Rule::in(['open', 'in_progress', 'on_hold', 'completed', 'verified', 'cancelled'])],
-            'priority' => ['sometimes', 'string', Rule::in(['low', 'medium', 'high', 'critical'])],
-            'assigned_to' => ['sometimes', 'integer', 'exists:users,id'],
-            'project_id' => ['sometimes', 'integer', 'exists:projects,id'],
+            'status' => ['sometimes', 'string', Rule::in(['pending', 'open', 'assigned', 'in_progress', 'on_hold', 'completed', 'verified', 'cancelled'])],
+            'priority' => ['sometimes', 'string', Rule::in(['low', 'medium', 'high', 'critical', 'emergency'])],
+            'assigned_to' => ['sometimes', 'integer', new BelongsToCurrentTenant('users')],
+            'project_id' => ['sometimes', 'integer', new BelongsToCurrentTenant('projects')],
             'type' => ['sometimes', 'string'],
             'sla_breached' => ['sometimes', 'boolean'],
             'sort_by' => ['sometimes', 'string', Rule::in(['created_at', 'updated_at', 'sla_deadline', 'priority', 'status'])],
@@ -65,6 +67,8 @@ final class WorkOrderController extends Controller
             ], 404);
         }
 
+        $this->authorize('view', $workOrder);
+
         return response()->json([
             'data' => $workOrder,
             'meta' => ['tenant_id' => $tenantId],
@@ -72,31 +76,16 @@ final class WorkOrderController extends Controller
     }
 
     /**
-     * Create a new work order.
+     * Create a new work order. Uses StoreWorkOrderRequest with tenant-scoped
+     * validation and WorkOrderPolicy::create authorization.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreWorkOrderRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'priority' => ['required', 'string', Rule::in(['low', 'medium', 'high', 'critical'])],
-            'type' => ['required', 'string', Rule::in(['corrective', 'preventive', 'inspection', 'emergency'])],
-            'asset_id' => ['nullable', 'integer', 'exists:assets,id'],
-            'location_id' => ['nullable', 'integer', 'exists:locations,id'],
-            'issue_id' => ['nullable', 'integer', 'exists:issues,id'],
-            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
-            'sla_hours' => ['nullable', 'integer', 'min:1'],
-            'sla_deadline' => ['nullable', 'date', 'after:now'],
-            'estimated_cost' => ['nullable', 'numeric', 'min:0'],
-            'source' => ['nullable', 'string', Rule::in(['manual', 'sensor', 'inspection', 'sync'])],
-        ]);
-
         $tenantId = $request->user()->tenant_id;
         $workOrder = $this->workOrderService->create(
             tenantId: $tenantId,
             createdBy: $request->user()->id,
-            data: $validated,
+            data: $request->validated(),
         );
 
         return response()->json([
@@ -106,27 +95,13 @@ final class WorkOrderController extends Controller
     }
 
     /**
-     * Update an existing work order.
+     * Update an existing work order. Uses UpdateWorkOrderRequest with tenant-scoped
+     * validation and WorkOrderPolicy::update authorization.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateWorkOrderRequest $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => ['sometimes', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
-            'priority' => ['sometimes', 'string', Rule::in(['low', 'medium', 'high', 'critical'])],
-            'type' => ['sometimes', 'string', Rule::in(['corrective', 'preventive', 'inspection', 'emergency'])],
-            'asset_id' => ['nullable', 'integer', 'exists:assets,id'],
-            'location_id' => ['nullable', 'integer', 'exists:locations,id'],
-            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
-            'sla_hours' => ['nullable', 'integer', 'min:1'],
-            'sla_deadline' => ['nullable', 'date'],
-            'estimated_cost' => ['nullable', 'numeric', 'min:0'],
-            'actual_cost' => ['nullable', 'numeric', 'min:0'],
-            'resolution_notes' => ['nullable', 'string', 'max:5000'],
-        ]);
-
         $tenantId = $request->user()->tenant_id;
-        $workOrder = $this->workOrderService->update($tenantId, $id, $validated);
+        $workOrder = $this->workOrderService->update($tenantId, $id, $request->validated());
 
         if (! $workOrder) {
             return response()->json([
@@ -147,11 +122,22 @@ final class WorkOrderController extends Controller
     public function updateStatus(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
-            'status' => ['required', 'string', Rule::in(['open', 'in_progress', 'on_hold', 'completed', 'verified', 'cancelled'])],
+            'status' => ['required', 'string', Rule::in(['open', 'assigned', 'in_progress', 'on_hold', 'completed', 'verified', 'cancelled'])],
             'resolution_notes' => ['nullable', 'string', 'max:5000'],
         ]);
 
         $tenantId = $request->user()->tenant_id;
+        $workOrder = WorkOrder::where('tenant_id', $tenantId)->find($id);
+
+        if (! $workOrder) {
+            return response()->json([
+                'data' => null,
+                'meta' => ['error' => 'Work order not found.'],
+            ], 404);
+        }
+
+        $this->authorize('transitionStatus', $workOrder);
+
         $workOrder = $this->workOrderService->transitionStatus(
             tenantId: $tenantId,
             id: $id,
@@ -162,7 +148,7 @@ final class WorkOrderController extends Controller
         if (! $workOrder) {
             return response()->json([
                 'data' => null,
-                'meta' => ['error' => 'Work order not found or invalid status transition.'],
+                'meta' => ['error' => 'Invalid status transition.'],
             ], 422);
         }
 

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Issue extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'project_id', 'asset_id', 'assigned_to',
         'facilitygrid_issue_id', 'title', 'description',

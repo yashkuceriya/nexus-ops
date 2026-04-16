@@ -52,7 +52,7 @@ class CreateWorkOrderFromIssue implements ShouldQueue
         if (! $issue->isOpen()) {
             Log::info('Issue is not open, skipping work order creation.', [
                 'issue_id' => $issue->id,
-                'status'   => $issue->status,
+                'status' => $issue->status,
             ]);
 
             return;
@@ -61,9 +61,9 @@ class CreateWorkOrderFromIssue implements ShouldQueue
         $workOrder = $this->workOrderService->createFromIssue($issue);
 
         Log::info('Work order created from imported issue.', [
-            'issue_id'      => $issue->id,
+            'issue_id' => $issue->id,
             'work_order_id' => $workOrder->id,
-            'wo_number'     => $workOrder->wo_number,
+            'wo_number' => $workOrder->wo_number,
         ]);
 
         // Evaluate automation rules for the issue_imported trigger
@@ -81,9 +81,9 @@ class CreateWorkOrderFromIssue implements ShouldQueue
     public function failed(IssueImported $event, \Throwable $exception): void
     {
         Log::error('Failed to create work order from imported issue.', [
-            'issue_id'  => $event->issueId,
-            'error'     => $exception->getMessage(),
-            'trace'     => $exception->getTraceAsString(),
+            'issue_id' => $event->issueId,
+            'error' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
         ]);
     }
 }

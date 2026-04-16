@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Location extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'project_id', 'parent_id', 'facilitygrid_location_id',
         'name', 'type', 'code', 'description',

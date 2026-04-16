@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class WorkOrder extends Model
 {
     use BelongsToTenant, HasFactory, SoftDeletes;
+
     protected $fillable = [
         'tenant_id', 'project_id', 'asset_id', 'location_id', 'issue_id',
         'assigned_to', 'created_by', 'vendor_id', 'wo_number', 'title', 'description',
@@ -71,14 +72,14 @@ class WorkOrder extends Model
 
     public static function generateWoNumber(): string
     {
-        $prefix = 'WO-' . now()->format('Ym');
-        $latest = static::where('wo_number', 'like', $prefix . '%')
+        $prefix = 'WO-'.now()->format('Ym');
+        $latest = static::where('wo_number', 'like', $prefix.'%')
             ->orderByDesc('wo_number')
             ->value('wo_number');
 
         $sequence = $latest ? (int) substr($latest, -4) + 1 : 1;
 
-        return $prefix . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        return $prefix.'-'.str_pad($sequence, 4, '0', STR_PAD_LEFT);
     }
 
     public function isSlaBreached(): bool

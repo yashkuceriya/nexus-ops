@@ -39,14 +39,14 @@ final class SensorIngestService
         return DB::transaction(function () use ($sensor, $value, $recordedAt, $isAnomaly, $anomalyType): SensorReading {
             $reading = SensorReading::create([
                 'sensor_source_id' => $sensor->id,
-                'value'            => $value,
-                'is_anomaly'       => $isAnomaly,
-                'anomaly_type'     => $anomalyType,
-                'recorded_at'      => $recordedAt,
+                'value' => $value,
+                'is_anomaly' => $isAnomaly,
+                'anomaly_type' => $anomalyType,
+                'recorded_at' => $recordedAt,
             ]);
 
             $sensor->update([
-                'last_value'      => $value,
+                'last_value' => $value,
                 'last_reading_at' => $recordedAt,
             ]);
 
@@ -74,7 +74,6 @@ final class SensorIngestService
     /**
      * Ingest a batch of sensor readings.
      *
-     * @param  int  $tenantId
      * @param  array<int, array{sensor_source_id: int, value: float, recorded_at?: string}>  $readings
      * @return array{ingested: int, anomalies: int, errors: array<int, string>}
      */
@@ -119,14 +118,14 @@ final class SensorIngestService
 
                 SensorReading::create([
                     'sensor_source_id' => $sensorId,
-                    'value'            => $value,
-                    'is_anomaly'       => $isAnomaly,
-                    'anomaly_type'     => $anomalyType,
-                    'recorded_at'      => $recordedAt,
+                    'value' => $value,
+                    'is_anomaly' => $isAnomaly,
+                    'anomaly_type' => $anomalyType,
+                    'recorded_at' => $recordedAt,
                 ]);
 
                 $sensor->update([
-                    'last_value'      => $value,
+                    'last_value' => $value,
                     'last_reading_at' => $recordedAt,
                 ]);
 
@@ -158,9 +157,9 @@ final class SensorIngestService
         }
 
         return [
-            'ingested'  => $ingested,
+            'ingested' => $ingested,
             'anomalies' => $anomalies,
-            'errors'    => $errors,
+            'errors' => $errors,
         ];
     }
 
@@ -176,7 +175,12 @@ final class SensorIngestService
     {
         $cutoff = Carbon::now()->subMinutes(self::DEBOUNCE_MINUTES);
 
-        return WorkOrder::where('source', 'sensor_alert')
+        // WorkOrderService::createFromSensorAlert creates WOs with source='sensor'.
+        // The previous value 'sensor_alert' meant debounce never matched, which
+        // could flood the tenant with duplicate emergency work orders on
+        // repeated threshold breaches.
+        return WorkOrder::where('tenant_id', $sensor->tenant_id)
+            ->where('source', 'sensor')
             ->where('asset_id', $sensor->asset_id)
             ->where('title', 'like', "Sensor Alert: {$sensor->name}%")
             ->where('created_at', '>=', $cutoff)

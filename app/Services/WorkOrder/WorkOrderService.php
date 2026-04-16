@@ -38,24 +38,24 @@ final class WorkOrderService
                 sourceEntity: 'issue',
                 sourceStatus: $issue->status,
                 targetEntity: 'work_order',
-            ) ?? 'open';
+            ) ?? 'pending';
 
             $priority = $issue->priority ?? 'medium';
             $slaHours = Priority::tryFrom($priority)?->slaHours() ?? Priority::Medium->slaHours();
 
             $workOrder = WorkOrder::create([
-                'tenant_id'    => $issue->tenant_id,
-                'project_id'   => $issue->project_id,
-                'asset_id'     => $issue->asset_id,
-                'issue_id'     => $issue->id,
-                'wo_number'    => WorkOrder::generateWoNumber(),
-                'title'        => $issue->title,
-                'description'  => $issue->description,
-                'status'       => $mappedStatus,
-                'priority'     => $priority,
-                'type'         => 'corrective',
-                'source'       => 'facilitygrid',
-                'sla_hours'    => $slaHours,
+                'tenant_id' => $issue->tenant_id,
+                'project_id' => $issue->project_id,
+                'asset_id' => $issue->asset_id,
+                'issue_id' => $issue->id,
+                'wo_number' => WorkOrder::generateWoNumber(),
+                'title' => $issue->title,
+                'description' => $issue->description,
+                'status' => $mappedStatus,
+                'priority' => $priority,
+                'type' => 'corrective',
+                'source' => 'facilitygrid',
+                'sla_hours' => $slaHours,
                 'sla_deadline' => Carbon::now()->addHours($slaHours),
             ]);
 
@@ -63,9 +63,9 @@ final class WorkOrderService
                 action: 'work_order_created',
                 model: $workOrder,
                 newValues: [
-                    'source'    => 'issue',
-                    'issue_id'  => $issue->id,
-                    'priority'  => $priority,
+                    'source' => 'issue',
+                    'issue_id' => $issue->id,
+                    'priority' => $priority,
                     'sla_hours' => $slaHours,
                 ],
                 source: 'system',
@@ -88,12 +88,12 @@ final class WorkOrderService
             $slaHours = Priority::Emergency->slaHours();
 
             $workOrder = WorkOrder::create([
-                'tenant_id'    => $sensor->tenant_id,
-                'asset_id'     => $sensor->asset_id,
-                'location_id'  => $sensor->location_id,
-                'wo_number'    => WorkOrder::generateWoNumber(),
-                'title'        => "Sensor Alert: {$sensor->name} - {$anomalyType}",
-                'description'  => sprintf(
+                'tenant_id' => $sensor->tenant_id,
+                'asset_id' => $sensor->asset_id,
+                'location_id' => $sensor->location_id,
+                'wo_number' => WorkOrder::generateWoNumber(),
+                'title' => "Sensor Alert: {$sensor->name} - {$anomalyType}",
+                'description' => sprintf(
                     'Automated alert: Sensor "%s" (type: %s) recorded value %.2f %s, which is %s. Thresholds: min=%s, max=%s.',
                     $sensor->name,
                     $sensor->sensor_type,
@@ -103,11 +103,11 @@ final class WorkOrderService
                     $sensor->threshold_min ?? 'N/A',
                     $sensor->threshold_max ?? 'N/A',
                 ),
-                'status'       => 'open',
-                'priority'     => $priority,
-                'type'         => 'emergency',
-                'source'       => 'sensor',
-                'sla_hours'    => $slaHours,
+                'status' => 'pending',
+                'priority' => $priority,
+                'type' => 'emergency',
+                'source' => 'sensor',
+                'sla_hours' => $slaHours,
                 'sla_deadline' => Carbon::now()->addHours($slaHours),
             ]);
 
@@ -115,12 +115,12 @@ final class WorkOrderService
                 action: 'work_order_created',
                 model: $workOrder,
                 newValues: [
-                    'source'       => 'sensor',
-                    'sensor_id'    => $sensor->id,
+                    'source' => 'sensor',
+                    'sensor_id' => $sensor->id,
                     'sensor_value' => $value,
                     'anomaly_type' => $anomalyType,
-                    'priority'     => $priority,
-                    'sla_hours'    => $slaHours,
+                    'priority' => $priority,
+                    'sla_hours' => $slaHours,
                 ],
                 source: 'system',
             );
@@ -141,16 +141,16 @@ final class WorkOrderService
             $slaHours = Priority::Medium->slaHours();
 
             $workOrder = WorkOrder::create([
-                'tenant_id'    => $schedule->tenant_id,
-                'asset_id'     => $schedule->asset_id,
-                'wo_number'    => WorkOrder::generateWoNumber(),
-                'title'        => "PM: {$schedule->name}",
-                'description'  => $schedule->description,
-                'status'       => 'open',
-                'priority'     => $priority,
-                'type'         => 'preventive',
-                'source'       => 'schedule',
-                'sla_hours'    => $slaHours,
+                'tenant_id' => $schedule->tenant_id,
+                'asset_id' => $schedule->asset_id,
+                'wo_number' => WorkOrder::generateWoNumber(),
+                'title' => "PM: {$schedule->name}",
+                'description' => $schedule->description,
+                'status' => 'pending',
+                'priority' => $priority,
+                'type' => 'preventive',
+                'source' => 'schedule',
+                'sla_hours' => $slaHours,
                 'sla_deadline' => Carbon::now()->addHours($slaHours),
             ]);
 
@@ -158,11 +158,11 @@ final class WorkOrderService
                 action: 'work_order_created',
                 model: $workOrder,
                 newValues: [
-                    'source'      => 'schedule',
+                    'source' => 'schedule',
                     'schedule_id' => $schedule->id,
-                    'frequency'   => $schedule->frequency,
-                    'priority'    => $priority,
-                    'sla_hours'   => $slaHours,
+                    'frequency' => $schedule->frequency,
+                    'priority' => $priority,
+                    'sla_hours' => $slaHours,
                 ],
                 source: 'system',
             );
@@ -258,8 +258,8 @@ final class WorkOrderService
                 'assigned_to' => $user->id,
             ];
 
-            // Auto-transition to assigned if currently open
-            if ($workOrder->status === 'open') {
+            // Auto-transition to assigned if currently pending
+            if ($workOrder->status === 'pending') {
                 $updates['status'] = 'assigned';
             }
 
@@ -373,10 +373,10 @@ final class WorkOrderService
             action: 'work_order_created',
             model: $workOrder,
             newValues: [
-                'source'     => 'manual',
+                'source' => 'manual',
                 'created_by' => $createdBy,
-                'priority'   => $priority,
-                'sla_hours'  => $slaHours,
+                'priority' => $priority,
+                'sla_hours' => $slaHours,
             ],
         );
 
@@ -445,5 +445,4 @@ final class WorkOrderService
         Cache::forget("dashboard_kpis_{$tenantId}");
         Cache::forget("dashboard_projects_{$tenantId}");
     }
-
 }

@@ -2,12 +2,16 @@
 
 namespace App\Livewire;
 
+use App\Models\ChecklistCompletion;
+use App\Models\ChecklistTemplate;
 use App\Models\Issue;
 use App\Models\MaintenanceSchedule;
 use App\Models\Project;
 use App\Models\SensorSource;
+use App\Models\TestExecution;
 use App\Models\WorkOrder;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class PortfolioDashboard extends Component
@@ -80,7 +84,98 @@ class PortfolioDashboard extends Component
     {
         Cache::forget("dashboard_kpis_{$this->tenantId}");
         Cache::forget("dashboard_projects_{$this->tenantId}");
+        Cache::forget("dashboard_fpt_{$this->tenantId}");
+        Cache::forget("dashboard_pfc_{$this->tenantId}");
         $this->updateLastUpdatedTimestamp();
+    }
+
+    /**
+     * Roll-up of functional performance testing across every project in this
+     * tenant. Rendered as a dashboard widget so commissioning directors can
+     * spot trends (e.g. a dip in witness coverage) without drilling into
+     * each project.
+     *
+     * @return array<string, int|float>
+     */
+    #[Computed]
+    public function commissioningSnapshot(): array
+    {
+        return Cache::remember(
+            "dashboard_fpt_{$this->tenantId}",
+            now()->addMinutes(5),
+            function (): array {
+                $base = TestExecution::query()->where('tenant_id', $this->tenantId);
+
+                $total = (clone $base)->count();
+                $passed = (clone $base)->where('status', TestExecution::STATUS_PASSED)->count();
+                $failed = (clone $base)->where('status', TestExecution::STATUS_FAILED)->count();
+                $inFlight = (clone $base)->whereIn('status', [
+                    TestExecution::STATUS_IN_PROGRESS,
+                    TestExecution::STATUS_ON_HOLD,
+                ])->count();
+                $witnessed = (clone $base)->whereNotNull('witness_signed_at')->count();
+
+                $complete = $passed + $failed;
+                $passRate = $complete > 0 ? round(($passed / $complete) * 100, 1) : 0.0;
+                $witnessPct = $total > 0 ? round(($witnessed / $total) * 100, 1) : 0.0;
+
+                return [
+                    'total' => $total,
+                    'passed' => $passed,
+                    'failed' => $failed,
+                    'in_flight' => $inFlight,
+                    'witnessed' => $witnessed,
+                    'pass_rate' => $passRate,
+                    'witness_pct' => $witnessPct,
+                ];
+            }
+        );
+    }
+
+    /**
+     * Portfolio-wide Pre-Functional Checklist snapshot. Sits next to the
+     * FPT widget on the dashboard so the team can see the full L1→L5
+     * commissioning picture at a glance.
+     *
+     * @return array<string, int|float>
+     */
+    #[Computed]
+    public function pfcSnapshot(): array
+    {
+        return Cache::remember(
+            "dashboard_pfc_{$this->tenantId}",
+            now()->addMinutes(5),
+            function (): array {
+                $base = ChecklistCompletion::query()
+                    ->where('tenant_id', $this->tenantId)
+                    ->where('type', ChecklistTemplate::TYPE_PFC);
+
+                $total = (clone $base)->count();
+                $completed = (clone $base)->where('status', ChecklistCompletion::STATUS_COMPLETED)->count();
+                $failed = (clone $base)->where('status', ChecklistCompletion::STATUS_FAILED)->count();
+                $inProgress = (clone $base)->where('status', ChecklistCompletion::STATUS_IN_PROGRESS)->count();
+
+                $done = $completed + $failed;
+                $cleanRate = $done > 0 ? round(($completed / $done) * 100, 1) : 0.0;
+                $completionRate = $total > 0 ? round(($done / $total) * 100, 1) : 0.0;
+
+                $itemPassed = (int) (clone $base)->sum('pass_count');
+                $itemFailed = (int) (clone $base)->sum('fail_count');
+                $itemTotal = $itemPassed + $itemFailed + (int) (clone $base)->sum('na_count');
+
+                return [
+                    'total' => $total,
+                    'completed' => $completed,
+                    'failed' => $failed,
+                    'in_progress' => $inProgress,
+                    'clean_rate' => $cleanRate,
+                    'completion_rate' => $completionRate,
+                    'item_total' => $itemTotal,
+                    'item_passed' => $itemPassed,
+                    'item_failed' => $itemFailed,
+                ];
+            }
+        );
     }
 
     public function getRecentWorkOrdersProperty()

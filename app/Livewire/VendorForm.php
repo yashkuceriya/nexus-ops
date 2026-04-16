@@ -10,16 +10,27 @@ class VendorForm extends Component
     public ?int $vendorId = null;
 
     public string $name = '';
+
     public string $contact_name = '';
+
     public string $email = '';
+
     public string $phone = '';
+
     public string $address = '';
+
     public string $city = '';
+
     public string $state = '';
+
     public string $zip = '';
+
     public array $trade_specialties = [];
+
     public string $license_number = '';
+
     public ?string $insurance_expiry = null;
+
     public string $notes = '';
 
     public const AVAILABLE_TRADES = [

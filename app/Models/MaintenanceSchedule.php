@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MaintenanceSchedule extends Model
 {
     use BelongsToTenant;
+
     protected $fillable = [
         'tenant_id', 'asset_id', 'name', 'description',
         'frequency', 'trigger_type', 'runtime_hours_interval',

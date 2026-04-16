@@ -11,11 +11,15 @@ class ChecklistForm extends Component
     public int $workOrderId;
 
     public ?int $selectedTemplateId = null;
+
     public ?int $activeCompletionId = null;
 
     public array $steps = [];
+
     public array $responses = [];
+
     public int $currentStep = 0;
+
     public int $totalSteps = 0;
 
     public function mount(int $workOrderId): void

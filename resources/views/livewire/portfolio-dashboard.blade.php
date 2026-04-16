@@ -198,6 +198,82 @@
         </div>
     </div>
 
+    {{-- Commissioning (FPT) Snapshot --}}
+    @php
+        $cx = $this->commissioningSnapshot;
+        $rate = (float) ($cx['pass_rate'] ?? 0);
+        $rateColor = $rate >= 95 ? 'emerald' : ($rate >= 80 ? 'amber' : 'red');
+        $metrics = $cx['total'] > 0 ? [
+            ['label' => 'Executions', 'value' => $cx['total'], 'tone' => 'text-gray-900 dark:text-zinc-100', 'sub' => $cx['passed'].' passed · '.$cx['failed'].' failed'],
+            ['label' => 'Pass Rate', 'value' => number_format($rate, 1).'%', 'tone' => 'text-'.$rateColor.'-600', 'sub' => 'executions'],
+            ['label' => 'In-flight', 'value' => $cx['in_flight'], 'tone' => 'text-blue-600', 'sub' => 'open runs'],
+            ['label' => 'Witnessed', 'value' => $cx['witnessed'], 'tone' => 'text-indigo-600', 'sub' => number_format((float) $cx['witness_pct'], 0).'% coverage'],
+            ['label' => 'Deficiencies', 'value' => $cx['failed'], 'tone' => 'text-red-600', 'sub' => 'auto-opened issues'],
+        ] : [];
+    @endphp
+    @if($cx['total'] > 0)
+        <div class="mb-8 overflow-hidden rounded-xl border border-gray-100 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm">
+            <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-zinc-700">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900 dark:text-zinc-100">Commissioning Performance</h2>
+                    <p class="text-xs text-gray-500 dark:text-zinc-400">Portfolio-wide FPT execution + witness coverage</p>
+                </div>
+                <a href="{{ route('fpt.executions.index') }}" wire:navigate class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">View executions →</a>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5">
+                @foreach($metrics as $m)
+                    <div class="px-5 py-4 border-r border-gray-100 dark:border-zinc-700 last:border-r-0">
+                        <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">{{ $m['label'] }}</div>
+                        <div class="mt-1 text-2xl font-extrabold tabular-nums {{ $m['tone'] }}">{{ $m['value'] }}</div>
+                        <div class="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">{{ $m['sub'] }}</div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="px-5 py-3 border-t border-gray-100 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900/40">
+                <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-zinc-400">
+                    <span class="font-semibold">Pass rate</span>
+                    <div class="h-1.5 flex-1 max-w-lg overflow-hidden rounded-full bg-gray-200 dark:bg-zinc-700">
+                        <div class="h-full bg-{{ $rateColor }}-500" style="width: {{ $rate }}%;"></div>
+                    </div>
+                    <span class="tabular-nums font-semibold text-gray-800 dark:text-zinc-200">{{ number_format($rate, 1) }}%</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Pre-Functional Checklist Snapshot --}}
+    @php
+        $pfc = $this->pfcSnapshot;
+        $cleanRate = (float) ($pfc['clean_rate'] ?? 0);
+        $cleanColor = $cleanRate >= 95 ? 'emerald' : ($cleanRate >= 80 ? 'amber' : 'red');
+    @endphp
+    @if($pfc['total'] > 0)
+        <div class="mb-8 overflow-hidden rounded-xl border border-gray-100 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm">
+            <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-zinc-700">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900 dark:text-zinc-100">Pre-Functional Readiness</h2>
+                    <p class="text-xs text-gray-500 dark:text-zinc-400">L1 / L2 checklists — prerequisite to functional testing</p>
+                </div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-600">PFC programme</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5">
+                @foreach([
+                    ['label' => 'Completions', 'value' => $pfc['total'], 'tone' => 'text-gray-900 dark:text-zinc-100', 'sub' => $pfc['completed'].' clean · '.$pfc['failed'].' w/ gaps'],
+                    ['label' => 'Clean Rate', 'value' => number_format($cleanRate, 1).'%', 'tone' => 'text-'.$cleanColor.'-600', 'sub' => 'of completed'],
+                    ['label' => 'In-flight', 'value' => $pfc['in_progress'], 'tone' => 'text-blue-600', 'sub' => 'open checklists'],
+                    ['label' => 'Items Passed', 'value' => $pfc['item_passed'], 'tone' => 'text-emerald-600', 'sub' => 'of '.$pfc['item_total']],
+                    ['label' => 'Items Failed', 'value' => $pfc['item_failed'], 'tone' => 'text-red-600', 'sub' => 'deficiencies'],
+                ] as $m)
+                    <div class="px-5 py-4 border-r border-gray-100 dark:border-zinc-700 last:border-r-0">
+                        <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">{{ $m['label'] }}</div>
+                        <div class="mt-1 text-2xl font-extrabold tabular-nums {{ $m['tone'] }}">{{ $m['value'] }}</div>
+                        <div class="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">{{ $m['sub'] }}</div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
     {{-- AI Insights Panel --}}
     @livewire('ai-insights-panel')
 

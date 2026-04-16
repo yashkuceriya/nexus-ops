@@ -18,9 +18,9 @@ final class IssueImported
     use SerializesModels;
 
     public function __construct(
-        public readonly int    $tenantId,
-        public readonly int    $issueId,
+        public readonly int $tenantId,
+        public readonly int $issueId,
         public readonly string $facilityGridIssueId,
-        public readonly bool   $wasCreated,
+        public readonly bool $wasCreated,
     ) {}
 }

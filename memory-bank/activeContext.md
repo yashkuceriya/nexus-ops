@@ -1,7 +1,17 @@
 # Active Context — NexusOps
 
 ## Current State
-All major features are implemented and working. The app has 22 pages, 84 PHP files, 30 Livewire components, and 29 passing tests.
+All major features are implemented and working. The app has 129 PHP files, 43 Livewire components, and 137 passing tests (450 assertions, 1 skipped).
+
+## v3–v5 Commissioning Suite (added after initial commit)
+- **FPT (Functional Performance Testing)**: TestScript/TestStep/TestExecution/TestStepResult models, auto-evaluation (tolerance/GTE/between), witness signatures with tamper detection, parent-child retest chains, PDF reports. Routes under `/fpt/*`. Livewire: TestScriptLibrary, TestScriptEditor, TestExecutionRunner, CxTestMatrix.
+- **PFC (Pre-Functional Checklist)**: Extends ChecklistTemplate/Completion, multi-session resume, auto-opens deficiency Issues on failed items. Livewire: PreFunctionalChecklistBoard.
+- **Turnover Packages**: Full payload (FPT scorecard, PFC clean rate, closeout status), signed public URLs via PublicTurnoverController, PDF with asset inventory + QR codes. Livewire: TurnoverConsole.
+- **Asset Signoff**: 4-state workflow (pending/approved/rejected/withdrawn), signature hashing, role-based approvers.
+- **Commissioning Analytics + Deficiency Board**: 6-month trends, aging buckets, kanban with advance/rewind/claim, top-failing scripts.
+- **Lessons Learned + Closeout Tracker**: 7-category knowledge base linked to Issues/WorkOrders.
+- **Weekly CX Digest**: `cx:weekly-digest` command + WeeklyCxDigestNotification, dry-run + per-tenant filtering.
+- **API tenant guard**: new `EnsureTenantActiveApi` middleware (`tenant.active.api`) applied to all authenticated v1 API routes.
 
 ## Recently Completed (this session)
 1. Full project scaffold with 21 models, 26 migrations, comprehensive seeder
@@ -35,7 +45,7 @@ All major features are implemented and working. The app has 22 pages, 84 PHP fil
 
 ## What Works
 - All 22 pages return HTTP 200
-- 29 tests pass (56 assertions)
+- 137 tests pass (450 assertions, 1 skipped)
 - Zero dead links in the app (16 on landing page are marketing placeholders)
 - Zero forbidden references (no "Facility Grid" or "FG" in user-visible text)
 - Seeder creates realistic demo data

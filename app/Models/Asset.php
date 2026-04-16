@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Asset extends Model
 {
     use BelongsToTenant, HasFactory, SoftDeletes;
+
     protected $fillable = [
         'tenant_id', 'project_id', 'location_id', 'parent_asset_id', 'facilitygrid_asset_id',
         'name', 'asset_tag', 'qr_code', 'category', 'system_type',
@@ -108,6 +109,11 @@ class Asset extends Model
         return $this->hasMany(CloseoutRequirement::class);
     }
 
+    public function testExecutions(): HasMany
+    {
+        return $this->hasMany(TestExecution::class);
+    }
+
     public function isWarrantyActive(): bool
     {
         return $this->warranty_expiry && $this->warranty_expiry->isFuture();
@@ -115,6 +121,6 @@ class Asset extends Model
 
     public function generateQrCode(): string
     {
-        return 'FGB-' . str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        return 'FGB-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
     }
 }

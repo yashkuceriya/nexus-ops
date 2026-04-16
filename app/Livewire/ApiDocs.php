@@ -438,7 +438,7 @@ class ApiDocs extends Component
     {
         foreach ($this->endpoints as $group => $endpoints) {
             foreach ($endpoints as $endpoint) {
-                $key = $endpoint['method'] . ' ' . $endpoint['path'];
+                $key = $endpoint['method'].' '.$endpoint['path'];
                 if ($key === $this->selectedEndpoint) {
                     return $endpoint;
                 }
@@ -450,7 +450,7 @@ class ApiDocs extends Component
 
     public function syntaxHighlight(string $json, bool $preEscaped = false): string
     {
-        if (!$preEscaped) {
+        if (! $preEscaped) {
             $json = e($json);
         }
 

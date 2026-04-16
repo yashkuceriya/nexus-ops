@@ -16,16 +16,16 @@ use Throwable;
 final class FacilityGridException extends RuntimeException
 {
     /**
-     * @param string      $errorType  A URI or short token identifying the error category
-     *                                (e.g. "rate_limited", "authentication_error", "not_found").
-     * @param int         $status     The originating HTTP status code (0 when not HTTP-related).
-     * @param string      $detail     A human-readable explanation of the specific occurrence.
-     * @param string|null $instance   Optional URI reference identifying the specific occurrence.
+     * @param  string  $errorType  A URI or short token identifying the error category
+     *                             (e.g. "rate_limited", "authentication_error", "not_found").
+     * @param  int  $status  The originating HTTP status code (0 when not HTTP-related).
+     * @param  string  $detail  A human-readable explanation of the specific occurrence.
+     * @param  string|null  $instance  Optional URI reference identifying the specific occurrence.
      */
     public function __construct(
-        public readonly string  $errorType,
-        public readonly int     $status,
-        public readonly string  $detail,
+        public readonly string $errorType,
+        public readonly int $status,
+        public readonly string $detail,
         public readonly ?string $instance = null,
         ?Throwable $previous = null,
     ) {
@@ -129,10 +129,10 @@ final class FacilityGridException extends RuntimeException
     public function toProblemDetails(): array
     {
         return [
-            'type'     => $this->errorType,
-            'status'   => $this->status,
-            'title'    => $this->humanTitle(),
-            'detail'   => $this->detail,
+            'type' => $this->errorType,
+            'status' => $this->status,
+            'title' => $this->humanTitle(),
+            'detail' => $this->detail,
             'instance' => $this->instance,
         ];
     }
@@ -141,14 +141,14 @@ final class FacilityGridException extends RuntimeException
     {
         return match ($this->errorType) {
             'authentication_error' => 'Authentication Error',
-            'forbidden'            => 'Forbidden',
-            'not_found'            => 'Not Found',
-            'rate_limited'         => 'Rate Limited',
-            'server_error'         => 'Server Error',
-            'timeout'              => 'Gateway Timeout',
-            'connection_failed'    => 'Connection Failed',
-            'retries_exhausted'    => 'Retries Exhausted',
-            default                => 'FacilityGrid API Error',
+            'forbidden' => 'Forbidden',
+            'not_found' => 'Not Found',
+            'rate_limited' => 'Rate Limited',
+            'server_error' => 'Server Error',
+            'timeout' => 'Gateway Timeout',
+            'connection_failed' => 'Connection Failed',
+            'retries_exhausted' => 'Retries Exhausted',
+            default => 'FacilityGrid API Error',
         };
     }
 }

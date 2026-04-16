@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
+use App\Rules\BelongsToCurrentTenant;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,7 @@ final class AssetController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'project_id' => ['sometimes', 'integer', 'exists:projects,id'],
+            'project_id' => ['sometimes', 'integer', new BelongsToCurrentTenant('projects')],
             'system_type' => ['sometimes', 'string', 'max:100'],
             'condition' => ['sometimes', 'string', Rule::in(['excellent', 'good', 'fair', 'poor', 'critical'])],
             'category' => ['sometimes', 'string', 'max:100'],
@@ -90,6 +91,8 @@ final class AssetController extends Controller
                 'meta' => ['error' => 'Asset not found.'],
             ], 404);
         }
+
+        $this->authorize('view', $asset);
 
         return response()->json([
             'data' => $asset,

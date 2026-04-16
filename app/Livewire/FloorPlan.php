@@ -5,13 +5,14 @@ namespace App\Livewire;
 use App\Models\Asset;
 use App\Models\Location;
 use App\Models\Project;
-use App\Models\SensorReading;
 use Livewire\Component;
 
 class FloorPlan extends Component
 {
     public ?int $selectedAssetId = null;
+
     public ?int $selectedFloor = null;
+
     public array $floors = [];
 
     public function mount(): void
@@ -35,11 +36,11 @@ class FloorPlan extends Component
     public function getAssetsProperty()
     {
         $query = Asset::with(['location', 'sensorSources.readings' => function ($q) {
-                $q->where('recorded_at', '>=', now()->subHour())
-                    ->orderByDesc('recorded_at');
-            }, 'workOrders' => function ($q) {
-                $q->whereIn('status', ['open', 'in_progress']);
-            }]);
+            $q->where('recorded_at', '>=', now()->subHour())
+                ->orderByDesc('recorded_at');
+        }, 'workOrders' => function ($q) {
+            $q->whereIn('status', ['open', 'in_progress']);
+        }]);
 
         if ($this->selectedFloor) {
             $query->where('location_id', $this->selectedFloor);
@@ -97,7 +98,7 @@ class FloorPlan extends Component
                 'color' => $color,
                 'status' => $status,
                 'condition' => ucfirst($asset->condition ?? 'Unknown'),
-                'last_reading' => $lastReading ? number_format($lastReading->value, 1) . ' ' . ($lastReading->sensorSource->unit ?? '') : 'N/A',
+                'last_reading' => $lastReading ? number_format($lastReading->value, 1).' '.($lastReading->sensorSource->unit ?? '') : 'N/A',
                 'open_wo_count' => $asset->workOrders->count(),
                 'system_type' => $asset->system_type ?? 'Unknown',
             ];

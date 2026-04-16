@@ -175,7 +175,7 @@ class InsightsGenerator
         } elseif ($currentBreached > 0) {
             $insights[] = [
                 'icon' => 'clock',
-                'insight_text' => "{$currentBreached} SLA breach(es) recorded this month with a " . round($currentRate) . "% breach rate. Monitor response times closely.",
+                'insight_text' => "{$currentBreached} SLA breach(es) recorded this month with a ".round($currentRate).'% breach rate. Monitor response times closely.',
                 'confidence' => 75,
                 'category' => 'sla',
                 'action_label' => 'View SLA Report',

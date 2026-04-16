@@ -7,14 +7,16 @@ use App\Models\MaintenanceSchedule;
 use App\Models\Project;
 use App\Models\WorkOrder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ReportsPage extends Component
 {
     public int $tenantId;
+
     public string $dateFrom;
+
     public string $dateTo;
+
     public string $projectFilter = '';
 
     public function mount(): void
@@ -26,19 +28,24 @@ class ReportsPage extends Component
 
     public function getProjectsProperty()
     {
-        return Project::orderBy('name')
+        return Project::where('tenant_id', $this->tenantId)
+            ->orderBy('name')
             ->get(['id', 'name']);
     }
 
     public function getKpiSummaryProperty(): array
     {
-        $query = WorkOrder::whereBetween('created_at', [$this->dateFrom, Carbon::parse($this->dateTo)->endOfDay()])
+        $query = WorkOrder::where('tenant_id', $this->tenantId)
+            ->whereBetween('created_at', [$this->dateFrom, Carbon::parse($this->dateTo)->endOfDay()])
             ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter));
 
         $totalWo = (clone $query)->count();
 
+        // Fetch only the columns we need to average in PHP to avoid loading
+        // full Eloquent models just for an MTTR calculation.
         $completed = (clone $query)->whereNotNull('completed_at')
             ->whereNotNull('started_at')
+            ->select(['id', 'started_at', 'completed_at'])
             ->get();
 
         $avgMttr = $completed->count() > 0
@@ -47,8 +54,11 @@ class ReportsPage extends Component
 
         $totalCost = (clone $query)->sum('actual_cost') ?: 0;
 
-        $totalPm = MaintenanceSchedule::where('is_active', true)->count();
-        $completedPm = MaintenanceSchedule::where('is_active', true)
+        $totalPm = MaintenanceSchedule::where('tenant_id', $this->tenantId)
+            ->where('is_active', true)
+            ->count();
+        $completedPm = MaintenanceSchedule::where('tenant_id', $this->tenantId)
+            ->where('is_active', true)
             ->whereNotNull('last_completed_date')
             ->count();
         $pmCompliance = $totalPm > 0 ? round(($completedPm / $totalPm) * 100, 1) : 100;
@@ -68,13 +78,20 @@ class ReportsPage extends Component
             $months->push(now()->subMonths($i)->format('Y-m'));
         }
 
-        $query = WorkOrder::where('created_at', '>=', now()->subMonths(12)->startOfMonth())
-            ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter));
-
-        $data = (clone $query)
-            ->selectRaw("strftime('%Y-%m', created_at) as month, type, COUNT(*) as count")
-            ->groupBy('month', 'type')
+        // Group in PHP rather than using strftime() (SQLite-only) so the same
+        // report works across SQLite (dev/test), MySQL (prod), and Postgres.
+        $rows = WorkOrder::where('tenant_id', $this->tenantId)
+            ->where('created_at', '>=', now()->subMonths(12)->startOfMonth())
+            ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
+            ->select(['id', 'type', 'created_at'])
             ->get();
+
+        $buckets = [];
+        foreach ($rows as $row) {
+            $month = $row->created_at->format('Y-m');
+            $type = $row->type;
+            $buckets[$month][$type] = ($buckets[$month][$type] ?? 0) + 1;
+        }
 
         $corrective = [];
         $preventive = [];
@@ -82,10 +99,10 @@ class ReportsPage extends Component
         $labels = [];
 
         foreach ($months as $month) {
-            $labels[] = Carbon::parse($month . '-01')->format('M Y');
-            $corrective[] = $data->where('month', $month)->where('type', 'corrective')->first()?->count ?? 0;
-            $preventive[] = $data->where('month', $month)->where('type', 'preventive')->first()?->count ?? 0;
-            $inspection[] = $data->where('month', $month)->where('type', 'inspection')->first()?->count ?? 0;
+            $labels[] = Carbon::parse($month.'-01')->format('M Y');
+            $corrective[] = $buckets[$month]['corrective'] ?? 0;
+            $preventive[] = $buckets[$month]['preventive'] ?? 0;
+            $inspection[] = $buckets[$month]['inspection'] ?? 0;
         }
 
         return [
@@ -98,7 +115,8 @@ class ReportsPage extends Component
 
     public function getWorkOrderAgingProperty(): array
     {
-        $openWos = WorkOrder::whereNotIn('status', ['completed', 'verified', 'cancelled'])
+        $openWos = WorkOrder::where('tenant_id', $this->tenantId)
+            ->whereNotIn('status', ['completed', 'verified', 'cancelled'])
             ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
             ->select(['id', 'created_at'])
             ->get();
@@ -150,7 +168,8 @@ class ReportsPage extends Component
         }
 
         // Load all active PM schedules once instead of 24 queries (2 per month)
-        $allSchedules = MaintenanceSchedule::where('is_active', true)
+        $allSchedules = MaintenanceSchedule::where('tenant_id', $this->tenantId)
+            ->where('is_active', true)
             ->select(['id', 'created_at', 'last_completed_date'])
             ->get();
 
@@ -188,7 +207,8 @@ class ReportsPage extends Component
         }
 
         // Load all WOs with SLA data once instead of 24 queries (2 per month)
-        $slaWorkOrders = WorkOrder::whereNotNull('sla_deadline')
+        $slaWorkOrders = WorkOrder::where('tenant_id', $this->tenantId)
+            ->whereNotNull('sla_deadline')
             ->where('created_at', '>=', now()->subMonths(12)->startOfMonth())
             ->when($this->projectFilter, fn ($q) => $q->where('project_id', $this->projectFilter))
             ->select(['id', 'created_at', 'sla_deadline', 'sla_breached'])
