@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Asset;
 use App\Models\AutomationRule;
+use App\Models\ChecklistTemplate;
 use App\Models\CloseoutRequirement;
 use App\Models\Issue;
 use App\Models\Location;
@@ -13,7 +14,6 @@ use App\Models\SensorSource;
 use App\Models\StatusMapping;
 use App\Models\Tenant;
 use App\Models\User;
-use App\Models\ChecklistTemplate;
 use App\Models\Vendor;
 use App\Models\VendorContract;
 use App\Models\WorkOrder;
@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(FptScriptSeeder::class);
+
         $tenant = Tenant::create([
             'name' => 'Acme Facilities Corp',
             'slug' => 'acme-facilities',
@@ -183,15 +185,15 @@ class DatabaseSeeder extends Seeder
                 'tenant_id' => $tenant->id,
                 'project_id' => $dcProject->id,
                 'location_id' => $loc->id,
-                'facilitygrid_asset_id' => 'FG-AST-' . (2000 + $i),
+                'facilitygrid_asset_id' => 'FG-AST-'.(2000 + $i),
                 'name' => $name,
                 'asset_tag' => strtoupper($tag),
-                'qr_code' => 'FGB-' . str_pad($i + 1, 8, '0', STR_PAD_LEFT),
+                'qr_code' => 'FGB-'.str_pad($i + 1, 8, '0', STR_PAD_LEFT),
                 'category' => $tag,
                 'system_type' => $system,
                 'manufacturer' => $mfr,
                 'model_number' => $model,
-                'serial_number' => 'SN-' . Str::random(10),
+                'serial_number' => 'SN-'.Str::random(10),
                 'condition' => $cond,
                 'commissioning_status' => $cxStatus,
                 'install_date' => now()->subMonths(6),
@@ -226,11 +228,11 @@ class DatabaseSeeder extends Seeder
                 'parent_asset_id' => $parentAsset->id,
                 'name' => $childName,
                 'asset_tag' => strtoupper(str_replace(['-', ' '], '_', $childCategory)),
-                'qr_code' => 'NXO-' . str_pad(100 + $ci, 8, '0', STR_PAD_LEFT),
+                'qr_code' => 'NXO-'.str_pad(100 + $ci, 8, '0', STR_PAD_LEFT),
                 'category' => $childCategory,
                 'system_type' => $parentAsset->system_type,
                 'manufacturer' => $parentAsset->manufacturer,
-                'serial_number' => 'SN-' . Str::random(10),
+                'serial_number' => 'SN-'.Str::random(10),
                 'condition' => $parentAsset->condition,
                 'commissioning_status' => $parentAsset->commissioning_status,
                 'install_date' => $parentAsset->install_date,
@@ -257,7 +259,7 @@ class DatabaseSeeder extends Seeder
                 'project_id' => $dcProject->id,
                 'asset_id' => $assets[$assetIdx]->id,
                 'assigned_to' => $i % 2 === 0 ? $tech1->id : $tech2->id,
-                'facilitygrid_issue_id' => 'FG-ISS-' . (3000 + $i),
+                'facilitygrid_issue_id' => 'FG-ISS-'.(3000 + $i),
                 'title' => $title,
                 'description' => "Commissioning issue detected during functional performance testing for {$assets[$assetIdx]->name}.",
                 'status' => $status,
@@ -280,7 +282,7 @@ class DatabaseSeeder extends Seeder
                 'issue_id' => $issue->id,
                 'assigned_to' => $issue->assigned_to,
                 'created_by' => $admin->id,
-                'wo_number' => 'WO-202604-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
+                'wo_number' => 'WO-202604-'.str_pad($i + 1, 4, '0', STR_PAD_LEFT),
                 'title' => $issue->title,
                 'description' => $issue->description,
                 'status' => match ($issue->status) {
@@ -528,7 +530,7 @@ class DatabaseSeeder extends Seeder
                     'tenant_id' => $tenant->id,
                     'project_id' => $dcProject->id,
                     'asset_id' => $asset->id,
-                    'name' => ucwords(str_replace('_', ' ', $cat)) . " - {$asset->name}",
+                    'name' => ucwords(str_replace('_', ' ', $cat))." - {$asset->name}",
                     'category' => $cat,
                     'status' => $i < 4 ? 'approved' : (rand(0, 1) ? 'submitted' : 'required'),
                     'due_date' => now()->addDays(rand(10, 60)),
@@ -573,5 +575,16 @@ class DatabaseSeeder extends Seeder
             ],
             'is_active' => true,
         ]);
+
+        // Seed a realistic set of FPT executions so the Cx Test Matrix,
+        // readiness score, and PDF reports all have live data on first boot.
+        $this->call(FptDemoExecutionSeeder::class);
+        $this->call(PfcTemplateSeeder::class);
+
+        // Refresh readiness scores now that the FPT dimension has data.
+        foreach ([$dcProject, $healthProject, $eduProject] as $project) {
+            $project->refresh();
+            $project->update(['readiness_score' => $project->calculateReadinessScore()]);
+        }
     }
 }
