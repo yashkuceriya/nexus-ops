@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
-            $table->string('facilitygrid_project_id')->nullable();
+            $table->string('external_project_id')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('status', ['planning', 'commissioning', 'closeout', 'operational', 'archived'])->default('commissioning');
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->timestamp('last_synced_at')->nullable();
             $table->timestamps();
 
-            $table->unique(['tenant_id', 'facilitygrid_project_id']);
+            $table->unique(['tenant_id', 'external_project_id']);
             $table->index(['tenant_id', 'status']);
         });
     }

@@ -12,18 +12,18 @@ class Tenant extends Model
 
     protected $fillable = [
         'name', 'slug', 'domain', 'settings', 'is_active',
-        'facilitygrid_api_url', 'facilitygrid_api_token', 'facilitygrid_auth_type',
-        'facilitygrid_token_expires_at', 'facilitygrid_refresh_token', 'facilitygrid_scopes',
+        'external_api_url', 'external_api_token', 'external_auth_type',
+        'external_token_expires_at', 'external_refresh_token', 'external_scopes',
     ];
 
     protected function casts(): array
     {
         return [
             'settings' => 'array',
-            'facilitygrid_scopes' => 'array',
-            'facilitygrid_api_token' => 'encrypted',
-            'facilitygrid_refresh_token' => 'encrypted',
-            'facilitygrid_token_expires_at' => 'datetime',
+            'external_scopes' => 'array',
+            'external_api_token' => 'encrypted',
+            'external_refresh_token' => 'encrypted',
+            'external_token_expires_at' => 'datetime',
             'is_active' => 'boolean',
         ];
     }
@@ -75,10 +75,10 @@ class Tenant extends Model
 
     public function isTokenExpired(): bool
     {
-        if (! $this->facilitygrid_token_expires_at) {
+        if (! $this->external_token_expires_at) {
             return false;
         }
 
-        return $this->facilitygrid_token_expires_at->isPast();
+        return $this->external_token_expires_at->isPast();
     }
 }

@@ -1,9 +1,9 @@
 # NexusOps — AI Assistant Context
 
 ## CRITICAL RULES
-- **NEVER mention "Facility Grid", "FG Bridge", or "FG"** in any user-visible text, comments, file names, or folder names
+- **ZERO occurrences anywhere** of "Facility Grid", "FacilityGrid", "facilitygrid", "FG Bridge", "fg_bridge", or the acronym "FG" (including "FG-" prefixes) — applies to UI text, comments, file names, folder names, class names, namespaces, DB columns, seed values, and all internal code
 - The app is branded **"NexusOps"** exclusively
-- Internal DB columns like `facilitygrid_*` are backend identifiers — don't rename them but don't expose them in UI
+- External integration code lives under `app/Services/ExternalSync/` with neutral naming (e.g., `ExternalSyncClient`, `external_*` DB columns)
 
 ## Quick Reference
 - **Framework**: Laravel 13, Livewire 4.2, PHP 8.5

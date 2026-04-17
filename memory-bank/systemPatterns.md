@@ -6,7 +6,7 @@ Modular monolith with clean separation:
 - **Services** (app/Services/) — business logic layer (WorkOrderService, SensorIngestService, AutomationEngine, AssetHealthService, InsightsGenerator, DashboardService)
 - **Livewire Components** (app/Livewire/) — 30 reactive UI components
 - **API Controllers** (app/Http/Controllers/Api/) — REST API with Sanctum auth
-- **Events/Listeners/Jobs** — async processing (SyncFacilityGridData, CreateWorkOrderFromIssue)
+- **Events/Listeners/Jobs** — async processing (SyncExternalData, CreateWorkOrderFromIssue)
 
 ## Multi-Tenancy
 - All models have `tenant_id` FK

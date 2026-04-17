@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\FacilityGrid;
+namespace App\Services\ExternalSync;
 
 use App\Events\IssueImported;
 use App\Events\ProjectSynced;
@@ -15,22 +15,22 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Orchestrates incremental sync of FacilityGrid data into the local database.
+ * Orchestrates incremental sync of upstream integration data into the local database.
  *
  * Key behaviours:
  *  - Cursor / watermark-based incremental sync via `SyncWatermark` model.
  *  - Circuit breaker: halts after N consecutive failures to avoid hammering a broken upstream.
- *  - Upserts keyed on `facilitygrid_*_id` columns to ensure idempotent imports.
+ *  - Upserts keyed on `external_*_id` columns to ensure idempotent imports.
  *  - Fires domain events for downstream listeners (readiness scores, notifications, etc.).
  */
-final class FacilityGridSyncService
+final class ExternalSyncService
 {
     private const int CIRCUIT_BREAKER_THRESHOLD = 5;
 
     private int $consecutiveFailures = 0;
 
     public function __construct(
-        private readonly FacilityGridClient $client,
+        private readonly ExternalSyncClient $client,
         private readonly Tenant $tenant,
     ) {}
 
@@ -41,7 +41,7 @@ final class FacilityGridSyncService
     /**
      * Run a full incremental sync for the tenant: projects -> issues + assets.
      *
-     * @throws FacilityGridException When the circuit breaker trips.
+     * @throws ExternalSyncException When the circuit breaker trips.
      */
     public function syncAll(): void
     {
@@ -51,7 +51,7 @@ final class FacilityGridSyncService
 
         foreach ($projects as $project) {
             if ($this->circuitOpen()) {
-                Log::error('FacilityGrid sync: circuit breaker open, aborting remaining projects.', [
+                Log::error('ExternalSync: circuit breaker open, aborting remaining projects.', [
                     'tenant_id' => $this->tenant->id,
                     'consecutive_failures' => $this->consecutiveFailures,
                 ]);
@@ -67,7 +67,7 @@ final class FacilityGridSyncService
      | ----------------------------------------------------------------*/
 
     /**
-     * Pull projects from FacilityGrid and upsert locally.
+     * Pull projects from the external system and upsert locally.
      *
      * @return list<Project> The local Project models that were upserted.
      */
@@ -79,7 +79,7 @@ final class FacilityGridSyncService
         try {
             $response = $this->client->getProjects($params);
             $this->recordSuccess();
-        } catch (FacilityGridException $e) {
+        } catch (ExternalSyncException $e) {
             $this->recordFailure($e, 'projects');
 
             return [];
@@ -92,7 +92,7 @@ final class FacilityGridSyncService
                 [
                     [
                         'tenant_id' => $this->tenant->id,
-                        'facilitygrid_project_id' => $row['id'],
+                        'external_project_id' => $row['id'],
                         'name' => $row['name'] ?? '',
                         'description' => $row['description'] ?? null,
                         'status' => $row['status'] ?? 'unknown',
@@ -101,12 +101,12 @@ final class FacilityGridSyncService
                         'created_at' => now(),
                     ],
                 ],
-                uniqueBy: ['tenant_id', 'facilitygrid_project_id'],
+                uniqueBy: ['tenant_id', 'external_project_id'],
                 update: ['name', 'description', 'status', 'metadata', 'updated_at'],
             );
 
             $localProjects[] = Project::where('tenant_id', $this->tenant->id)
-                ->where('facilitygrid_project_id', $row['id'])
+                ->where('external_project_id', $row['id'])
                 ->first();
         }
 
@@ -136,13 +136,13 @@ final class FacilityGridSyncService
 
     private function syncIssues(Project $project): int
     {
-        $watermark = $this->getWatermark("issues:{$project->facilitygrid_project_id}");
+        $watermark = $this->getWatermark("issues:{$project->external_project_id}");
         $params = $this->buildIncrementalParams($watermark);
 
         try {
-            $response = $this->client->getIssues($project->facilitygrid_project_id, $params);
+            $response = $this->client->getIssues($project->external_project_id, $params);
             $this->recordSuccess();
-        } catch (FacilityGridException $e) {
+        } catch (ExternalSyncException $e) {
             $this->recordFailure($e, "issues for project {$project->id}");
 
             return 0;
@@ -152,7 +152,7 @@ final class FacilityGridSyncService
 
         foreach ($response['data'] as $row) {
             $wasCreated = ! Issue::where('tenant_id', $this->tenant->id)
-                ->where('facilitygrid_issue_id', $row['id'])
+                ->where('external_issue_id', $row['id'])
                 ->exists();
 
             Issue::upsert(
@@ -160,7 +160,7 @@ final class FacilityGridSyncService
                     [
                         'tenant_id' => $this->tenant->id,
                         'project_id' => $project->id,
-                        'facilitygrid_issue_id' => $row['id'],
+                        'external_issue_id' => $row['id'],
                         'title' => $row['title'] ?? '',
                         'description' => $row['description'] ?? null,
                         'severity' => $row['severity'] ?? 'medium',
@@ -170,19 +170,19 @@ final class FacilityGridSyncService
                         'created_at' => now(),
                     ],
                 ],
-                uniqueBy: ['tenant_id', 'facilitygrid_issue_id'],
+                uniqueBy: ['tenant_id', 'external_issue_id'],
                 update: ['title', 'description', 'severity', 'status', 'metadata', 'updated_at'],
             );
 
             $issue = Issue::where('tenant_id', $this->tenant->id)
-                ->where('facilitygrid_issue_id', $row['id'])
+                ->where('external_issue_id', $row['id'])
                 ->first();
 
             if ($issue) {
                 IssueImported::dispatch(
                     tenantId: $this->tenant->id,
                     issueId: $issue->id,
-                    facilityGridIssueId: $row['id'],
+                    externalIssueId: $row['id'],
                     wasCreated: $wasCreated,
                 );
             }
@@ -197,13 +197,13 @@ final class FacilityGridSyncService
 
     private function syncAssets(Project $project): int
     {
-        $watermark = $this->getWatermark("assets:{$project->facilitygrid_project_id}");
+        $watermark = $this->getWatermark("assets:{$project->external_project_id}");
         $params = $this->buildIncrementalParams($watermark);
 
         try {
-            $response = $this->client->getAssets($project->facilitygrid_project_id, $params);
+            $response = $this->client->getAssets($project->external_project_id, $params);
             $this->recordSuccess();
-        } catch (FacilityGridException $e) {
+        } catch (ExternalSyncException $e) {
             $this->recordFailure($e, "assets for project {$project->id}");
 
             return 0;
@@ -217,7 +217,7 @@ final class FacilityGridSyncService
                     [
                         'tenant_id' => $this->tenant->id,
                         'project_id' => $project->id,
-                        'facilitygrid_asset_id' => $row['id'],
+                        'external_asset_id' => $row['id'],
                         'name' => $row['name'] ?? '',
                         'type' => $row['type'] ?? 'unknown',
                         'status' => $row['status'] ?? 'active',
@@ -226,7 +226,7 @@ final class FacilityGridSyncService
                         'created_at' => now(),
                     ],
                 ],
-                uniqueBy: ['tenant_id', 'facilitygrid_asset_id'],
+                uniqueBy: ['tenant_id', 'external_asset_id'],
                 update: ['name', 'type', 'status', 'metadata', 'updated_at'],
             );
 
@@ -293,11 +293,11 @@ final class FacilityGridSyncService
         $this->consecutiveFailures = 0;
     }
 
-    private function recordFailure(FacilityGridException $e, string $context): void
+    private function recordFailure(ExternalSyncException $e, string $context): void
     {
         $this->consecutiveFailures++;
 
-        Log::warning("FacilityGrid sync failure [{$context}]", [
+        Log::warning("ExternalSync failure [{$context}]", [
             'tenant_id' => $this->tenant->id,
             'error_type' => $e->errorType,
             'status' => $e->status,

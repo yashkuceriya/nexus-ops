@@ -47,14 +47,13 @@ All major features are implemented and working. The app has 129 PHP files, 43 Li
 - All 22 pages return HTTP 200
 - 137 tests pass (450 assertions, 1 skipped)
 - Zero dead links in the app (16 on landing page are marketing placeholders)
-- Zero forbidden references (no "Facility Grid" or "FG" in user-visible text)
+- Zero references to the prior upstream vendor anywhere (UI, comments, classes, namespaces, DB columns, seeds)
 - Seeder creates realistic demo data
 - PM scheduler command works
 
 ## Known Limitations
-- Internal code still has `facilitygrid_*` DB column names (these are field identifiers, not user-visible)
-- The connector service uses placeholder API endpoints (real API docs not publicly available)
-- Some services in `app/Services/FacilityGrid/` have "FacilityGrid" in the class name (internal, not user-visible)
+- External integration uses neutral naming: `app/Services/ExternalSync/`, `external_*` DB columns, `SyncExternalData` job
+- The connector service uses placeholder API endpoints
 - SQLite used for dev — some features may need adjustment for MySQL in production
 - Mapbox uses a public demo token that may have rate limits
 - No actual ML/AI — the "AI Insights" panel generates insights from rule-based analysis of real data

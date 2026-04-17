@@ -12,8 +12,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 
 /**
- * Assembles an "Accelerated Turnover Package" PDF for a project — mirroring
- * the flagship feature of commissioning platforms like Facility Grid.
+ * Assembles an "Accelerated Turnover Package" PDF for a project — a flagship
+ * feature of modern commissioning platforms.
  *
  * The package consolidates every artifact an O&M team needs on Day 1:
  *   - Project overview & handover readiness score

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Models\Tenant;
-use App\Services\FacilityGrid\FacilityGridClient;
-use App\Services\FacilityGrid\FacilityGridException;
-use App\Services\FacilityGrid\FacilityGridSyncService;
+use App\Services\ExternalSync\ExternalSyncClient;
+use App\Services\ExternalSync\ExternalSyncException;
+use App\Services\ExternalSync\ExternalSyncService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,12 +17,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Queued job that runs a full FacilityGrid incremental sync for a single tenant.
+ * Queued job that runs a full incremental sync from the external system for a single tenant.
  *
  * Overlap prevention ensures only one sync runs per tenant at a time.
  * The job retries up to 3 times with 60-second back-off on infrastructure failures.
  */
-final class SyncFacilityGridData implements ShouldQueue
+final class SyncExternalData implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -38,7 +38,7 @@ final class SyncFacilityGridData implements ShouldQueue
     public function __construct(
         public readonly Tenant $tenant,
     ) {
-        $this->onQueue('facility-grid-sync');
+        $this->onQueue('external-sync');
     }
 
     /**
@@ -57,15 +57,15 @@ final class SyncFacilityGridData implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('FacilityGrid sync started.', ['tenant_id' => $this->tenant->id]);
+        Log::info('ExternalSync started.', ['tenant_id' => $this->tenant->id]);
 
-        $client = new FacilityGridClient($this->tenant);
-        $service = new FacilityGridSyncService($client, $this->tenant);
+        $client = new ExternalSyncClient($this->tenant);
+        $service = new ExternalSyncService($client, $this->tenant);
 
         try {
             $service->syncAll();
-        } catch (FacilityGridException $e) {
-            Log::error('FacilityGrid sync failed.', [
+        } catch (ExternalSyncException $e) {
+            Log::error('ExternalSync failed.', [
                 'tenant_id' => $this->tenant->id,
                 'error_type' => $e->errorType,
                 'detail' => $e->detail,
@@ -74,7 +74,7 @@ final class SyncFacilityGridData implements ShouldQueue
             throw $e; // Let the queue worker handle retry / dead-lettering.
         }
 
-        Log::info('FacilityGrid sync completed.', ['tenant_id' => $this->tenant->id]);
+        Log::info('ExternalSync completed.', ['tenant_id' => $this->tenant->id]);
     }
 
     /**
@@ -84,7 +84,7 @@ final class SyncFacilityGridData implements ShouldQueue
      */
     public function failed(?\Throwable $exception): void
     {
-        Log::critical('FacilityGrid sync permanently failed.', [
+        Log::critical('ExternalSync permanently failed.', [
             'tenant_id' => $this->tenant->id,
             'exception' => $exception?->getMessage(),
         ]);
@@ -95,7 +95,7 @@ final class SyncFacilityGridData implements ShouldQueue
      */
     public function shouldRetry(\Throwable $exception): bool
     {
-        if ($exception instanceof FacilityGridException) {
+        if ($exception instanceof ExternalSyncException) {
             // Do not retry auth or permission errors.
             return ! in_array($exception->errorType, ['authentication_error', 'forbidden'], true);
         }

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('facilitygrid_document_id')->nullable();
+            $table->string('external_document_id')->nullable();
             $table->string('title');
             $table->string('filename');
             $table->string('file_path');

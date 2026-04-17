@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['owner', 'admin', 'manager', 'technician', 'readonly'])->default('readonly');
             $table->string('phone')->nullable();
-            $table->string('facilitygrid_user_id')->nullable();
+            $table->string('external_user_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
             $table->unique(['tenant_id', 'email']);
-            $table->index('facilitygrid_user_id');
+            $table->index('external_user_id');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

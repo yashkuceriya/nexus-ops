@@ -15,7 +15,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'tenant_id', 'name', 'email', 'password', 'role', 'phone', 'facilitygrid_user_id',
+        'tenant_id', 'name', 'email', 'password', 'role', 'phone', 'external_user_id',
     ];
 
     protected $hidden = [

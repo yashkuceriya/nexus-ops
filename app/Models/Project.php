@@ -14,7 +14,7 @@ class Project extends Model
     use BelongsToTenant, HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'tenant_id', 'facilitygrid_project_id', 'name', 'description', 'status',
+        'tenant_id', 'external_project_id', 'name', 'description', 'status',
         'project_type', 'address', 'city', 'state', 'zip',
         'readiness_score', 'total_issues', 'open_issues',
         'total_tests', 'completed_tests', 'total_closeout_docs', 'completed_closeout_docs',

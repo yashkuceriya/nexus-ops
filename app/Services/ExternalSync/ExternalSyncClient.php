@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\FacilityGrid;
+namespace App\Services\ExternalSync;
 
 use App\Models\Tenant;
 use GuzzleHttp\Client;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * HTTP client for the FacilityGrid external API.
+ * HTTP client for the external sync API.
  *
  * Features:
  *  - Tenant-scoped authentication (Bearer / API-Key).
@@ -21,7 +21,7 @@ use Psr\Http\Message\ResponseInterface;
  *  - Cursor-based pagination helper.
  *  - Typed exceptions mapped to RFC 9457 Problem Details.
  */
-final class FacilityGridClient
+final class ExternalSyncClient
 {
     private const int MAX_RETRIES = 5;
 
@@ -42,7 +42,7 @@ final class FacilityGridClient
         ?Client $client = null,
     ) {
         $this->http = $client ?? new Client([
-            'base_uri' => rtrim($this->tenant->facilitygrid_api_url, '/').'/',
+            'base_uri' => rtrim($this->tenant->external_api_url, '/').'/',
             RequestOptions::CONNECT_TIMEOUT => self::CONNECT_TIMEOUT,
             RequestOptions::TIMEOUT => self::REQUEST_TIMEOUT,
             RequestOptions::HTTP_ERRORS => false,
@@ -141,7 +141,7 @@ final class FacilityGridClient
     /**
      * Send a request, retrying on transient failures.
      *
-     * @throws FacilityGridException
+     * @throws ExternalSyncException
      */
     private function requestWithRetry(string $method, string $uri, array $options = []): array
     {
@@ -155,8 +155,8 @@ final class FacilityGridClient
                 $response = $this->http->request($method, $uri, $options);
             } catch (ConnectException $e) {
                 if ($attempt >= self::MAX_RETRIES || hrtime(true) >= $deadline) {
-                    throw FacilityGridException::connectionFailed(
-                        "Failed to connect to FacilityGrid API: {$e->getMessage()}",
+                    throw ExternalSyncException::connectionFailed(
+                        "Failed to connect to external sync API: {$e->getMessage()}",
                         $e,
                     );
                 }
@@ -168,8 +168,8 @@ final class FacilityGridClient
                 // Guzzle threw without a response (network-level issue).
                 if ($e->getResponse() === null) {
                     if ($attempt >= self::MAX_RETRIES || hrtime(true) >= $deadline) {
-                        throw FacilityGridException::connectionFailed(
-                            "FacilityGrid API request failed: {$e->getMessage()}",
+                        throw ExternalSyncException::connectionFailed(
+                            "External sync API request failed: {$e->getMessage()}",
                             $e,
                         );
                     }
@@ -196,7 +196,7 @@ final class FacilityGridClient
 
             // Retryable - but budget/attempt check first.
             if ($attempt >= self::MAX_RETRIES || hrtime(true) >= $deadline) {
-                throw FacilityGridException::retriesExhausted(
+                throw ExternalSyncException::retriesExhausted(
                     $attempt,
                     new \RuntimeException("Last status: {$status}"),
                 );
@@ -206,7 +206,7 @@ final class FacilityGridClient
                 ? $this->retryAfterDelay($response, $attempt)
                 : $this->calculateDelay($attempt);
 
-            Log::warning('FacilityGrid: retrying after transient error', [
+            Log::warning('ExternalSync: retrying after transient error', [
                 'tenant_id' => $this->tenant->id,
                 'uri' => $uri,
                 'status' => $status,
@@ -266,10 +266,10 @@ final class FacilityGridClient
         $decoded = json_decode($body, associative: true, flags: JSON_THROW_ON_ERROR);
 
         if (! is_array($decoded)) {
-            throw new FacilityGridException(
+            throw new ExternalSyncException(
                 errorType: 'invalid_response',
                 status: 0,
-                detail: 'FacilityGrid API returned a non-object/non-array JSON payload.',
+                detail: 'External sync API returned a non-object/non-array JSON payload.',
             );
         }
 
@@ -277,7 +277,7 @@ final class FacilityGridClient
     }
 
     /**
-     * @throws FacilityGridException
+     * @throws ExternalSyncException
      */
     private function throwForStatus(int $status, ResponseInterface $response, string $uri): never
     {
@@ -285,12 +285,12 @@ final class FacilityGridClient
         $detail = $this->extractDetail($body) ?? "HTTP {$status} on {$uri}";
 
         throw match (true) {
-            $status === 401 => FacilityGridException::authentication($detail),
-            $status === 403 => FacilityGridException::forbidden($detail),
-            $status === 404 => FacilityGridException::notFound('resource', $uri),
-            $status === 408 => FacilityGridException::timeout($detail),
-            $status >= 500 => FacilityGridException::serverError($status, $detail),
-            default => new FacilityGridException(
+            $status === 401 => ExternalSyncException::authentication($detail),
+            $status === 403 => ExternalSyncException::forbidden($detail),
+            $status === 404 => ExternalSyncException::notFound('resource', $uri),
+            $status === 408 => ExternalSyncException::timeout($detail),
+            $status >= 500 => ExternalSyncException::serverError($status, $detail),
+            default => new ExternalSyncException(
                 errorType: 'client_error',
                 status: $status,
                 detail: $detail,
@@ -331,8 +331,8 @@ final class FacilityGridClient
             'Content-Type' => 'application/json',
         ];
 
-        $token = $this->tenant->facilitygrid_api_token;
-        $authType = $this->tenant->facilitygrid_auth_type ?? 'bearer';
+        $token = $this->tenant->external_api_token;
+        $authType = $this->tenant->external_auth_type ?? 'bearer';
 
         $headers = match ($authType) {
             'bearer' => array_merge($headers, ['Authorization' => "Bearer {$token}"]),

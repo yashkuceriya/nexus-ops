@@ -62,7 +62,7 @@ class WorkOrderTest extends TestCase
 
         StatusMapping::create([
             'tenant_id' => $this->tenant->id,
-            'source_system' => 'facility_grid',
+            'source_system' => 'external',
             'source_entity' => 'issue',
             'source_status' => 'Open',
             'target_entity' => 'work_order',
@@ -158,7 +158,7 @@ class WorkOrderTest extends TestCase
     {
         $status = StatusMapping::resolve(
             $this->tenant->id,
-            'facility_grid',
+            'external',
             'issue',
             'Open',
             'work_order'

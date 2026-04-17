@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('facilitygrid_asset_id')->nullable();
+            $table->string('external_asset_id')->nullable();
             $table->string('name');
             $table->string('asset_tag')->nullable();
             $table->string('qr_code')->nullable()->unique();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->json('metadata')->nullable();
             $table->timestamps();
 
-            $table->unique(['tenant_id', 'facilitygrid_asset_id']);
+            $table->unique(['tenant_id', 'external_asset_id']);
             $table->index(['project_id', 'system_type']);
             $table->index(['tenant_id', 'category']);
         });

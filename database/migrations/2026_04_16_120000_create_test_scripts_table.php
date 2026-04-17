@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * A test_script is a template — a named, versioned, ordered sequence of
  * measurements and observations performed on an asset to prove that it
- * meets design intent. This directly mirrors Facility Grid's FPT scripts.
+ * meets design intent.
  */
 return new class extends Migration
 {

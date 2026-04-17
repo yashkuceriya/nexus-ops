@@ -12,7 +12,7 @@ class Location extends Model
     use BelongsToTenant;
 
     protected $fillable = [
-        'tenant_id', 'project_id', 'parent_id', 'facilitygrid_location_id',
+        'tenant_id', 'project_id', 'parent_id', 'external_location_id',
         'name', 'type', 'code', 'description',
     ];
 

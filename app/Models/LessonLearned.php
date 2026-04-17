@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * A searchable knowledge-base record that captures WHY a problem happened
  * and HOW similar issues should be prevented on future projects.
  *
- * Facility Grid's workflows emphasise continuous improvement — this is the
+ * Commissioning workflows emphasise continuous improvement — this is the
  * canonical place we capture those improvements so they don't get lost in
  * closed issue threads.
  */

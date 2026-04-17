@@ -29,9 +29,9 @@ class DatabaseSeeder extends Seeder
         $tenant = Tenant::create([
             'name' => 'Acme Facilities Corp',
             'slug' => 'acme-facilities',
-            'domain' => 'acme.facilitygrid-bridge.test',
-            'facilitygrid_api_url' => 'https://api.nexusops.internal/v1',
-            'facilitygrid_auth_type' => 'bearer',
+            'domain' => 'acme.nexusops.test',
+            'external_api_url' => 'https://api.nexusops.internal/v1',
+            'external_auth_type' => 'bearer',
             'settings' => ['timezone' => 'America/New_York', 'currency' => 'USD'],
         ]);
 
@@ -67,17 +67,17 @@ class DatabaseSeeder extends Seeder
             'role' => 'technician',
         ]);
 
-        // Default status mappings (Facility Grid -> Work Orders, mirroring Procore pattern)
+        // Default status mappings (external system -> Work Orders, mirroring Procore pattern)
         $mappings = [
             ['Draft', 'pending'], ['Open', 'pending'], ['In Progress', 'in_progress'],
             ['Work Completed', 'completed'], ['Closed', 'verified'], ['Deferred', 'on_hold'],
         ];
-        foreach ($mappings as [$fg, $wo]) {
+        foreach ($mappings as [$sourceStatus, $wo]) {
             StatusMapping::create([
                 'tenant_id' => $tenant->id,
-                'source_system' => 'facility_grid',
+                'source_system' => 'external',
                 'source_entity' => 'issue',
-                'source_status' => $fg,
+                'source_status' => $sourceStatus,
                 'target_entity' => 'work_order',
                 'target_status' => $wo,
                 'auto_transition' => true,
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
         // Project 1: Data Center (high readiness)
         $dcProject = Project::create([
             'tenant_id' => $tenant->id,
-            'facilitygrid_project_id' => 'FG-PRJ-1001',
+            'external_project_id' => 'EXT-PRJ-1001',
             'name' => 'Meridian Data Center - Phase 2',
             'description' => 'New 50MW data center facility with redundant cooling and power systems',
             'status' => 'closeout',
@@ -108,7 +108,7 @@ class DatabaseSeeder extends Seeder
         // Project 2: Healthcare (medium readiness)
         $healthProject = Project::create([
             'tenant_id' => $tenant->id,
-            'facilitygrid_project_id' => 'FG-PRJ-1002',
+            'external_project_id' => 'EXT-PRJ-1002',
             'name' => 'St. Mary Medical Center - Wing B Renovation',
             'description' => 'HVAC and electrical systems upgrade for patient wing',
             'status' => 'commissioning',
@@ -129,7 +129,7 @@ class DatabaseSeeder extends Seeder
         // Project 3: Higher Ed (early stage)
         $eduProject = Project::create([
             'tenant_id' => $tenant->id,
-            'facilitygrid_project_id' => 'FG-PRJ-1003',
+            'external_project_id' => 'EXT-PRJ-1003',
             'name' => 'MIT Research Lab - Building 46',
             'description' => 'New research laboratory with specialized ventilation and fume hoods',
             'status' => 'commissioning',
@@ -185,10 +185,10 @@ class DatabaseSeeder extends Seeder
                 'tenant_id' => $tenant->id,
                 'project_id' => $dcProject->id,
                 'location_id' => $loc->id,
-                'facilitygrid_asset_id' => 'FG-AST-'.(2000 + $i),
+                'external_asset_id' => 'EXT-AST-'.(2000 + $i),
                 'name' => $name,
                 'asset_tag' => strtoupper($tag),
-                'qr_code' => 'FGB-'.str_pad($i + 1, 8, '0', STR_PAD_LEFT),
+                'qr_code' => 'NXO-'.str_pad($i + 1, 8, '0', STR_PAD_LEFT),
                 'category' => $tag,
                 'system_type' => $system,
                 'manufacturer' => $mfr,
@@ -259,13 +259,13 @@ class DatabaseSeeder extends Seeder
                 'project_id' => $dcProject->id,
                 'asset_id' => $assets[$assetIdx]->id,
                 'assigned_to' => $i % 2 === 0 ? $tech1->id : $tech2->id,
-                'facilitygrid_issue_id' => 'FG-ISS-'.(3000 + $i),
+                'external_issue_id' => 'EXT-ISS-'.(3000 + $i),
                 'title' => $title,
                 'description' => "Commissioning issue detected during functional performance testing for {$assets[$assetIdx]->name}.",
                 'status' => $status,
                 'priority' => $prio,
                 'issue_type' => ['functional_performance_test_failure', 'design_intent_deviation', 'installation_deficiency'][$i % 3],
-                'source_system' => 'facility_grid',
+                'source_system' => 'external',
                 'due_date' => now()->addDays(rand(3, 30)),
                 'resolved_at' => in_array($status, ['work_completed', 'closed']) ? now()->subDays(rand(1, 5)) : null,
             ]);
@@ -294,7 +294,7 @@ class DatabaseSeeder extends Seeder
                 },
                 'priority' => $issue->priority === 'critical' ? 'emergency' : $issue->priority,
                 'type' => 'corrective',
-                'source' => 'facility_grid_issue',
+                'source' => 'external_issue',
                 'sla_hours' => match ($issue->priority) {
                     'critical' => 4, 'high' => 8, 'medium' => 24, default => 48,
                 },

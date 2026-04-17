@@ -13,7 +13,7 @@ class Issue extends Model
 
     protected $fillable = [
         'tenant_id', 'project_id', 'asset_id', 'assigned_to',
-        'facilitygrid_issue_id', 'title', 'description',
+        'external_issue_id', 'title', 'description',
         'status', 'priority', 'issue_type',
         'source_system', 'source_id', 'attachments',
         'due_date', 'resolved_at', 'last_synced_at',

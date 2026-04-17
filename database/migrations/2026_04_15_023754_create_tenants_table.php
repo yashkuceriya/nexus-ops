@@ -14,12 +14,12 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('domain')->nullable()->unique();
             $table->json('settings')->nullable();
-            $table->string('facilitygrid_api_url')->nullable();
-            $table->text('facilitygrid_api_token')->nullable();
-            $table->string('facilitygrid_auth_type')->default('bearer');
-            $table->timestamp('facilitygrid_token_expires_at')->nullable();
-            $table->text('facilitygrid_refresh_token')->nullable();
-            $table->json('facilitygrid_scopes')->nullable();
+            $table->string('external_api_url')->nullable();
+            $table->text('external_api_token')->nullable();
+            $table->string('external_auth_type')->default('bearer');
+            $table->timestamp('external_token_expires_at')->nullable();
+            $table->text('external_refresh_token')->nullable();
+            $table->json('external_scopes')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

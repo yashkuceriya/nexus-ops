@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Electronic sign-off record for a single asset's closeout.
  *
- * This directly mirrors Facility Grid's "Asset Closeout Signoff" workflow:
+ * This directly mirrors the industry-standard "Asset Closeout Signoff" workflow:
  * a project manager requests sign-off from an approver, the approver either
  * approves (producing a tamper-evident signature hash) or rejects with a
  * reason, and the entire flow is append-only and auditable.

@@ -11,7 +11,7 @@ class Document extends Model
     use BelongsToTenant;
 
     protected $fillable = [
-        'tenant_id', 'project_id', 'uploaded_by', 'facilitygrid_document_id',
+        'tenant_id', 'project_id', 'uploaded_by', 'external_document_id',
         'title', 'filename', 'file_path', 'mime_type', 'file_size', 'category',
     ];
 

@@ -11,7 +11,7 @@ NexusOps is a **production-grade facility operations platform** built in Laravel
 5. Deployable on AWS Fargate with Docker
 
 ## Key Constraints
-- **Branding**: Called "NexusOps" — NEVER use "Facility Grid", "FG Bridge", or "FG" in ANY user-visible text, code comments, file names, or folder names
+- **Branding**: Called "NexusOps" exclusively. Zero references to the prior upstream vendor anywhere in the codebase (UI, comments, class names, namespaces, DB columns, seed values, docs). See `CLAUDE.md` for the exact forbidden-string list.
 - **SQLite for dev**: Avoid MySQL-specific functions (use CASE WHEN not FIELD(), strftime not DATE_FORMAT)
 - **CDN-based frontend**: Tailwind CSS, Alpine.js, Chart.js, Mapbox GL loaded via CDN — no build step needed
 - **Demo-ready**: Ships with realistic seed data (3 projects, 6 assets, sensors, work orders, vendors, automation rules)

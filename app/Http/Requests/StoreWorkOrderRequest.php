@@ -47,7 +47,7 @@ final class StoreWorkOrderRequest extends FormRequest
             'sla_hours' => ['nullable', 'integer', 'min:1'],
             'sla_deadline' => ['nullable', 'date', 'after:now'],
             'estimated_cost' => ['nullable', 'numeric', 'min:0'],
-            'source' => ['nullable', 'string', Rule::in(['manual', 'sensor', 'inspection', 'sync', 'facilitygrid'])],
+            'source' => ['nullable', 'string', Rule::in(['manual', 'sensor', 'inspection', 'sync', 'external'])],
         ];
     }
 

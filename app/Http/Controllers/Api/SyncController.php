@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SyncFacilityGridData;
+use App\Jobs\SyncExternalData;
 use App\Models\SyncWatermark;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ final class SyncController extends Controller
 
         $tenant = $user->tenant;
 
-        if (! $tenant->facilitygrid_api_url || ! $tenant->facilitygrid_api_token) {
+        if (! $tenant->external_api_url || ! $tenant->external_api_token) {
             return response()->json([
                 'data' => null,
                 'meta' => ['error' => 'External system integration is not configured for this tenant.'],
@@ -61,8 +61,8 @@ final class SyncController extends Controller
         // Dispatch the sync job. The job constructor expects the Tenant model
         // (serialized via SerializesModels) so Bus can reconstruct it on the
         // worker. Passing an int here previously caused a TypeError.
-        if (class_exists(SyncFacilityGridData::class)) {
-            Bus::dispatch(new SyncFacilityGridData($tenant));
+        if (class_exists(SyncExternalData::class)) {
+            Bus::dispatch(new SyncExternalData($tenant));
         }
 
         // Mark watermarks as attempted

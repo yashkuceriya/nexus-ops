@@ -34,7 +34,7 @@ final class WorkOrderService
         return DB::transaction(function () use ($issue): WorkOrder {
             $mappedStatus = StatusMapping::resolve(
                 tenantId: $issue->tenant_id,
-                sourceSystem: $issue->source_system ?? 'facilitygrid',
+                sourceSystem: $issue->source_system ?? 'external',
                 sourceEntity: 'issue',
                 sourceStatus: $issue->status,
                 targetEntity: 'work_order',
@@ -54,7 +54,7 @@ final class WorkOrderService
                 'status' => $mappedStatus,
                 'priority' => $priority,
                 'type' => 'corrective',
-                'source' => 'facilitygrid',
+                'source' => 'external',
                 'sla_hours' => $slaHours,
                 'sla_deadline' => Carbon::now()->addHours($slaHours),
             ]);

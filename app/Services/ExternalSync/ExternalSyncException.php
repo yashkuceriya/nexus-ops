@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Services\FacilityGrid;
+namespace App\Services\ExternalSync;
 
 use RuntimeException;
 use Throwable;
 
 /**
- * Typed exception for FacilityGrid API errors.
+ * Typed exception for external sync API errors.
  *
  * Carries RFC 9457 Problem Details fields so callers can build
  * consistent error responses without inspecting raw HTTP data.
  */
-final class FacilityGridException extends RuntimeException
+final class ExternalSyncException extends RuntimeException
 {
     /**
      * @param  string  $errorType  A URI or short token identifying the error category
@@ -61,7 +61,7 @@ final class FacilityGridException extends RuntimeException
         return new self(
             errorType: 'not_found',
             status: 404,
-            detail: "The requested {$resource} ({$id}) was not found on FacilityGrid.",
+            detail: "The requested {$resource} ({$id}) was not found on the external system.",
             instance: "{$resource}/{$id}",
             previous: $previous,
         );
@@ -72,7 +72,7 @@ final class FacilityGridException extends RuntimeException
         return new self(
             errorType: 'rate_limited',
             status: 429,
-            detail: "FacilityGrid API rate limit exceeded. Retry after {$retryAfter}s.",
+            detail: "External sync API rate limit exceeded. Retry after {$retryAfter}s.",
             previous: $previous,
         );
     }
@@ -112,7 +112,7 @@ final class FacilityGridException extends RuntimeException
         return new self(
             errorType: 'retries_exhausted',
             status: 0,
-            detail: "All {$attempts} retry attempts against FacilityGrid API have been exhausted.",
+            detail: "All {$attempts} retry attempts against external sync API have been exhausted.",
             previous: $previous,
         );
     }
@@ -148,7 +148,7 @@ final class FacilityGridException extends RuntimeException
             'timeout' => 'Gateway Timeout',
             'connection_failed' => 'Connection Failed',
             'retries_exhausted' => 'Retries Exhausted',
-            default => 'FacilityGrid API Error',
+            default => 'External Sync API Error',
         };
     }
 }

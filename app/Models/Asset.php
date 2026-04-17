@@ -14,7 +14,7 @@ class Asset extends Model
     use BelongsToTenant, HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'tenant_id', 'project_id', 'location_id', 'parent_asset_id', 'facilitygrid_asset_id',
+        'tenant_id', 'project_id', 'location_id', 'parent_asset_id', 'external_asset_id',
         'name', 'asset_tag', 'qr_code', 'category', 'system_type',
         'manufacturer', 'model_number', 'serial_number',
         'condition', 'commissioning_status',
@@ -121,6 +121,6 @@ class Asset extends Model
 
     public function generateQrCode(): string
     {
-        return 'FGB-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
+        return 'NXO-'.str_pad($this->id, 8, '0', STR_PAD_LEFT);
     }
 }

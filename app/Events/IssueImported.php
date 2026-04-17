@@ -9,7 +9,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Dispatched every time an issue is imported or updated from FacilityGrid.
+ * Dispatched every time an issue is imported or updated from the external system.
  */
 final class IssueImported
 {
@@ -20,7 +20,7 @@ final class IssueImported
     public function __construct(
         public readonly int $tenantId,
         public readonly int $issueId,
-        public readonly string $facilityGridIssueId,
+        public readonly string $externalIssueId,
         public readonly bool $wasCreated,
     ) {}
 }

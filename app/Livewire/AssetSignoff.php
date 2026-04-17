@@ -14,7 +14,7 @@ use Livewire\Component;
  *
  * This component drives the UI that a commissioning provider or owner's rep
  * uses to request, approve, and reject closeout sign-offs — the workflow
- * directly parallels the "Asset Closeout Signoff" feature in Facility Grid.
+ * directly parallels the industry-standard "Asset Closeout Signoff" feature.
  */
 class AssetSignoff extends Component
 {

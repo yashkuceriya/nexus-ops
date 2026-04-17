@@ -9,7 +9,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Dispatched when a full project sync from FacilityGrid completes.
+ * Dispatched when a full project sync from the external system completes.
  */
 final class ProjectSynced
 {
