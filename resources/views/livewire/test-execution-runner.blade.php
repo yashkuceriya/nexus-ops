@@ -103,7 +103,7 @@
 
             {{-- Current step --}}
             <div class="lg:col-span-2">
-                @php($current = $this->currentResult)
+                @php $current = $this->currentResult; @endphp
                 @if($current === null)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-10 text-center">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">All steps recorded</h3>
@@ -273,7 +273,7 @@
                                     @if($current->measurement_type === 'numeric')
                                         <input type="number" step="any" wire:model.live.debounce.400ms="measuredNumeric"
                                             class="block w-full rounded-md border-gray-300 text-sm"
-                                            placeholder="{{ $current->measurement_unit ? "value in {$current->measurement_unit}" : 'numeric value' }}">
+                                            placeholder="{{ $current->measurement_unit ? ('value in '.$current->measurement_unit) : 'numeric value' }}">
 
                                         @if($current->evaluation_mode)
                                             @php
@@ -339,7 +339,7 @@
                     </div>
 
                     @if($current->issue_id)
-                        @php($autoIssue = $current->issue)
+                        @php $autoIssue = $current->issue; @endphp
                         <div class="mt-4 rounded-lg bg-red-50 border border-red-200 p-4 text-sm space-y-2">
                             <div class="flex items-start justify-between gap-3">
                                 <div>
