@@ -13,22 +13,22 @@
 
         @php
             $statusConfig = match($execution->status) {
-                'passed'      => ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-700', 'ring' => 'ring-emerald-200'],
-                'failed'      => ['bg' => 'bg-red-50',     'text' => 'text-red-700',     'ring' => 'ring-red-200'],
-                'aborted'     => ['bg' => 'bg-gray-100',   'text' => 'text-gray-700',    'ring' => 'ring-gray-300'],
-                'on_hold'     => ['bg' => 'bg-amber-50',   'text' => 'text-amber-700',   'ring' => 'ring-amber-200'],
-                'in_progress' => ['bg' => 'bg-blue-50',    'text' => 'text-blue-700',    'ring' => 'ring-blue-200'],
-                default       => ['bg' => 'bg-slate-50',   'text' => 'text-slate-700',   'ring' => 'ring-slate-200'],
+                'passed'      => ['chip' => 'chip-pass'],
+                'failed'      => ['chip' => 'chip-fail'],
+                'aborted'     => ['chip' => 'chip-pending'],
+                'on_hold'     => ['chip' => 'chip-warn'],
+                'in_progress' => ['chip' => 'chip-run'],
+                default       => ['chip' => 'chip-pending'],
             };
         @endphp
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="card p-6 mb-6">
             <div class="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <h1 class="text-xl font-bold text-gray-900 tracking-tight">{{ $execution->test_script_name }}</h1>
                         <span class="text-xs text-gray-500">v{{ $execution->test_script_version }}</span>
-                        <span class="inline-flex items-center rounded-full {{ $statusConfig['bg'] }} {{ $statusConfig['text'] }} ring-1 ring-inset {{ $statusConfig['ring'] }} px-2.5 py-0.5 text-xs font-medium uppercase">
+                        <span class="chip {{ $statusConfig['chip'] }} uppercase">
                             {{ str_replace('_', ' ', $execution->status) }}
                         </span>
                     </div>
@@ -42,31 +42,31 @@
                 <div class="flex items-center gap-6">
                     <div class="text-center">
                         <div class="text-2xl font-bold text-emerald-600">{{ $execution->pass_count }}</div>
-                        <div class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Pass</div>
+                        <div class="label-kicker">Pass</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-red-600">{{ $execution->fail_count }}</div>
-                        <div class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Fail</div>
+                        <div class="label-kicker">Fail</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-gray-400">{{ $execution->pending_count }}</div>
-                        <div class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Pending</div>
+                        <div class="label-kicker">Pending</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-gray-900">{{ $execution->progressPercent() }}%</div>
-                        <div class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Complete</div>
+                        <div class="label-kicker">Complete</div>
                     </div>
                 </div>
             </div>
             <div class="mt-4 h-2 w-full rounded-full bg-gray-100 overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all"
+                <div class="h-full bg-gradient-to-r from-accent-500 to-accent-600 transition-all"
                     style="width: {{ $execution->progressPercent() }}%"></div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {{-- Step list --}}
-            <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="lg:col-span-1 card overflow-hidden">
                 <div class="px-5 py-3 border-b border-gray-100 text-sm font-semibold text-gray-700">Steps</div>
                 <div class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto">
                     @foreach($this->results as $r)
@@ -105,32 +105,32 @@
             <div class="lg:col-span-2">
                 @php $current = $this->currentResult; @endphp
                 @if($current === null)
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-10 text-center">
+                    <div class="card p-10 text-center">
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">All steps recorded</h3>
                         <p class="text-sm text-gray-500 mb-6">Close out the execution to lock the record.</p>
 
                         @if($execution->isInProgress())
                             <button type="button" wire:click="$toggle('showComplete')"
-                                class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500">
+                                class="btn-primary inline-flex items-center gap-2">
                                 Finish Execution
                             </button>
                         @elseif($execution->status === 'failed')
                             <button type="button" wire:click="retest"
-                                class="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-500">
+                                class="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-[13px] font-semibold text-white hover:bg-amber-500">
                                 Start Retest
                             </button>
                         @endif
 
                         @if(! $execution->witness_signed_at && in_array($execution->status, ['passed', 'failed']))
                             <button type="button" wire:click="$toggle('showWitness')"
-                                class="ml-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-500">
+                                class="ml-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-[13px] font-semibold text-white hover:bg-emerald-500">
                                 Witness &amp; Sign
                             </button>
                         @endif
 
                         @if(in_array($execution->status, ['passed', 'failed', 'aborted']))
                             <a href="{{ route('fpt.report', $execution->id) }}"
-                                class="ml-2 inline-flex items-center gap-2 rounded-lg bg-white border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                class="ml-2 btn-ghost inline-flex items-center gap-2">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                 Download PDF Report
                             </a>
@@ -231,15 +231,15 @@
                         @endif
                     </div>
                 @else
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="card overflow-hidden">
                         <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div>
-                                <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Step {{ $current->step_sequence }}</div>
+                                <div class="text-label-kicker">Step {{ $current->step_sequence }}</div>
                                 <h2 class="text-lg font-semibold text-gray-900">{{ $current->step_title }}</h2>
                             </div>
                             @if($current->expected_value)
                                 <div class="text-right">
-                                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Expected</div>
+                                    <div class="text-label-kicker">Expected</div>
                                     <div class="text-sm font-medium text-gray-900">
                                         {{ $current->expected_value }}
                                         @if($current->measurement_unit) <span class="text-gray-500">{{ $current->measurement_unit }}</span> @endif
@@ -251,14 +251,14 @@
 
                         <div class="px-6 py-5 space-y-4">
                             <div>
-                                <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Instruction</div>
+                                <div class="text-label-kicker mb-1">Instruction</div>
                                 <p class="text-sm text-gray-800 whitespace-pre-line">{{ $current->step_instruction }}</p>
                             </div>
 
                             @if($current->measurement_type !== 'none')
                                 <div>
                                     <div class="flex items-center justify-between mb-1">
-                                        <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                                        <label class="text-label-kicker">
                                             Measured Value ({{ $current->measurement_type }})
                                         </label>
                                         @if($this->bmsPrefill)
@@ -312,7 +312,7 @@
                             @endif
 
                             <div>
-                                <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Technician Notes</label>
+                                <label class="text-label-kicker">Technician Notes</label>
                                 <textarea wire:model="notes" rows="2" class="block w-full rounded-md border-gray-300 text-sm"
                                     placeholder="Anything worth recording — conditions, observations, caveats..."></textarea>
                             </div>

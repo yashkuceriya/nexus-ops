@@ -12,7 +12,7 @@
     @endif
     <meta name="robots" content="noindex,nofollow">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 text-gray-900 antialiased">
+<body class="min-h-screen text-gray-900 antialiased" style="background:#F5F4F9;">
     @php
         $score = (float) ($payload['readiness_score'] ?? 0);
         $scoreColor = $score >= 85 ? 'emerald' : ($score >= 70 ? 'amber' : 'red');

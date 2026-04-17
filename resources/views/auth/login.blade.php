@@ -3,107 +3,158 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login — Nexus Ops</title>
+    <title>Welcome back — NexusOps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] },
                     colors: {
-                        brand: { 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' }
-                    }
+                        ink: { DEFAULT:'#0F172A', muted:'#475569', soft:'#94A3B8' },
+                        accent: { 50:'#EEF2FF', 100:'#E0E7FF', 600:'#4F46E5', 700:'#4338CA', 800:'#3730A3' },
+                    },
                 }
             }
         }
     </script>
     <style>
-        body { background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 50%, #f0f9ff 100%); }
+        html,body { font-family:'Inter',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+        body { background:#F5F4F9; color:#0F172A; }
+        .mono { font-family:'JetBrains Mono', ui-monospace, monospace; }
+        .btn-primary { background:#4F46E5; color:#fff; padding:10px 16px; border-radius:10px; font-weight:600; font-size:13px; transition:background 120ms ease; }
+        .btn-primary:hover { background:#4338CA; }
+        .btn-ghost { background:#fff; color:#0F172A; padding:10px 14px; border-radius:10px; font-weight:600; font-size:12px; border:1px solid #E5E7EB; }
+        .btn-ghost:hover { background:#F8FAFC; }
+        .hairline { border:1px solid #E5E7EB; }
+        .input {
+            display:block; width:100%; border-radius:10px; border:1px solid #E5E7EB; background:#fff;
+            padding:10px 14px; font-size:13px; color:#0F172A; transition: border-color 120ms, box-shadow 120ms;
+        }
+        .input:focus { outline:none; border-color:#6366F1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+        .label { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#475569; }
+        .right-panel {
+            background:
+                radial-gradient(1200px 600px at 80% 20%, rgba(99,102,241,.12), transparent 60%),
+                radial-gradient(800px 400px at 20% 80%, rgba(79,70,229,.12), transparent 60%),
+                linear-gradient(180deg, #F5F4F9 0%, #EEF2FF 100%);
+        }
+        .grid-texture {
+            background-image:
+                linear-gradient(rgba(79,70,229,.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79,70,229,.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
     </style>
 </head>
-<body class="h-full flex items-center justify-center">
-    <div class="w-full max-w-md mx-auto px-6">
-        {{-- Card --}}
-        <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/60 border border-gray-100 px-8 py-10">
-            {{-- Brand --}}
-            <div class="text-center mb-8">
-                <div class="flex items-center justify-center gap-2 mb-3">
-                    <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008V7.5z" />
-                        </svg>
-                    </div>
-                    <span class="text-2xl font-bold text-gray-900">Nexus<span class="text-brand-600">Ops</span></span>
-                </div>
-                <p class="text-sm text-gray-500">Intelligent Facility Operations Platform</p>
+<body class="h-full">
+<div class="min-h-full grid grid-cols-1 lg:grid-cols-2">
+    {{-- Left: form --}}
+    <div class="flex flex-col justify-between px-8 py-10 lg:px-16 lg:py-16 bg-white">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-accent-600 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25M3 6.695c0-.836.88-1.38 1.628-1.006L9.503 8.311c.317.158.69.158 1.006 0l4.994-2.497a1.125 1.125 0 011.006 0l4.875 2.437c.381.19.622.58.622 1.006V19.18c0 .836-.88 1.38-1.628 1.006l-3.869-1.934a1.125 1.125 0 00-1.006 0l-4.994 2.497c-.317.158-.69.158-1.006 0l-4.875-2.437A1.125 1.125 0 013 17.305V6.695z"/></svg>
             </div>
+            <div class="text-[15px] font-bold tracking-tight text-ink">NexusOps</div>
+        </div>
+
+        <div class="max-w-sm w-full mx-auto">
+            <h1 class="text-3xl font-bold tracking-tight text-ink">Welcome back</h1>
+            <p class="text-[13px] text-ink-muted mt-2">Enter your credentials to access the Facility OS.</p>
 
             @if($errors->any())
-            <div class="mb-5 rounded-lg bg-red-50 border border-red-100 p-3.5">
-                <p class="text-sm text-red-600">{{ $errors->first() }}</p>
-            </div>
+                <div class="mt-6 rounded-lg bg-red-50 border border-red-200 p-3">
+                    <p class="text-[13px] text-red-700">{{ $errors->first() }}</p>
+                </div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-5">
                 @csrf
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                            </svg>
-                        </div>
-                        <input id="email" name="email" type="email" required autofocus value="{{ old('email', 'admin@acme.com') }}" placeholder="you@company.com"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50/50 py-2.5 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="email" class="label">Email Address</label>
+                        <span class="mono text-[10px] text-ink-soft">SYS_AUTH_000</span>
                     </div>
+                    <input id="email" name="email" type="email" required autofocus value="{{ old('email', 'admin@acme.com') }}" placeholder="name@nexusops.com" class="input">
                 </div>
-
                 <div>
                     <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <span class="text-xs text-gray-400">Forgot?</span>
+                        <label for="password" class="label">Password</label>
+                        <a href="#" class="text-[11px] font-semibold text-accent-700 hover:text-accent-800">Forgot Password?</a>
                     </div>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                            </svg>
-                        </div>
-                        <input id="password" name="password" type="password" required placeholder="Enter your password"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50/50 py-2.5 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none transition">
-                    </div>
+                    <input id="password" name="password" type="password" required placeholder="••••••••" class="input">
                 </div>
-
-                <button type="submit"
-                    class="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/25 hover:from-brand-700 hover:to-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-all">
-                    Sign In
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
+                <label class="flex items-center gap-2 text-[12px] text-ink-muted">
+                    <input type="checkbox" name="remember" class="rounded border-slate-300 text-accent-600 focus:ring-accent-500">
+                    Stay authenticated for 30 days
+                </label>
+                <button type="submit" class="btn-primary w-full inline-flex items-center justify-center gap-2">
+                    Access Control Center
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                 </button>
-            </form>
 
-            {{-- Demo Credentials --}}
-            <div class="mt-6 rounded-lg bg-gray-50 border border-gray-100 p-4">
-                <div class="flex items-center gap-2 mb-2">
-                    <svg class="w-4 h-4 text-brand-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                    </svg>
-                    <span class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Demo Credentials</span>
+                <div class="relative py-2">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                    <div class="relative flex justify-center"><span class="bg-white px-3 text-[10px] font-bold tracking-widest text-ink-soft uppercase">External Identity Providers</span></div>
                 </div>
-                <div class="space-y-1 text-xs text-gray-500">
-                    <p><span class="font-mono text-gray-700">admin@acme.com</span> &middot; password</p>
-                    <p><span class="font-mono text-gray-700">manager@acme.com</span> &middot; password</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" class="btn-ghost inline-flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        Google SSO
+                    </button>
+                    <button type="button" class="btn-ghost inline-flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#0078D4"><path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/></svg>
+                        Azure AD
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex items-center justify-between text-[10px] mono text-ink-soft">
+            <span>© {{ date('Y') }} NEXUSOPS SYSTEMS</span>
+            <span>SECURE_ENCRYPTION_ACTIVE</span>
+        </div>
+    </div>
+
+    {{-- Right: brand panel --}}
+    <div class="hidden lg:flex right-panel relative overflow-hidden">
+        <div class="absolute inset-0 grid-texture opacity-60"></div>
+        <div class="absolute top-8 right-8 mono text-[10px] text-ink-soft leading-relaxed text-right">
+            SYSTEM STATUS: READY<br>
+            PROTOCOL: NEXUS_CORE_V1_5<br>
+            LOCATION: GLOBAL_EDGE_NODE
+        </div>
+        <div class="absolute bottom-8 right-8 mono text-[10px] text-ink-soft text-right">
+            LAT: 37.7749° N<br>
+            LONG: 122.4194° W<br>
+            NODE_SECURED
+        </div>
+        <div class="m-auto relative z-10 text-center px-10">
+            <div class="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur border border-accent-100 px-3 py-1 mb-5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent-600 animate-pulse"></span>
+                <span class="text-[10px] font-bold tracking-widest uppercase text-accent-800">Operational Efficiency Elevated</span>
+            </div>
+            <h2 class="text-5xl font-bold tracking-tight text-ink">NexusOps</h2>
+            <p class="text-[14px] text-ink-muted mt-3 max-w-sm mx-auto">Precision Commissioning for <span class="text-accent-700 font-semibold">High-Stakes Facilities</span></p>
+            <div class="grid grid-cols-3 gap-6 mt-10 max-w-md mx-auto">
+                <div>
+                    <div class="text-2xl font-bold tabular-nums text-accent-700">99.9%</div>
+                    <div class="mono text-[9px] text-ink-soft tracking-widest uppercase mt-1">Uptime Assurance</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold tabular-nums text-accent-700">2.4<span class="text-base">ms</span></div>
+                    <div class="mono text-[9px] text-ink-soft tracking-widest uppercase mt-1">Data Latency</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold tabular-nums text-accent-700">0.02</div>
+                    <div class="mono text-[9px] text-ink-soft tracking-widest uppercase mt-1">Error Margin</div>
                 </div>
             </div>
         </div>
-
-        {{-- Footer --}}
-        <div class="flex items-center justify-center gap-6 mt-6">
-            <span class="text-xs text-gray-400">Support</span>
-            <span class="text-xs text-gray-400">Security</span>
-            <span class="text-xs text-gray-300">v1.0.0</span>
-        </div>
     </div>
+</div>
 </body>
 </html>

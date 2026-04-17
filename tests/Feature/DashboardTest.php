@@ -43,7 +43,7 @@ class DashboardTest extends TestCase
         $this->actingAs($this->user)
             ->get('/dashboard')
             ->assertStatus(200)
-            ->assertSee('Portfolio Readiness Dashboard');
+            ->assertSee('Portfolio Dashboard');
     }
 
     public function test_authenticated_users_can_access_projects(): void
