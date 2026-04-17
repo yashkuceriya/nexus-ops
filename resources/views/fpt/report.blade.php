@@ -4,65 +4,67 @@
     <meta charset="utf-8">
     <title>FPT Report — {{ $execution->test_script_name }}</title>
     <style>
+        /* NexusOps Cx report — tokens: indigo #4F46E5 primary, emerald #10B981 pass,
+           red #EF4444 fail, border #E5E7EB, table header bg #F5F4F9. */
         * { box-sizing: border-box; }
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #1a202c; margin: 0; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #0F172A; margin: 0; }
         .page { padding: 24px 32px; }
-        h1 { font-size: 20px; margin: 0 0 4px; color: #111827; }
-        h2 { font-size: 13px; margin: 18px 0 8px; color: #1f2937; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
-        h3 { font-size: 11px; margin: 12px 0 4px; color: #374151; }
+        h1 { font-size: 20px; margin: 0 0 4px; color: #0F172A; }
+        h2 { font-size: 13px; margin: 18px 0 8px; color: #0F172A; border-bottom: 1px solid #E5E7EB; padding-bottom: 4px; }
+        h3 { font-size: 11px; margin: 12px 0 4px; color: #475569; }
 
-        .muted { color: #6b7280; }
-        .tag { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 600; text-transform: uppercase; }
-        .tag-pass { background: #d1fae5; color: #065f46; }
-        .tag-fail { background: #fee2e2; color: #991b1b; }
-        .tag-pending { background: #e5e7eb; color: #374151; }
-        .tag-skipped { background: #f3f4f6; color: #6b7280; }
-        .tag-na { background: #f3f4f6; color: #6b7280; }
-        .tag-l1 { background: #dbeafe; color: #1e40af; }
-        .tag-l2 { background: #dbeafe; color: #1e40af; }
-        .tag-l3 { background: #fef3c7; color: #92400e; }
-        .tag-l4 { background: #fecaca; color: #991b1b; }
-        .tag-l5 { background: #e9d5ff; color: #6b21a8; }
+        .muted { color: #94A3B8; }
+        .tag { display: inline-block; padding: 1px 6px; border-radius: 9999px; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        .tag-pass { background: #D1FAE5; color: #065F46; }
+        .tag-fail { background: #FEE2E2; color: #991B1B; }
+        .tag-pending { background: #E5E7EB; color: #475569; }
+        .tag-skipped { background: #F5F4F9; color: #94A3B8; }
+        .tag-na { background: #F5F4F9; color: #94A3B8; }
+        .tag-l1 { background: #EEF2FF; color: #3730A3; }
+        .tag-l2 { background: #EEF2FF; color: #3730A3; }
+        .tag-l3 { background: #FEF3C7; color: #92400E; }
+        .tag-l4 { background: #FECACA; color: #991B1B; }
+        .tag-l5 { background: #E0E7FF; color: #4338CA; }
 
         .hero {
-            background: #111827; color: white; padding: 18px 22px; border-radius: 6px;
+            background: #4F46E5; color: white; padding: 18px 22px; border-radius: 12px;
             margin-bottom: 18px; display: table; width: 100%;
         }
         .hero-left, .hero-right { display: table-cell; vertical-align: middle; }
         .hero-right { text-align: right; }
-        .hero-title { font-size: 18px; font-weight: 700; }
-        .hero-sub { font-size: 10px; color: #9ca3af; margin-top: 4px; }
+        .hero-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+        .hero-sub { font-size: 10px; color: #C7D2FE; margin-top: 4px; }
         .hero-stat-value { font-size: 32px; font-weight: 800; }
-        .hero-stat-label { font-size: 9px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; }
+        .hero-stat-label { font-size: 9px; color: #C7D2FE; text-transform: uppercase; letter-spacing: 0.1em; }
 
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f9fafb; text-align: left; padding: 6px 8px; font-size: 9px; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
-        td { padding: 6px 8px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
-        tr.row-fail td { background: #fff7f7; }
-        tr.row-pass td { background: #f9fefb; }
+        th { background: #F5F4F9; text-align: left; padding: 6px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; border-bottom: 1px solid #E5E7EB; }
+        td { padding: 6px 8px; border-bottom: 1px solid #E5E7EB; vertical-align: top; }
+        tr.row-fail td { background: #FEF2F2; }
+        tr.row-pass td { background: #F0FDF4; }
 
         .grid-2 { display: table; width: 100%; margin-bottom: 6px; }
         .grid-2 > div { display: table-cell; width: 50%; padding-right: 10px; vertical-align: top; }
 
-        .summary-grid { display: table; width: 100%; margin: 10px 0; }
+        .summary-grid { display: table; width: 100%; margin: 10px 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
         .summary-cell {
-            display: table-cell; width: 20%; text-align: center; padding: 8px;
-            border-right: 1px solid #e5e7eb;
+            display: table-cell; width: 20%; text-align: center; padding: 10px 8px;
+            border-right: 1px solid #E5E7EB; background: #FFFFFF;
         }
         .summary-cell:last-child { border-right: none; }
-        .summary-value { font-size: 18px; font-weight: 700; color: #111827; }
-        .summary-label { font-size: 8px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.1em; }
+        .summary-value { font-size: 18px; font-weight: 700; color: #0F172A; }
+        .summary-label { font-size: 8px; text-transform: uppercase; color: #94A3B8; letter-spacing: 0.1em; }
 
         .sig-box {
-            border: 1px solid #e5e7eb; border-radius: 4px; padding: 10px 12px;
-            margin-top: 6px; background: #f9fafb;
+            border: 1px solid #E5E7EB; border-radius: 12px; padding: 10px 12px;
+            margin-top: 6px; background: #FFFFFF;
         }
-        .sig-image { max-width: 240px; max-height: 80px; border: 1px solid #d1d5db; background: white; padding: 4px; }
-        .hash { font-family: monospace; font-size: 8px; word-break: break-all; color: #6b7280; margin-top: 4px; }
+        .sig-image { max-width: 240px; max-height: 80px; border: 1px solid #E5E7EB; background: white; padding: 4px; }
+        .hash { font-family: monospace; font-size: 8px; word-break: break-all; color: #94A3B8; margin-top: 4px; }
 
         .footer {
-            margin-top: 20px; padding-top: 8px; border-top: 1px solid #e5e7eb;
-            font-size: 8px; color: #9ca3af;
+            margin-top: 20px; padding-top: 8px; border-top: 1px solid #E5E7EB;
+            font-size: 8px; color: #94A3B8;
         }
     </style>
 </head>
@@ -88,10 +90,10 @@
 
     {{-- Result banner --}}
     @php($banner = $banner ?? [
-        'passed' => ['bg' => '#d1fae5', 'border' => '#059669', 'text' => '#065f46', 'label' => 'PASSED'],
-        'failed' => ['bg' => '#fee2e2', 'border' => '#dc2626', 'text' => '#991b1b', 'label' => 'FAILED'],
-        'aborted' => ['bg' => '#f3f4f6', 'border' => '#6b7280', 'text' => '#374151', 'label' => 'ABORTED'],
-    ][$execution->status] ?? ['bg' => '#fef3c7', 'border' => '#d97706', 'text' => '#92400e', 'label' => strtoupper(str_replace('_', ' ', $execution->status))])
+        'passed' => ['bg' => '#D1FAE5', 'border' => '#10B981', 'text' => '#065F46', 'label' => 'PASSED'],
+        'failed' => ['bg' => '#FEE2E2', 'border' => '#EF4444', 'text' => '#991B1B', 'label' => 'FAILED'],
+        'aborted' => ['bg' => '#F5F4F9', 'border' => '#94A3B8', 'text' => '#475569', 'label' => 'ABORTED'],
+    ][$execution->status] ?? ['bg' => '#FEF3C7', 'border' => '#F59E0B', 'text' => '#92400E', 'label' => strtoupper(str_replace('_', ' ', $execution->status))])
     <div style="background: {{ $banner['bg'] }}; border-left: 4px solid {{ $banner['border'] }}; color: {{ $banner['text'] }}; padding: 10px 14px; font-weight: 700; font-size: 14px; margin-bottom: 14px;">
         {{ $banner['label'] }}
     </div>
@@ -129,15 +131,15 @@
     {{-- Summary counters --}}
     <div class="summary-grid">
         <div class="summary-cell">
-            <div class="summary-value" style="color: #059669">{{ $execution->pass_count }}</div>
+            <div class="summary-value" style="color: #10B981">{{ $execution->pass_count }}</div>
             <div class="summary-label">Pass</div>
         </div>
         <div class="summary-cell">
-            <div class="summary-value" style="color: #dc2626">{{ $execution->fail_count }}</div>
+            <div class="summary-value" style="color: #EF4444">{{ $execution->fail_count }}</div>
             <div class="summary-label">Fail</div>
         </div>
         <div class="summary-cell">
-            <div class="summary-value" style="color: #6b7280">{{ $execution->pending_count }}</div>
+            <div class="summary-value" style="color: #94A3B8">{{ $execution->pending_count }}</div>
             <div class="summary-label">Pending</div>
         </div>
         <div class="summary-cell">
@@ -176,7 +178,7 @@
                         </div>
                     @endif
                     @if($r['issue_id'])
-                        <div style="font-size: 9px; color: #991b1b; margin-top: 2px;">
+                        <div style="font-size: 9px; color: #991B1B; margin-top: 2px;">
                             ⚠ Auto-opened Deficiency Issue #{{ $r['issue_id'] }}
                             @if($r['issue_priority']) · {{ strtoupper($r['issue_priority']) }} @endif
                         </div>
@@ -191,7 +193,7 @@
                         <span class="muted">—</span>
                     @endif
                     @if($r['auto_evaluated'])
-                        <div style="font-size: 8px; color: #1e40af;">auto-evaluated</div>
+                        <div style="font-size: 8px; color: #4F46E5;">auto-evaluated</div>
                     @endif
                     @if($r['notes'])
                         <div class="muted" style="font-size: 8px; margin-top: 2px;">{{ $r['notes'] }}</div>
@@ -212,7 +214,7 @@
     {{-- Overall notes --}}
     @if($execution->overall_notes)
         <h2>Overall Notes</h2>
-        <div style="padding: 8px 10px; background: #f9fafb; border-left: 3px solid #d1d5db; white-space: pre-line;">{{ $execution->overall_notes }}</div>
+        <div style="padding: 8px 10px; background: #F5F4F9; border-left: 3px solid #4F46E5; white-space: pre-line; border-radius: 6px;">{{ $execution->overall_notes }}</div>
     @endif
 
     {{-- Signatures --}}
@@ -242,7 +244,7 @@
                     @endif
                     <div class="hash"><strong>SHA-256:</strong> {{ $execution->witness_signature_hash }}</div>
                     @if($witness_signature_valid !== null)
-                        <div style="margin-top: 4px; font-size: 9px; color: {{ $witness_signature_valid ? '#059669' : '#dc2626' }};">
+                        <div style="margin-top: 4px; font-size: 9px; color: {{ $witness_signature_valid ? '#10B981' : '#EF4444' }};">
                             {{ $witness_signature_valid ? '✓ Signature integrity verified' : '✗ Signature integrity FAILED verification' }}
                         </div>
                     @endif

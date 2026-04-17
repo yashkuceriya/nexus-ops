@@ -1,32 +1,29 @@
-<div class="min-h-screen bg-gray-50">
-    <div class="px-6 py-6 max-w-[1400px] mx-auto">
+<div class="space-y-6">
+    @if(session('success'))
+    <div class="card p-4 bg-emerald-50 border-emerald-200 text-[13px] text-emerald-700 font-semibold">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="card p-4 bg-red-50 border-red-200 text-[13px] text-red-700 font-semibold">
+        {{ session('error') }}
+    </div>
+    @endif
 
-        {{-- Flash Messages --}}
-        @if(session('success'))
-        <div class="mb-4 rounded-xl bg-emerald-50 border border-emerald-200 px-5 py-3 text-sm text-emerald-700 font-medium">
-            {{ session('success') }}
-        </div>
-        @endif
-        @if(session('error'))
-        <div class="mb-4 rounded-xl bg-red-50 border border-red-200 px-5 py-3 text-sm text-red-700 font-medium">
-            {{ session('error') }}
-        </div>
-        @endif
+    {{-- Back Link --}}
+    <div>
+        <a href="{{ route('work-orders.index') }}" class="inline-flex items-center gap-1.5 text-[13px] text-ink-muted hover:text-ink transition-colors">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Back to Work Orders
+        </a>
+    </div>
 
-        {{-- Back Link --}}
-        <div class="mb-5">
-            <a href="{{ route('work-orders.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                Back to Work Orders
-            </a>
-        </div>
-
-        {{-- Header --}}
-        <div class="mb-6">
-            <div class="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <span class="text-sm font-mono font-semibold text-gray-500 bg-gray-100 rounded-md px-2.5 py-1">{{ $workOrder->wo_number }}</span>
+    {{-- Header --}}
+    <div>
+        <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="mono font-semibold text-ink bg-slate-100 rounded-md px-2.5 py-1">{{ $workOrder->wo_number }}</span>
 
                         {{-- Priority Badge --}}
                         <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold
@@ -86,7 +83,7 @@
             $isCancelled = $workOrder->status === 'cancelled';
             $isOnHold = $workOrder->status === 'on_hold';
         @endphp
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-6 py-5 mb-6">
+        <div class="card px-6 py-5 mb-6">
             @if($isCancelled)
             <div class="flex items-center gap-2 mb-3">
                 <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"/></svg>
@@ -147,7 +144,7 @@
 
                 {{-- Description Card --}}
                 @if($workOrder->description)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Description</h3>
                     </div>
@@ -158,7 +155,7 @@
                 @endif
 
                 {{-- Details Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Details</h3>
                     </div>
@@ -246,7 +243,7 @@
 
                 {{-- Linked Issue Card --}}
                 @if($workOrder->issue)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Linked Issue</h3>
                     </div>
@@ -296,7 +293,7 @@
                 @endif
 
                 {{-- Activity Log Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Activity Log</h3>
                     </div>
@@ -356,7 +353,7 @@
 
                 {{-- Actions Card --}}
                 @if(count($this->allowedTransitions) > 0)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Actions</h3>
                     </div>
@@ -393,7 +390,7 @@
                 @endif
 
                 {{-- Assignment Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" x-data="{ showReassign: false }">
+                <div class="card overflow-hidden" x-data="{ showReassign: false }">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Assignment</h3>
                     </div>
@@ -438,7 +435,7 @@
                 </div>
 
                 {{-- Vendor Assignment Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" x-data="{ showVendorSelect: false }">
+                <div class="card overflow-hidden" x-data="{ showVendorSelect: false }">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Vendor Assignment</h3>
                     </div>
@@ -532,7 +529,7 @@
                 </div>
 
                 {{-- Cost Tracking Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Cost Tracking</h3>
                     </div>
@@ -565,7 +562,7 @@
 
                 {{-- SLA Card --}}
                 @if($workOrder->sla_deadline)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden {{ $workOrder->isSlaBreached() ? 'ring-1 ring-red-200' : '' }}">
+                <div class="card overflow-hidden {{ $workOrder->isSlaBreached() ? 'ring-1 ring-red-200' : '' }}">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">SLA</h3>
                     </div>
@@ -618,7 +615,7 @@
 
                 {{-- Resolution Notes --}}
                 @if($workOrder->resolution_notes)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Resolution Notes</h3>
                     </div>
@@ -631,5 +628,4 @@
             </div>
         </div>
 
-    </div>
 </div>
