@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Audit Trail</h1>
+            <h1 class="text-2xl font-bold text-ink tracking-tight">Audit Trail</h1>
             <p class="mt-1 text-sm text-gray-500">Activity log for compliance and security</p>
         </div>
 

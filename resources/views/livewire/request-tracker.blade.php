@@ -16,7 +16,7 @@
                         placeholder="e.g. AB12CD34"
                         class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-lg font-mono font-semibold tracking-widest text-gray-900 uppercase placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal placeholder:font-normal focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                     <button wire:click="lookup"
-                        class="rounded-lg bg-accent-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                        class="rounded-lg bg-accent-600 px-5 py-3 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                         Look Up
                     </button>
                 </div>
@@ -175,7 +175,7 @@
                                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <div class="flex justify-end">
                                 <button wire:click="submitSurvey"
-                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                                     Submit Feedback
                                 </button>
                             </div>

@@ -1,14 +1,14 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Automation Rules</h1>
+                <h1 class="text-2xl font-bold text-ink tracking-tight">Automation Rules</h1>
                 <p class="mt-1 text-sm text-gray-500">Workflow automation engine for triggers, conditions, and actions</p>
             </div>
             <a href="{{ route('automation.create') }}"
-                class="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors">
+                class="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-accent-700 transition-colors">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
@@ -157,7 +157,7 @@
                 <p class="mt-3 text-sm font-medium text-gray-500">No automation rules found</p>
                 <p class="mt-1 text-xs text-gray-400">Create your first rule to automate workflows</p>
                 <a href="{{ route('automation.create') }}"
-                    class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-accent-600 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-700 transition-colors">
+                    class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-accent-600 px-3 py-2 text-xs font-semibold text-white hover:bg-accent-700 transition-colors">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>

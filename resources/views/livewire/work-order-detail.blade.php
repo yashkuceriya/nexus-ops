@@ -62,7 +62,7 @@
                             {{ str_replace('_', ' ', ucfirst($workOrder->status)) }}
                         </span>
                     </div>
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight mt-2">{{ $workOrder->title }}</h1>
+                    <h1 class="text-2xl font-bold text-ink tracking-tight mt-2">{{ $workOrder->title }}</h1>
                     <p class="mt-1 text-sm text-gray-500">Created {{ $workOrder->created_at->format('M d, Y \a\t g:i A') }}</p>
                 </div>
             </div>

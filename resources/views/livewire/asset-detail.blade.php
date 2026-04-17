@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50" x-data="{ tab: 'overview' }">
+<div class="" x-data="{ tab: 'overview' }">
 
     {{-- Back Link --}}
     <div class="mb-5">
@@ -13,7 +13,7 @@
         <div class="flex items-start justify-between">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-3 flex-wrap">
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">{{ $asset->name }}</h1>
+                    <h1 class="text-2xl font-bold text-ink tracking-tight">{{ $asset->name }}</h1>
                     @if($asset->system_type)
                     <span class="inline-flex items-center rounded-lg bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-200">{{ $asset->system_type }}</span>
                     @endif

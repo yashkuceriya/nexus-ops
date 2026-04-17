@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-slate-50" wire:poll.5s="refreshReadings">
+<div class="" wire:poll.5s="refreshReadings">
     {{-- Page Header --}}
     <div class="mb-8">
         <div class="flex items-center gap-3 mb-1">
-            <div class="w-2 h-8 bg-emerald-500 rounded-full"></div>
-            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">IoT Sensor Dashboard</h1>
+            <div class="w-2 h-8 bg-accent-600 rounded-full"></div>
+            <h1 class="text-2xl font-bold text-ink tracking-tight">IoT Sensor Dashboard</h1>
             <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-200 ml-auto">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 Live &middot; 5s
@@ -26,7 +26,7 @@
                     </div>
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Sensors</span>
                 </div>
-                <div class="text-3xl font-bold text-slate-900 tracking-tight">{{ number_format($this->sensors->count()) }}</div>
+                <div class="text-3xl font-bold text-ink tracking-tight">{{ number_format($this->sensors->count()) }}</div>
                 @php
                     $activePct = $this->sensors->count() > 0
                         ? round($this->sensors->where('is_active', true)->count() / $this->sensors->count() * 100, 1)
@@ -67,7 +67,7 @@
                     </div>
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sensor Types</span>
                 </div>
-                <div class="text-3xl font-bold text-slate-900 tracking-tight">{{ $this->sensors->pluck('sensor_type')->unique()->count() }}</div>
+                <div class="text-3xl font-bold text-ink tracking-tight">{{ $this->sensors->pluck('sensor_type')->unique()->count() }}</div>
                 <p class="text-xs text-blue-600 font-medium mt-1">Unique classifications</p>
             </div>
         </div>

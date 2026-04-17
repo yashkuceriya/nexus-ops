@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         <div class="flex items-start justify-between mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Lessons Learned</h1>
+                <h1 class="text-2xl font-bold text-ink tracking-tight">Lessons Learned</h1>
                 <p class="mt-1 text-sm text-gray-500">
                     A searchable knowledge base of root causes and preventive actions from past projects.
                 </p>

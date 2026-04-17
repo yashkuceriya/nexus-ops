@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Back Link --}}
@@ -14,7 +14,7 @@
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
-                        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">{{ $vendor->name }}</h1>
+                        <h1 class="text-2xl font-bold text-ink tracking-tight">{{ $vendor->name }}</h1>
                         @if($vendor->is_active)
                             <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ring-inset bg-emerald-100 text-emerald-700 ring-emerald-600/10">Active</span>
                         @else

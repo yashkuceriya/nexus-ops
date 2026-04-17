@@ -1,10 +1,10 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Analytics & Reports</h1>
+                <h1 class="text-2xl font-bold text-ink tracking-tight">Analytics & Reports</h1>
                 <p class="mt-1 text-sm text-gray-500">Performance metrics and operational insights</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">

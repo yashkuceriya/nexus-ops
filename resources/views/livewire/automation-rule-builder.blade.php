@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[900px] mx-auto">
 
         {{-- Header --}}
@@ -9,7 +9,7 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">{{ $ruleId ? 'Edit' : 'Create' }} Automation Rule</h1>
+                <h1 class="text-2xl font-bold text-ink tracking-tight">{{ $ruleId ? 'Edit' : 'Create' }} Automation Rule</h1>
                 <p class="mt-1 text-sm text-gray-500">Define triggers, conditions, and actions for workflow automation</p>
             </div>
         </div>
@@ -307,7 +307,7 @@
             <div class="flex items-center justify-between pt-2">
                 <a href="{{ route('automation.index') }}" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">Cancel</a>
                 <button type="submit"
-                    class="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors">
+                    class="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-accent-700 transition-colors">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>

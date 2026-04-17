@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
@@ -26,7 +26,7 @@
             <div class="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
-                        <h1 class="text-xl font-bold text-gray-900 tracking-tight">{{ $execution->test_script_name }}</h1>
+                        <h1 class="text-xl font-bold text-ink tracking-tight">{{ $execution->test_script_name }}</h1>
                         <span class="text-xs text-gray-500">v{{ $execution->test_script_version }}</span>
                         <span class="chip {{ $statusConfig['chip'] }} uppercase">
                             {{ str_replace('_', ' ', $execution->status) }}

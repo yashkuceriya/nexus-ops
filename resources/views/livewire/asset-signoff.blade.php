@@ -1,7 +1,7 @@
 <div class="card p-6" x-data="{ signing: null, pad: null }">
     <div class="flex items-start justify-between mb-5">
         <div>
-            <h2 class="text-lg font-semibold text-gray-900 tracking-tight">Electronic Sign-Off</h2>
+            <h2 class="text-lg font-semibold text-ink tracking-tight">Electronic Sign-Off</h2>
             <p class="text-sm text-gray-500 mt-1">
                 Request and capture tamper-evident approvals for this asset's closeout.
             </p>

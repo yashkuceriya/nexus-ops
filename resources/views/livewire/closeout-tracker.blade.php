@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="">
     <div class="px-6 py-6 max-w-[1400px] mx-auto">
 
         {{-- Header --}}
@@ -13,7 +13,7 @@
 
         <div class="flex items-start justify-between mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Closeout Tracker</h1>
+                <h1 class="text-2xl font-bold text-ink tracking-tight">Closeout Tracker</h1>
                 <p class="mt-1 text-sm text-gray-500">{{ $project->name }}</p>
             </div>
             <a href="{{ route('projects.turnover-package', $project->id) }}"

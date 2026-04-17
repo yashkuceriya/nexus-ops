@@ -77,7 +77,7 @@
                                     class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                                 <button
                                     x-on:click="$wire.saveStepResponse(parseFloat(numValue))"
-                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                                     Save
                                 </button>
                             </div>
@@ -93,7 +93,7 @@
                                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(textValue)"
-                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                                 Save
                             </button>
                         </div>
@@ -109,7 +109,7 @@
                                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(photoNote)"
-                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                                 Save
                             </button>
                         </div>
