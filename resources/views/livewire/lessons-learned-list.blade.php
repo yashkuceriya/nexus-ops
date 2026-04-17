@@ -9,7 +9,7 @@
                 </p>
             </div>
             <button type="button" wire:click="$toggle('showCreateForm')"
-                class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition">
+                class="inline-flex items-center gap-2 rounded-lg btn-primary transition">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
@@ -89,7 +89,7 @@
                     <button type="button" wire:click="$set('showCreateForm', false)"
                         class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
                     <button type="button" wire:click="save"
-                        class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500">
+                        class="inline-flex items-center gap-2 rounded-lg btn-primary">
                         Save Lesson
                     </button>
                 </div>
@@ -127,7 +127,7 @@
         </div>
 
         @if($this->lessons->isEmpty())
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div class="card p-12 text-center">
                 <h3 class="text-sm font-semibold text-gray-900 mb-1">No lessons captured yet</h3>
                 <p class="text-sm text-gray-500">Start building your organisational knowledge base by capturing lessons from closed issues.</p>
             </div>
@@ -142,7 +142,7 @@
                             default    => ['bg' => 'bg-slate-50', 'text' => 'text-slate-700', 'ring' => 'ring-slate-200'],
                         };
                     @endphp
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition">
+                    <div class="card p-5 hover:shadow-md transition">
                         <div class="flex items-start justify-between gap-3 mb-3">
                             <h3 class="text-base font-semibold text-gray-900">{{ $lesson->title }}</h3>
                             <span class="inline-flex items-center rounded-full {{ $severityConfig['bg'] }} {{ $severityConfig['text'] }} ring-1 ring-inset {{ $severityConfig['ring'] }} px-2 py-0.5 text-[11px] font-medium uppercase">
@@ -161,15 +161,15 @@
                         </div>
                         <div class="space-y-3 text-sm">
                             <div>
-                                <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Problem</div>
+                                <div class="label-kicker mb-1">Problem</div>
                                 <p class="text-gray-700">{{ \Illuminate\Support\Str::limit($lesson->problem_summary, 180) }}</p>
                             </div>
                             <div>
-                                <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Root Cause</div>
+                                <div class="label-kicker mb-1">Root Cause</div>
                                 <p class="text-gray-700">{{ \Illuminate\Support\Str::limit($lesson->root_cause, 180) }}</p>
                             </div>
                             <div>
-                                <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Preventive Action</div>
+                                <div class="label-kicker mb-1">Preventive Action</div>
                                 <p class="text-gray-700">{{ \Illuminate\Support\Str::limit($lesson->preventive_action ?: $lesson->corrective_action, 180) }}</p>
                             </div>
                         </div>

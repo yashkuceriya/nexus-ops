@@ -23,7 +23,7 @@
     @endif
 
     {{-- Scatter Plot --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="card p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-gray-900">Criticality vs. Health Score</h2>
             <div class="flex items-center gap-3 flex-wrap">
@@ -41,7 +41,7 @@
     </div>
 
     {{-- Asset Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="card overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100">
             <h2 class="text-lg font-semibold text-gray-900">Assets by Health Score</h2>
             <p class="text-xs text-gray-500 mt-0.5">Sorted by lowest health score first</p>
@@ -50,12 +50,12 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-50">
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Asset</th>
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Health Score</th>
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Condition</th>
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">System Type</th>
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Contributing Factors</th>
-                        <th class="px-6 py-3.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider"></th>
+                        <th class="px-6 py-3.5 text-left label-kicker">Asset</th>
+                        <th class="px-6 py-3.5 text-left label-kicker">Health Score</th>
+                        <th class="px-6 py-3.5 text-left label-kicker">Condition</th>
+                        <th class="px-6 py-3.5 text-left label-kicker">System Type</th>
+                        <th class="px-6 py-3.5 text-left label-kicker">Contributing Factors</th>
+                        <th class="px-6 py-3.5 text-left label-kicker"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">

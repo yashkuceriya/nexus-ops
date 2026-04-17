@@ -9,7 +9,7 @@
     </div>
 
     {{-- Header --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="card p-6 mb-6">
         <div class="flex items-start justify-between">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-3 flex-wrap">
@@ -46,7 +46,7 @@
                 </p>
             </div>
             <div class="flex-shrink-0 ml-6">
-                <div class="w-24 h-24 bg-white rounded-xl border border-gray-200 p-2 flex items-center justify-center">
+                <div class="w-24 h-24 card p-2 flex items-center justify-center">
                     @try
                         {!! $this->generateQrCode() !!}
                     @catch (\Throwable $e)
@@ -63,33 +63,33 @@
     {{-- Info Grid --}}
     <div class="grid grid-cols-4 gap-4 mb-6">
         {{-- Manufacturer --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Manufacturer</p>
+        <div class="card p-4">
+            <p class="label-kicker">Manufacturer</p>
             <p class="mt-1 text-sm font-medium text-gray-900">{{ $asset->manufacturer ?? '—' }}</p>
         </div>
         {{-- Model --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Model</p>
+        <div class="card p-4">
+            <p class="label-kicker">Model</p>
             <p class="mt-1 text-sm font-medium text-gray-900">{{ $asset->model_number ?? '—' }}</p>
         </div>
         {{-- Serial Number --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Serial Number</p>
+        <div class="card p-4">
+            <p class="label-kicker">Serial Number</p>
             <p class="mt-1 text-sm font-medium text-gray-900 font-mono">{{ $asset->serial_number ?? '—' }}</p>
         </div>
         {{-- Asset Tag --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Asset Tag</p>
+        <div class="card p-4">
+            <p class="label-kicker">Asset Tag</p>
             <p class="mt-1 text-sm font-medium text-gray-900 font-mono">{{ $asset->asset_tag ?? '—' }}</p>
         </div>
         {{-- Install Date --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Install Date</p>
+        <div class="card p-4">
+            <p class="label-kicker">Install Date</p>
             <p class="mt-1 text-sm font-medium text-gray-900">{{ $asset->install_date?->format('M d, Y') ?? '—' }}</p>
         </div>
         {{-- Warranty --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Warranty</p>
+        <div class="card p-4">
+            <p class="label-kicker">Warranty</p>
             @if($asset->warranty_expiry)
                 @if($asset->isWarrantyActive())
                     <p class="mt-1 text-sm font-medium text-emerald-600">
@@ -107,19 +107,19 @@
             @endif
         </div>
         {{-- Runtime Hours --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Runtime Hours</p>
+        <div class="card p-4">
+            <p class="label-kicker">Runtime Hours</p>
             <p class="mt-1 text-sm font-medium text-gray-900">{{ $asset->runtime_hours ? number_format($asset->runtime_hours) . ' hrs' : '—' }}</p>
         </div>
         {{-- Location --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Location</p>
+        <div class="card p-4">
+            <p class="label-kicker">Location</p>
             <p class="mt-1 text-sm font-medium text-gray-900">{{ $asset->location?->name ?? '—' }}</p>
         </div>
     </div>
 
     {{-- Tabs --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="card overflow-hidden">
         <div class="border-b border-gray-200 px-1">
             <nav class="flex space-x-0">
                 <button @click="tab = 'overview'"
@@ -192,7 +192,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Commissioning</p>
+                                <p class="label-kicker">Commissioning</p>
                                 <p class="text-sm font-semibold text-gray-900">{{ str_replace('_', ' ', ucfirst($asset->commissioning_status ?? 'Unknown')) }}</p>
                             </div>
                         </div>
@@ -207,7 +207,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Replacement Cost</p>
+                                <p class="label-kicker">Replacement Cost</p>
                                 <p class="text-sm font-semibold text-gray-900">{{ $asset->replacement_cost ? '$' . number_format($asset->replacement_cost, 2) : '—' }}</p>
                             </div>
                         </div>
@@ -222,7 +222,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Expected Life</p>
+                                <p class="label-kicker">Expected Life</p>
                                 <p class="text-sm font-semibold text-gray-900">{{ $asset->expected_life_years ? $asset->expected_life_years . ' years' : '—' }}</p>
                             </div>
                         </div>
@@ -350,13 +350,13 @@
                 <table class="min-w-full">
                     <thead>
                         <tr class="bg-gray-50/80">
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">WO Number</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Title</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Priority</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Assigned To</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Created</th>
-                            <th class="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Completed</th>
+                            <th class="px-5 py-3 text-left label-kicker">WO Number</th>
+                            <th class="px-5 py-3 text-left label-kicker">Title</th>
+                            <th class="px-5 py-3 text-left label-kicker">Status</th>
+                            <th class="px-5 py-3 text-left label-kicker">Priority</th>
+                            <th class="px-5 py-3 text-left label-kicker">Assigned To</th>
+                            <th class="px-5 py-3 text-left label-kicker">Created</th>
+                            <th class="px-5 py-3 text-left label-kicker">Completed</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -538,7 +538,7 @@
 
                         <div class="mt-4 grid grid-cols-3 gap-4">
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Next Due</p>
+                                <p class="label-kicker">Next Due</p>
                                 @if($schedule->next_due_date)
                                 <p class="mt-0.5 text-sm font-medium {{ $isOverdue ? 'text-red-600' : 'text-gray-900' }}">
                                     @if($isOverdue)
@@ -552,11 +552,11 @@
                                 @endif
                             </div>
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Last Completed</p>
+                                <p class="label-kicker">Last Completed</p>
                                 <p class="mt-0.5 text-sm font-medium text-gray-900">{{ $schedule->last_completed_date?->format('M d, Y') ?? '—' }}</p>
                             </div>
                             <div>
-                                <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Est. Duration</p>
+                                <p class="label-kicker">Est. Duration</p>
                                 <p class="mt-0.5 text-sm font-medium text-gray-900">{{ $schedule->estimated_duration_minutes ? $schedule->estimated_duration_minutes . ' min' : '—' }}</p>
                             </div>
                         </div>
@@ -564,7 +564,7 @@
                         {{-- Checklist Preview --}}
                         @if($schedule->checklist && count($schedule->checklist) > 0)
                         <div class="mt-4 pt-3 border-t border-gray-100">
-                            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Checklist Preview</p>
+                            <p class="label-kicker mb-2">Checklist Preview</p>
                             <div class="space-y-1">
                                 @foreach(array_slice($schedule->checklist, 0, 4) as $item)
                                 <div class="flex items-center gap-2 text-xs text-gray-600">
@@ -625,9 +625,9 @@
     </div>
 
     {{-- QR Code Card --}}
-    <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div class="mt-6 card p-6">
         <div class="flex items-start gap-6">
-            <div class="flex-shrink-0 w-52 h-52 bg-white rounded-xl border border-gray-200 p-3 flex items-center justify-center">
+            <div class="flex-shrink-0 w-52 h-52 card p-3 flex items-center justify-center">
                 @try
                     {!! $this->generateQrCode() !!}
                 @catch (\Throwable $e)
@@ -641,7 +641,7 @@
                 <h3 class="text-sm font-semibold text-gray-900 mb-1">Asset QR Code</h3>
                 <p class="text-sm text-gray-500 mb-3">Scan this code to quickly identify and look up this asset in the field.</p>
                 <div class="flex items-center gap-2 mb-4">
-                    <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Code:</span>
+                    <span class="label-kicker">Code:</span>
                     <code class="px-3 py-1 rounded-lg bg-gray-100 text-sm font-mono text-gray-700">{{ $asset->qr_code ?? $asset->generateQrCode() }}</code>
                 </div>
                 <a href="data:image/svg+xml;base64,{{ base64_encode($this->generateQrCode()) }}"

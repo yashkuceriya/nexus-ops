@@ -17,7 +17,7 @@
                 <p class="mt-1 text-sm text-gray-500">{{ $project->name }}</p>
             </div>
             <a href="{{ route('projects.turnover-package', $project->id) }}"
-                class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition">
+                class="inline-flex items-center gap-2 rounded-lg btn-primary transition">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
@@ -26,7 +26,7 @@
         </div>
 
         {{-- Progress --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="card p-6 mb-6">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-sm font-semibold text-gray-700">Project Readiness</h2>
                 <span class="text-2xl font-bold text-emerald-600">{{ $this->stats['progress'] }}%</span>
@@ -37,23 +37,23 @@
             </div>
             <div class="grid grid-cols-5 gap-4 mt-5">
                 <div>
-                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Total</div>
+                    <div class="label-kicker">Total</div>
                     <div class="text-xl font-bold text-gray-900">{{ $this->stats['total'] }}</div>
                 </div>
                 <div>
-                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Approved</div>
+                    <div class="label-kicker">Approved</div>
                     <div class="text-xl font-bold text-emerald-600">{{ $this->stats['approved'] }}</div>
                 </div>
                 <div>
-                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Submitted</div>
+                    <div class="label-kicker">Submitted</div>
                     <div class="text-xl font-bold text-blue-600">{{ $this->stats['submitted'] }}</div>
                 </div>
                 <div>
-                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Pending</div>
+                    <div class="label-kicker">Pending</div>
                     <div class="text-xl font-bold text-amber-600">{{ $this->stats['required'] }}</div>
                 </div>
                 <div>
-                    <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Overdue</div>
+                    <div class="label-kicker">Overdue</div>
                     <div class="text-xl font-bold text-red-600">{{ $this->stats['overdue'] }}</div>
                 </div>
             </div>
@@ -85,21 +85,21 @@
 
         {{-- List --}}
         @if($this->requirements->isEmpty())
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div class="card p-12 text-center">
                 <h3 class="text-sm font-semibold text-gray-900 mb-1">No requirements match your filters</h3>
                 <p class="text-sm text-gray-500">Try widening the filters or seed the project with default closeout requirements.</p>
             </div>
         @else
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="card overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Requirement</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Category</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Asset</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Due</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-4 py-3 text-right text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-4 py-3 text-left label-kicker">Requirement</th>
+                            <th class="px-4 py-3 text-left label-kicker">Category</th>
+                            <th class="px-4 py-3 text-left label-kicker">Asset</th>
+                            <th class="px-4 py-3 text-left label-kicker">Due</th>
+                            <th class="px-4 py-3 text-left label-kicker">Status</th>
+                            <th class="px-4 py-3 text-right label-kicker">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">

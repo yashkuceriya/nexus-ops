@@ -24,7 +24,7 @@
         <form wire:submit="save" class="space-y-6">
 
             {{-- Section 1: Name + Description --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-6">
+            <div class="card/80 p-6">
                 <h2 class="text-base font-semibold text-gray-900 mb-4">Rule Details</h2>
 
                 <div class="space-y-4">
@@ -45,7 +45,7 @@
                     <div class="flex items-center gap-3">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input wire:model="isActive" type="checkbox" class="sr-only peer">
-                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent-600"></div>
                         </label>
                         <span class="text-sm text-gray-700">Rule is active</span>
                     </div>
@@ -53,7 +53,7 @@
             </div>
 
             {{-- Section 2: Trigger Type --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-6">
+            <div class="card/80 p-6">
                 <h2 class="text-base font-semibold text-gray-900 mb-4">Trigger</h2>
                 <p class="text-sm text-gray-500 mb-4">Select the event that will activate this rule.</p>
 
@@ -75,7 +75,7 @@
             </div>
 
             {{-- Section 3: Conditions --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-6">
+            <div class="card/80 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h2 class="text-base font-semibold text-gray-900">Conditions</h2>
@@ -103,7 +103,7 @@
                     <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
                         <div class="flex-1 grid grid-cols-3 gap-3">
                             <div>
-                                <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Field</label>
+                                <label class="block label-kicker mb-1">Field</label>
                                 <select wire:model="conditions.{{ $index }}.field"
                                     class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                     @foreach($conditionFields as $val => $lbl)
@@ -112,7 +112,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Operator</label>
+                                <label class="block label-kicker mb-1">Operator</label>
                                 <select wire:model="conditions.{{ $index }}.operator"
                                     class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                     @foreach($operators as $val => $lbl)
@@ -121,7 +121,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Value</label>
+                                <label class="block label-kicker mb-1">Value</label>
                                 <input wire:model="conditions.{{ $index }}.value" type="text" placeholder="Enter value..."
                                     class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                             </div>
@@ -146,7 +146,7 @@
             </div>
 
             {{-- Section 4: Actions --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-6">
+            <div class="card/80 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h2 class="text-base font-semibold text-gray-900">Actions</h2>
@@ -176,7 +176,7 @@
                             <div class="flex-1 space-y-3">
                                 {{-- Action Type --}}
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Action Type</label>
+                                    <label class="block label-kicker mb-1">Action Type</label>
                                     <select wire:model.live="actions.{{ $index }}.type"
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                         @foreach($actionTypes as $val => $lbl)
@@ -188,7 +188,7 @@
                                 {{-- Contextual fields based on action type --}}
                                 @if(($action['type'] ?? '') === 'assign_to_user')
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Assign To</label>
+                                    <label class="block label-kicker mb-1">Assign To</label>
                                     <select wire:model="actions.{{ $index }}.user_id"
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                         <option value="">Select user...</option>
@@ -201,7 +201,7 @@
 
                                 @if(($action['type'] ?? '') === 'change_priority')
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">New Priority</label>
+                                    <label class="block label-kicker mb-1">New Priority</label>
                                     <select wire:model="actions.{{ $index }}.priority"
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                         <option value="emergency">Emergency</option>
@@ -216,7 +216,7 @@
                                 @if(($action['type'] ?? '') === 'send_notification')
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Channel</label>
+                                        <label class="block label-kicker mb-1">Channel</label>
                                         <select wire:model="actions.{{ $index }}.channel"
                                             class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                             <option value="email">Email</option>
@@ -225,7 +225,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Recipient</label>
+                                        <label class="block label-kicker mb-1">Recipient</label>
                                         <select wire:model="actions.{{ $index }}.user_id"
                                             class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                             <option value="">Assigned user</option>
@@ -236,7 +236,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Message</label>
+                                    <label class="block label-kicker mb-1">Message</label>
                                     <input wire:model="actions.{{ $index }}.message" type="text" placeholder="Custom notification message..."
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                 </div>
@@ -244,7 +244,7 @@
 
                                 @if(($action['type'] ?? '') === 'escalate_to_manager')
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Escalation Message <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
+                                    <label class="block label-kicker mb-1">Escalation Message <span class="text-gray-400 font-normal normal-case">(optional)</span></label>
                                     <input wire:model="actions.{{ $index }}.message" type="text" placeholder="Custom escalation message..."
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                 </div>
@@ -259,12 +259,12 @@
                                 @if(($action['type'] ?? '') === 'create_work_order')
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">WO Title</label>
+                                        <label class="block label-kicker mb-1">WO Title</label>
                                         <input wire:model="actions.{{ $index }}.template.title" type="text" placeholder="Work order title..."
                                             class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Priority</label>
+                                        <label class="block label-kicker mb-1">Priority</label>
                                         <select wire:model="actions.{{ $index }}.template.priority"
                                             class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                                             <option value="emergency">Emergency</option>
@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                                    <label class="block label-kicker mb-1">Description</label>
                                     <textarea wire:model="actions.{{ $index }}.template.description" rows="2" placeholder="Work order description..."
                                         class="w-full rounded-lg border border-gray-300 px-2.5 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"></textarea>
                                 </div>
@@ -307,7 +307,7 @@
             <div class="flex items-center justify-between pt-2">
                 <a href="{{ route('automation.index') }}" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">Cancel</a>
                 <button type="submit"
-                    class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors">
+                    class="inline-flex items-center gap-2 rounded-lg bg-accent-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>

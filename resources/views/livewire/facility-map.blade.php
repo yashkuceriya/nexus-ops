@@ -168,7 +168,7 @@
                                     <p class="text-zinc-500 text-[9px] uppercase tracking-wider">Alerts</p>
                                 </div>
                             </div>
-                            <a href="/projects/${m.id}" class="block w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors">
+                            <a href="/projects/${m.id}" class="block w-full text-center bg-accent-600 hover:bg-accent-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors">
                                 View Details
                             </a>
                         </div>

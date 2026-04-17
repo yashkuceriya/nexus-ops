@@ -1,5 +1,5 @@
 <div wire:poll.8s>
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="card overflow-hidden">
         {{-- Header --}}
         <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <div class="flex items-center gap-2">

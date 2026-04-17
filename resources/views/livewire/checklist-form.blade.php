@@ -14,7 +14,7 @@
             $progressPercent = $totalSteps > 0 ? round(($currentStep / $totalSteps) * 100) : 0;
         @endphp
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="card overflow-hidden">
             {{-- Header with progress --}}
             <div class="px-5 py-3.5 border-b border-gray-100">
                 <div class="flex items-center justify-between mb-2">
@@ -25,7 +25,7 @@
                 </div>
                 {{-- Progress Bar --}}
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-brand-500 h-2 rounded-full transition-all duration-300" style="width: {{ $progressPercent }}%"></div>
+                    <div class="bg-accent-600 h-2 rounded-full transition-all duration-300" style="width: {{ $progressPercent }}%"></div>
                 </div>
             </div>
 
@@ -74,10 +74,10 @@
                                     @if(isset($currentStepData['min'])) min="{{ $currentStepData['min'] }}" @endif
                                     @if(isset($currentStepData['max'])) max="{{ $currentStepData['max'] }}" @endif
                                     placeholder="Enter value..."
-                                    class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none">
+                                    class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                                 <button
                                     x-on:click="$wire.saveStepResponse(parseFloat(numValue))"
-                                    class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
                                     Save
                                 </button>
                             </div>
@@ -90,10 +90,10 @@
                                 x-model="textValue"
                                 rows="3"
                                 placeholder="Enter notes..."
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(textValue)"
-                                class="mt-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
                                 Save
                             </button>
                         </div>
@@ -106,10 +106,10 @@
                                 x-model="photoNote"
                                 rows="2"
                                 placeholder="Describe what was observed..."
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(photoNote)"
-                                class="mt-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
                                 Save
                             </button>
                         </div>
@@ -166,7 +166,7 @@
 
     {{-- Template Selection --}}
     @else
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="card overflow-hidden">
             <div class="px-5 py-3.5 border-b border-gray-100">
                 <h3 class="text-sm font-semibold text-gray-900">Inspection Checklists</h3>
             </div>
@@ -174,7 +174,7 @@
                 {{-- Completed Checklists --}}
                 @if($this->completions->count() > 0)
                 <div class="mb-5">
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Previous Checklists</p>
+                    <p class="label-kicker mb-2">Previous Checklists</p>
                     <div class="space-y-2">
                         @foreach($this->completions as $comp)
                         <div class="flex items-center justify-between rounded-lg border px-4 py-3
@@ -199,15 +199,15 @@
                 @endif
 
                 {{-- Start New Checklist --}}
-                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Start New Checklist</p>
+                <p class="label-kicker mb-2">Start New Checklist</p>
                 @forelse($this->templates as $template)
                 <button wire:click="startChecklist({{ $template->id }})"
-                    class="w-full text-left flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3 hover:border-brand-300 hover:bg-brand-50/50 transition-colors mb-2 group">
+                    class="w-full text-left flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3 hover:border-brand-300 hover:bg-accent-50/50 transition-colors mb-2 group">
                     <div>
                         <p class="text-sm font-medium text-gray-900 group-hover:text-brand-700">{{ $template->name }}</p>
                         <p class="text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', $template->category)) }} &middot; {{ count($template->steps) }} steps</p>
                     </div>
-                    <svg class="h-5 w-5 text-gray-400 group-hover:text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="h-5 w-5 text-gray-400 group-hover:text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 @empty
                 <div class="py-6 text-center">

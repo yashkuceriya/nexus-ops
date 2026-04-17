@@ -24,7 +24,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {{-- Floor Plan SVG --}}
         <div class="xl:col-span-3">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 overflow-hidden">
+            <div class="card p-4 overflow-hidden">
                 <svg viewBox="0 0 800 560" class="w-full h-auto" style="min-height: 480px;"
                      xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -170,9 +170,9 @@
             </div>
 
             {{-- Legend --}}
-            <div class="mt-4 bg-white rounded-xl shadow-sm border border-gray-200 px-5 py-3">
+            <div class="mt-4 card px-5 py-3">
                 <div class="flex items-center gap-6 flex-wrap">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Legend:</span>
+                    <span class="label-kicker">Legend:</span>
                     <div class="flex items-center gap-2">
                         <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white shadow"></span>
                         <span class="text-xs text-gray-600">Normal — all sensors OK, no active WOs</span>
@@ -197,7 +197,7 @@
         <div class="xl:col-span-1">
             @if($this->selectedAssetDetail)
                 @php $detail = $this->selectedAssetDetail; @endphp
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-6">
+                <div class="card overflow-hidden sticky top-6">
                     {{-- Header --}}
                     <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between
                         {{ match($detail['color']) {
@@ -231,17 +231,17 @@
                     {{-- Details --}}
                     <div class="p-5 space-y-4">
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Condition</p>
+                            <p class="label-kicker">Condition</p>
                             <p class="mt-1 text-sm font-medium text-gray-900">{{ $detail['condition'] }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Last Sensor Reading</p>
+                            <p class="label-kicker">Last Sensor Reading</p>
                             <p class="mt-1 text-sm font-medium text-gray-900">{{ $detail['last_reading'] }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Open Work Orders</p>
+                            <p class="label-kicker">Open Work Orders</p>
                             <p class="mt-1 text-sm font-medium {{ $detail['open_wo_count'] > 0 ? 'text-amber-600' : 'text-gray-900' }}">
                                 {{ $detail['open_wo_count'] }}
                             </p>
@@ -257,7 +257,7 @@
                     </div>
                 </div>
             @else
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+                <div class="card p-8 text-center">
                     <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>

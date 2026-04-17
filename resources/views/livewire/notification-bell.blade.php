@@ -18,7 +18,7 @@
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
             @if($this->unreadCount > 0)
-                <button wire:click="markAllAsRead" class="text-xs text-brand-600 hover:text-brand-700 font-medium">
+                <button wire:click="markAllAsRead" class="text-xs text-accent-700 hover:text-brand-700 font-medium">
                     Mark all as read
                 </button>
             @endif
@@ -29,7 +29,7 @@
             @forelse($this->notifications as $notification)
                 <div
                     wire:click="markAsRead('{{ $notification->id }}')"
-                    class="flex items-start gap-3 px-4 py-3 cursor-pointer transition {{ is_null($notification->read_at) ? 'bg-brand-50/50 hover:bg-brand-50' : 'hover:bg-gray-50' }}"
+                    class="flex items-start gap-3 px-4 py-3 cursor-pointer transition {{ is_null($notification->read_at) ? 'bg-accent-50/50 hover:bg-accent-50' : 'hover:bg-gray-50' }}"
                 >
                     {{-- Icon by type --}}
                     <div class="flex-shrink-0 mt-0.5">
@@ -85,7 +85,7 @@
                     {{-- Unread dot --}}
                     @if(is_null($notification->read_at))
                         <div class="flex-shrink-0 mt-1.5">
-                            <div class="w-2 h-2 bg-brand-500 rounded-full"></div>
+                            <div class="w-2 h-2 bg-accent-600 rounded-full"></div>
                         </div>
                     @endif
                 </div>

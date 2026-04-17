@@ -47,9 +47,9 @@
         </div>
 
         {{-- Table --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden">
+        <div class="card/80 overflow-hidden">
             {{-- Table Header --}}
-            <div class="hidden md:grid md:grid-cols-[170px_180px_140px_1fr_130px_50px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+            <div class="hidden md:grid md:grid-cols-[170px_180px_140px_1fr_130px_50px] gap-4 px-5 py-3 bg-gray-50 border-b border-gray-200 label-kicker">
                 <div>Timestamp</div>
                 <div>User</div>
                 <div>Action</div>
@@ -136,7 +136,7 @@
                     <div class="grid grid-cols-2 gap-4 mt-1">
                         {{-- Old Values --}}
                         <div>
-                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Previous Values</p>
+                            <p class="label-kicker mb-2">Previous Values</p>
                             <div class="rounded-lg bg-red-50 border border-red-200/60 p-3 space-y-1.5">
                                 @foreach($changedKeys as $key)
                                 <div class="flex items-start gap-2">
@@ -149,7 +149,7 @@
 
                         {{-- New Values --}}
                         <div>
-                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">New Values</p>
+                            <p class="label-kicker mb-2">New Values</p>
                             <div class="rounded-lg bg-emerald-50 border border-emerald-200/60 p-3 space-y-1.5">
                                 @foreach($changedKeys as $key)
                                 <div class="flex items-start gap-2">

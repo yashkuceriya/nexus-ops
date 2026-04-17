@@ -22,10 +22,21 @@ class SmokeNewRoutesTest extends TestCase
         $execution = TestExecution::where('tenant_id', $admin->tenant_id)->first();
 
         $routes = [
+            '/dashboard',
             '/fpt/scripts',
             '/fpt/executions',
             '/lessons-learned',
             '/reports/commissioning',
+            '/reports',
+            '/audit-log',
+            '/automation',
+            '/vendors',
+            '/assets',
+            '/sensors',
+            '/floor-plan',
+            '/health-matrix',
+            '/deficiencies',
+            '/docs',
             "/projects/{$project->id}/pfc",
             "/projects/{$project->id}/cx-matrix",
             "/projects/{$project->id}/turnover",

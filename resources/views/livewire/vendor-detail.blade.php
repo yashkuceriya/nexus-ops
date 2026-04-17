@@ -104,7 +104,7 @@
             <div class="lg:col-span-2 space-y-6">
 
                 {{-- Performance Scorecard --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Performance Scorecard</h3>
                     </div>
@@ -143,7 +143,7 @@
                 </div>
 
                 {{-- Tabs --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="border-b border-gray-100">
                         <nav class="flex -mb-px">
                             <button wire:click="switchTab('contracts')"
@@ -259,14 +259,14 @@
             <div class="space-y-6">
 
                 {{-- Vendor Info Card --}}
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-gray-100">
                         <h3 class="text-sm font-semibold text-gray-900">Vendor Details</h3>
                     </div>
                     <div class="px-5 py-4 space-y-3">
                         @if($vendor->address)
                         <div>
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">Address</span>
+                            <span class="label-kicker block mb-0.5">Address</span>
                             <span class="text-sm text-gray-900">{{ $vendor->address }}</span>
                             @if($vendor->city || $vendor->state || $vendor->zip)
                             <br><span class="text-sm text-gray-900">{{ implode(', ', array_filter([$vendor->city, $vendor->state])) }} {{ $vendor->zip }}</span>
@@ -276,13 +276,13 @@
 
                         @if($vendor->license_number)
                         <div>
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">License #</span>
+                            <span class="label-kicker block mb-0.5">License #</span>
                             <span class="text-sm font-mono text-gray-900">{{ $vendor->license_number }}</span>
                         </div>
                         @endif
 
                         <div>
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">Insurance</span>
+                            <span class="label-kicker block mb-0.5">Insurance</span>
                             @php $insuranceStatus = $vendor->getInsuranceStatus(); @endphp
                             <span class="inline-flex items-center gap-1.5 text-sm font-medium {{ match($insuranceStatus) {
                                 'active' => 'text-emerald-600',
@@ -305,7 +305,7 @@
 
                         @if($vendor->notes)
                         <div>
-                            <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">Notes</span>
+                            <span class="label-kicker block mb-0.5">Notes</span>
                             <p class="text-sm text-gray-700 whitespace-pre-line">{{ $vendor->notes }}</p>
                         </div>
                         @endif
@@ -315,7 +315,7 @@
                 {{-- Active Contract Summary --}}
                 @php $activeContract = $vendor->getActiveContract(); @endphp
                 @if($activeContract)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden ring-1 ring-emerald-200">
+                <div class="card overflow-hidden ring-1 ring-emerald-200">
                     <div class="px-5 py-3.5 border-b border-gray-100 bg-emerald-50/50">
                         <h3 class="text-sm font-semibold text-emerald-900">Active Contract</h3>
                     </div>
@@ -327,12 +327,12 @@
                             @endif
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Expires</span>
+                            <span class="label-kicker">Expires</span>
                             <span class="text-sm text-gray-900">{{ $activeContract->end_date->format('M d, Y') }}</span>
                         </div>
                         @if($activeContract->nte_limit)
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">NTE Limit</span>
+                            <span class="label-kicker">NTE Limit</span>
                             <span class="text-sm font-bold text-gray-900">${{ number_format($activeContract->nte_limit, 2) }}</span>
                         </div>
                         @endif

@@ -3,7 +3,7 @@
         {{-- Token Input --}}
         <div class="text-center py-10">
             <div class="mx-auto w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mb-5">
-                <svg class="w-8 h-8 text-brand-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <svg class="w-8 h-8 text-accent-700" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                 </svg>
             </div>
@@ -14,9 +14,9 @@
                 <div class="flex gap-2">
                     <input type="text" wire:model="token" wire:keydown.enter="lookup" maxlength="8"
                         placeholder="e.g. AB12CD34"
-                        class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-lg font-mono font-semibold tracking-widest text-gray-900 uppercase placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal placeholder:font-normal focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none">
+                        class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-lg font-mono font-semibold tracking-widest text-gray-900 uppercase placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal placeholder:font-normal focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                     <button wire:click="lookup"
-                        class="rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                        class="rounded-lg bg-accent-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
                         Look Up
                     </button>
                 </div>
@@ -71,7 +71,7 @@
         </div>
 
         {{-- Progress Timeline --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-6 py-5 mb-6">
+        <div class="card px-6 py-5 mb-6">
             <div class="flex items-center justify-between">
                 @foreach($this->statusSteps as $step)
                 <div class="flex flex-col items-center flex-1 relative">
@@ -80,8 +80,8 @@
                         {{ $step['is_past'] || $step['is_current'] ? 'bg-brand-400' : 'bg-gray-200' }}"></div>
                     @endif
                     <div class="relative z-10 flex items-center justify-center h-8 w-8 rounded-full border-2 transition-all
-                        {{ $step['is_past'] ? 'bg-brand-500 border-brand-500 text-white' : '' }}
-                        {{ $step['is_current'] ? 'bg-brand-500 border-brand-500 text-white ring-4 ring-brand-100' : '' }}
+                        {{ $step['is_past'] ? 'bg-accent-600 border-brand-500 text-white' : '' }}
+                        {{ $step['is_current'] ? 'bg-accent-600 border-brand-500 text-white ring-4 ring-brand-100' : '' }}
                         {{ $step['is_future'] ? 'bg-white border-gray-300 text-gray-400' : '' }}">
                         @if($step['is_past'])
                             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -98,31 +98,31 @@
         </div>
 
         {{-- Request Details --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+        <div class="card overflow-hidden mb-6">
             <div class="px-5 py-3.5 border-b border-gray-100">
                 <h3 class="text-sm font-semibold text-gray-900">Request Details</h3>
             </div>
             <div class="px-5 py-4">
                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                     <div>
-                        <dt class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Building</dt>
+                        <dt class="label-kicker">Building</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ $request->project?->name ?? '---' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Location</dt>
+                        <dt class="label-kicker">Location</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ $request->location?->name ?? '---' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Category</dt>
+                        <dt class="label-kicker">Category</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $request->category)) }}</dd>
                     </div>
                     <div>
-                        <dt class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Submitted By</dt>
+                        <dt class="label-kicker">Submitted By</dt>
                         <dd class="mt-1 text-sm text-gray-900">{{ $request->requester_name }}</dd>
                     </div>
                 </dl>
                 <div class="mt-4 pt-4 border-t border-gray-100">
-                    <dt class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</dt>
+                    <dt class="label-kicker mb-1">Description</dt>
                     <dd class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ $request->description }}</dd>
                 </div>
             </div>
@@ -130,7 +130,7 @@
 
         {{-- Satisfaction Survey (for completed/closed requests) --}}
         @if(in_array($request->status, ['completed', 'closed']))
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="card overflow-hidden">
                 <div class="px-5 py-3.5 border-b border-gray-100">
                     <h3 class="text-sm font-semibold text-gray-900">How did we do?</h3>
                 </div>
@@ -172,10 +172,10 @@
                         @if($rating > 0)
                         <div class="space-y-3">
                             <textarea wire:model="comment" rows="2" placeholder="Any additional comments? (optional)"
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <div class="flex justify-end">
                                 <button wire:click="submitSurvey"
-                                    class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
+                                    class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 transition-colors">
                                     Submit Feedback
                                 </button>
                             </div>
@@ -190,7 +190,7 @@
         <div class="mt-6 text-center">
             <button wire:click="$set('searched', false); $wire.set('request', null); $wire.set('token', '')"
                 x-on:click="$wire.set('searched', false); $wire.set('token', '')"
-                class="text-sm text-gray-500 hover:text-brand-600 transition-colors">
+                class="text-sm text-gray-500 hover:text-accent-700 transition-colors">
                 Look up a different request
             </button>
         </div>

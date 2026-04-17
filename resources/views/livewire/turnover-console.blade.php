@@ -10,10 +10,10 @@
     {{-- Header --}}
     <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-            <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-brand-600 font-semibold">
+            <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-accent-700 font-semibold">
                 <span>Accelerated Turnover Package</span>
                 <span class="text-gray-400">·</span>
-                <a href="{{ route('projects.show', $project->id) }}" wire:navigate class="text-gray-500 hover:text-brand-600">
+                <a href="{{ route('projects.show', $project->id) }}" wire:navigate class="text-gray-500 hover:text-accent-700">
                     {{ $project->name }}
                 </a>
             </div>
@@ -26,7 +26,7 @@
                 Cx Matrix
             </a>
             <a href="{{ route('projects.turnover-package', $project->id) }}"
-               class="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">
+               class="inline-flex items-center gap-1.5 rounded-lg bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
                 </svg>
@@ -129,7 +129,7 @@
                     <div class="text-xs text-gray-500">FPT execution + witness + step-level statistics</div>
                 </div>
                 <a href="{{ route('fpt.executions.index', ['projectFilter' => $project->id]) }}" wire:navigate
-                   class="text-xs font-semibold text-brand-600 hover:text-brand-700">View all executions →</a>
+                   class="text-xs font-semibold text-accent-700 hover:text-brand-700">View all executions →</a>
             </div>
             @php
                 $metrics = [

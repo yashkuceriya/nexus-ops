@@ -34,10 +34,10 @@
         @php $kpi = $this->kpiSummary; @endphp
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {{-- Total Work Orders --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Work Orders</p>
+                        <p class="label-kicker">Total Work Orders</p>
                         <p class="mt-2 text-3xl font-bold text-gray-900">{{ number_format($kpi['total_work_orders']) }}</p>
                     </div>
                     <div class="h-12 w-12 rounded-lg bg-indigo-50 flex items-center justify-center">
@@ -49,10 +49,10 @@
             </div>
 
             {{-- Avg Resolution Time --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Resolution Time</p>
+                        <p class="label-kicker">Avg Resolution Time</p>
                         <p class="mt-2 text-3xl font-bold text-gray-900">{{ $kpi['avg_mttr_hours'] }}<span class="text-base font-normal text-gray-400 ml-1">hrs</span></p>
                     </div>
                     <div class="h-12 w-12 rounded-lg bg-amber-50 flex items-center justify-center">
@@ -64,10 +64,10 @@
             </div>
 
             {{-- Total Spend --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Spend</p>
+                        <p class="label-kicker">Total Spend</p>
                         <p class="mt-2 text-3xl font-bold text-gray-900">${{ number_format($kpi['total_cost'], 0) }}</p>
                     </div>
                     <div class="h-12 w-12 rounded-lg bg-emerald-50 flex items-center justify-center">
@@ -79,10 +79,10 @@
             </div>
 
             {{-- PM Compliance --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">PM Compliance</p>
+                        <p class="label-kicker">PM Compliance</p>
                         <p class="mt-2 text-3xl font-bold text-gray-900">{{ $kpi['pm_compliance'] }}<span class="text-base font-normal text-gray-400 ml-1">%</span></p>
                     </div>
                     <div class="h-12 w-12 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -98,7 +98,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {{-- Work Orders by Month --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">Work Orders by Month</h3>
                 <div wire:ignore>
                     <canvas id="woByMonthChart" height="260"></canvas>
@@ -106,7 +106,7 @@
             </div>
 
             {{-- Work Order Aging --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">Work Order Aging</h3>
                 <div wire:ignore>
                     <canvas id="woAgingChart" height="260"></canvas>
@@ -114,7 +114,7 @@
             </div>
 
             {{-- Top 10 Problem Assets --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">Top 10 Problem Assets</h3>
                 <div wire:ignore>
                     <canvas id="topAssetsChart" height="260"></canvas>
@@ -122,7 +122,7 @@
             </div>
 
             {{-- PM Compliance Trend --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">PM Compliance Trend</h3>
                 <div wire:ignore>
                     <canvas id="pmComplianceChart" height="260"></canvas>
@@ -130,7 +130,7 @@
             </div>
 
             {{-- SLA Compliance --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">SLA Compliance</h3>
                 <div wire:ignore>
                     <canvas id="slaComplianceChart" height="260"></canvas>
@@ -138,7 +138,7 @@
             </div>
 
             {{-- Cost by System --}}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+            <div class="card/80 p-5">
                 <h3 class="text-sm font-semibold text-gray-900 mb-4">Cost by System</h3>
                 <div wire:ignore>
                     <canvas id="costBySystemChart" height="260"></canvas>

@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6" x-data="{ signing: null, pad: null }">
+<div class="card p-6" x-data="{ signing: null, pad: null }">
     <div class="flex items-start justify-between mb-5">
         <div>
             <h2 class="text-lg font-semibold text-gray-900 tracking-tight">Electronic Sign-Off</h2>
@@ -8,7 +8,7 @@
         </div>
         <button type="button"
             wire:click="$toggle('showRequestForm')"
-            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition">
+            class="inline-flex items-center gap-2 rounded-lg btn-primary transition">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -47,7 +47,7 @@
                 <button type="button" wire:click="$set('showRequestForm', false)"
                     class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
                 <button type="button" wire:click="requestSignoff"
-                    class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500">
+                    class="inline-flex items-center gap-2 rounded-lg btn-primary">
                     Send Request
                 </button>
             </div>
