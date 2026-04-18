@@ -560,55 +560,61 @@
                     </div>
                 </div>
 
-                {{-- SLA Card --}}
+                {{-- SLA Gauge --}}
                 @if($workOrder->sla_deadline)
-                <div class="card overflow-hidden {{ $workOrder->isSlaBreached() ? 'ring-1 ring-red-200' : '' }}">
-                    <div class="px-5 py-3.5 border-b border-gray-100">
-                        <h3 class="text-sm font-semibold text-gray-900">SLA</h3>
+                @php
+                    $totalSeconds = $workOrder->sla_hours * 3600;
+                    $elapsedSeconds = $workOrder->created_at->diffInSeconds($workOrder->completed_at ?? now());
+                    $progress = $totalSeconds > 0 ? min(100, ($elapsedSeconds / $totalSeconds) * 100) : 0;
+                    $arcColor = $progress >= 100 ? '#EF4444' : ($progress >= 75 ? '#F59E0B' : '#10B981');
+                    // Semi-circle: 180° arc. Path length = π * r where r=70.
+                    $arcLen = pi() * 70;
+                    $arcDash = ($progress / 100) * $arcLen;
+                @endphp
+                <div class="card overflow-hidden {{ $workOrder->isSlaBreached() ? 'ring-1 ring-red-200' : '' }}" wire:poll.60s>
+                    <div class="px-5 py-3.5 hairline-b flex items-center justify-between">
+                        <h3 class="text-[15px] font-semibold text-ink">SLA</h3>
+                        @if($workOrder->isSlaBreached())
+                            <span class="chip chip-fail">BREACHED</span>
+                        @elseif($workOrder->completed_at)
+                            <span class="chip chip-pass">ON TIME</span>
+                        @elseif($progress >= 75)
+                            <span class="chip chip-warn">AT RISK</span>
+                        @else
+                            <span class="chip chip-pass">ON TRACK</span>
+                        @endif
                     </div>
-                    <div class="px-5 py-4 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Deadline</span>
-                            <span class="text-sm text-gray-900">{{ $workOrder->sla_deadline->format('M d, Y g:i A') }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">SLA Hours</span>
-                            <span class="text-sm text-gray-900">{{ $workOrder->sla_hours }}h</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Time Remaining</span>
-                            @if($workOrder->isSlaBreached())
-                                <span class="inline-flex items-center rounded px-2 py-0.5 text-xs font-bold bg-red-100 text-red-700">BREACHED</span>
-                            @elseif($workOrder->completed_at)
-                                <span class="text-sm font-medium text-emerald-600">Completed on time</span>
-                            @else
-                                @php
-                                    $remaining = now()->diff($workOrder->sla_deadline);
-                                    $hoursLeft = $remaining->h + ($remaining->days * 24);
-                                    $minutesLeft = $remaining->i;
-                                @endphp
-                                <span class="text-sm font-medium {{ $hoursLeft < 2 ? 'text-amber-600' : 'text-gray-900' }}">
-                                    {{ $hoursLeft }}h {{ $minutesLeft }}m
-                                </span>
-                            @endif
-                        </div>
-
-                        {{-- Progress Bar --}}
-                        @php
-                            $totalSeconds = $workOrder->sla_hours * 3600;
-                            $elapsedSeconds = $workOrder->created_at->diffInSeconds(
-                                $workOrder->completed_at ?? now()
-                            );
-                            $progress = $totalSeconds > 0 ? min(100, ($elapsedSeconds / $totalSeconds) * 100) : 0;
-                        @endphp
-                        <div class="pt-1">
-                            <div class="w-full bg-slate-100 rounded-full h-2">
-                                <div class="h-2 rounded-full transition-all duration-300
-                                    {{ $progress >= 100 ? 'bg-red-500' : ($progress >= 75 ? 'bg-amber-500' : 'bg-emerald-500') }}"
-                                    style="width: {{ $progress }}%"></div>
+                    <div class="px-5 py-4">
+                        <div class="relative mx-auto" style="width:180px; height:100px;">
+                            <svg viewBox="0 0 180 100" class="w-full h-full">
+                                <path d="M 20 90 A 70 70 0 0 1 160 90" fill="none" stroke="#F1F5F9" stroke-width="12" stroke-linecap="round"/>
+                                <path d="M 20 90 A 70 70 0 0 1 160 90" fill="none" stroke="{{ $arcColor }}" stroke-width="12" stroke-linecap="round"
+                                      stroke-dasharray="{{ $arcDash }} {{ $arcLen }}"
+                                      style="transition: stroke-dasharray 600ms ease-out;"/>
+                            </svg>
+                            <div class="absolute inset-x-0 bottom-2 text-center">
+                                <div class="text-2xl font-bold text-ink tabular-nums leading-none">{{ number_format($progress, 0) }}<span class="text-sm text-ink-soft">%</span></div>
+                                <div class="mono text-[9px] text-ink-soft mt-0.5">SLA CONSUMED</div>
                             </div>
-                            <p class="mt-1 text-[11px] text-gray-400 text-right">{{ number_format($progress, 0) }}% of SLA consumed</p>
                         </div>
+                        <div class="mt-3 grid grid-cols-2 gap-3 text-center">
+                            <div>
+                                <p class="label-kicker">Budget</p>
+                                <p class="mono text-[13px] font-semibold text-ink mt-1">{{ $workOrder->sla_hours }}h</p>
+                            </div>
+                            <div>
+                                <p class="label-kicker">Remaining</p>
+                                @if($workOrder->isSlaBreached())
+                                    <p class="mono text-[13px] font-semibold text-red-600 mt-1">—</p>
+                                @elseif($workOrder->completed_at)
+                                    <p class="mono text-[13px] font-semibold text-emerald-600 mt-1">Complete</p>
+                                @else
+                                    @php $rem = now()->diff($workOrder->sla_deadline); $hLeft = $rem->h + ($rem->days * 24); @endphp
+                                    <p class="mono text-[13px] font-semibold {{ $hLeft < 2 ? 'text-amber-600' : 'text-ink' }} mt-1">{{ $hLeft }}h {{ $rem->i }}m</p>
+                                @endif
+                            </div>
+                        </div>
+                        <p class="mt-3 text-[11px] text-ink-soft text-center mono">Deadline {{ $workOrder->sla_deadline->format('M d · g:i A') }}</p>
                     </div>
                 </div>
                 @endif

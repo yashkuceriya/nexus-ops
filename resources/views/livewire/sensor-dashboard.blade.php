@@ -73,6 +73,66 @@
         </div>
     </div>
 
+    {{-- Anomaly heatmap — 7d × 24h --}}
+    @php
+        $hm = $this->anomalyHeatmap;
+        $hmMax = max(1, $hm['max']);
+    @endphp
+    <div class="card p-5 mb-6">
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <div>
+                <h3 class="text-[15px] font-semibold text-ink">Anomaly Density</h3>
+                <p class="text-[12px] text-ink-muted">Hourly anomaly counts across all active sensors, last 7 days.</p>
+            </div>
+            <div class="flex items-center gap-1.5 text-[10px] mono text-ink-soft">
+                <span>low</span>
+                <span class="w-3 h-3 rounded-sm bg-slate-100"></span>
+                <span class="w-3 h-3 rounded-sm" style="background:rgba(79,70,229,.25)"></span>
+                <span class="w-3 h-3 rounded-sm" style="background:rgba(79,70,229,.5)"></span>
+                <span class="w-3 h-3 rounded-sm" style="background:rgba(79,70,229,.75)"></span>
+                <span class="w-3 h-3 rounded-sm" style="background:#4F46E5"></span>
+                <span>high</span>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <div class="inline-block min-w-full">
+                <div class="flex">
+                    <div class="w-14 shrink-0"></div>
+                    <div class="flex-1 grid" style="grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 2px;">
+                        @for($h = 0; $h < 24; $h++)
+                            <div class="text-center mono text-[9px] text-ink-soft">{{ $h % 3 === 0 ? str_pad($h, 2, '0', STR_PAD_LEFT) : '' }}</div>
+                        @endfor
+                    </div>
+                </div>
+                @foreach($hm['grid'] as $day => $hours)
+                    <div class="flex items-center mt-0.5">
+                        <div class="w-14 shrink-0 mono text-[10px] text-ink-soft pr-2 text-right">{{ \Carbon\Carbon::parse($day)->format('D M j') }}</div>
+                        <div class="flex-1 grid" style="grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 2px;">
+                            @foreach($hours as $hour => $count)
+                                @php
+                                    $intensity = $hmMax > 0 ? $count / $hmMax : 0;
+                                    if ($count === 0) {
+                                        $bg = '#F1F5F9';
+                                    } else {
+                                        $alpha = max(.2, min(1, $intensity));
+                                        $bg = 'rgba(79,70,229,'.round($alpha, 2).')';
+                                    }
+                                @endphp
+                                <div class="h-5 rounded-sm hover:ring-2 hover:ring-accent-400 cursor-pointer transition"
+                                     style="background: {{ $bg }}"
+                                     title="{{ \Carbon\Carbon::parse($day)->format('M j') }} {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00 — {{ $count }} {{ \Illuminate\Support\Str::plural('anomaly', $count) }}"></div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between text-[11px] mono text-ink-soft">
+            <span>Peak bucket: {{ $hmMax }} {{ \Illuminate\Support\Str::plural('anomaly', $hmMax) }}/hr</span>
+            <span>{{ collect($hm['grid'])->flatten()->sum() }} total in the last 7d</span>
+        </div>
+    </div>
+
     {{-- Main Two-Panel Layout --}}
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {{-- LEFT: Sensor Directory --}}

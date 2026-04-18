@@ -68,6 +68,40 @@ class SensorDashboard extends Component
             ->count();
     }
 
+    /**
+     * 7-day × 24-hour anomaly density grid. Values are anomaly counts per
+     * (day, hour) bucket across all active sensors in the tenant.
+     *
+     * @return array{max:int, grid:array<int, array<int, int>>}
+     */
+    public function getAnomalyHeatmapProperty(): array
+    {
+        $sensorIds = SensorSource::pluck('id');
+        $since = now()->subDays(7)->startOfHour();
+
+        $rows = SensorReading::query()
+            ->whereIn('sensor_source_id', $sensorIds)
+            ->where('is_anomaly', true)
+            ->where('recorded_at', '>=', $since)
+            ->selectRaw("strftime('%Y-%m-%d', recorded_at) as d, CAST(strftime('%H', recorded_at) AS INTEGER) as h, COUNT(*) as c")
+            ->groupBy('d', 'h')
+            ->get();
+
+        $grid = [];
+        $max = 0;
+        for ($i = 6; $i >= 0; $i--) {
+            $day = now()->subDays($i)->toDateString();
+            $grid[$day] = array_fill(0, 24, 0);
+        }
+        foreach ($rows as $r) {
+            if (isset($grid[$r->d])) {
+                $grid[$r->d][(int) $r->h] = (int) $r->c;
+                $max = max($max, (int) $r->c);
+            }
+        }
+        return ['max' => $max, 'grid' => $grid];
+    }
+
     public function render()
     {
         return view('livewire.sensor-dashboard')

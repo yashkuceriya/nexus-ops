@@ -82,14 +82,30 @@
 
     {{-- Score card + blockers --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="col-span-1 rounded-xl bg-gradient-to-br {{ $scoreBg }} border border-gray-200 p-6 flex flex-col items-center justify-center">
-            <div class="text-xs uppercase tracking-wider text-gray-600 font-semibold">Readiness Score</div>
-            <div class="text-6xl font-extrabold {{ $scoreRing }} tabular-nums mt-2">{{ number_format($scorePct, 0) }}<span class="text-3xl">%</span></div>
-            <div class="text-lg font-bold text-gray-700 mt-1">Grade {{ $p['readiness_grade'] }}</div>
-            <div class="text-xs text-gray-500 mt-3 text-center">
-                Target Handover: <strong>{{ $project->target_handover_date?->format('M d, Y') ?? 'TBD' }}</strong>
+        @php
+            $ringColor = $scorePct >= 95 ? '#10B981' : ($scorePct >= 80 ? '#F59E0B' : '#EF4444');
+            $ringCirc = 2 * pi() * 54;
+            $ringDash = ($scorePct / 100) * $ringCirc;
+        @endphp
+        <div class="col-span-1 card p-5 flex flex-col items-center justify-center">
+            <p class="label-kicker mb-2">Readiness Score</p>
+            <div class="relative w-40 h-40">
+                <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#F1F5F9" stroke-width="10"/>
+                    <circle cx="60" cy="60" r="54" fill="none"
+                        stroke="{{ $ringColor }}" stroke-width="10" stroke-linecap="round"
+                        stroke-dasharray="{{ $ringDash }} {{ $ringCirc }}"
+                        style="transition: stroke-dasharray 800ms ease-out;"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="text-4xl font-bold text-ink tabular-nums leading-none">{{ number_format($scorePct, 0) }}<span class="text-xl text-ink-soft">%</span></div>
+                    <div class="mono text-[10px] text-ink-soft mt-1">GRADE {{ $p['readiness_grade'] }}</div>
+                </div>
+            </div>
+            <div class="mt-4 text-center text-[11px] text-ink-soft mono">
+                <div>TARGET {{ strtoupper($project->target_handover_date?->format('M d, Y') ?? 'TBD') }}</div>
                 @if($project->actual_handover_date)
-                    <div class="mt-0.5">Actual: <strong>{{ $project->actual_handover_date->format('M d, Y') }}</strong></div>
+                    <div class="mt-0.5 text-emerald-700">ACTUAL {{ strtoupper($project->actual_handover_date->format('M d, Y')) }}</div>
                 @endif
             </div>
         </div>

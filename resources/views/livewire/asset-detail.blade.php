@@ -60,6 +60,54 @@
         </div>
     </div>
 
+    {{-- Health score ring + factor breakdown --}}
+    @php
+        $hs = (int) $this->healthScore;
+        $hbd = $this->healthBreakdown ?? [];
+        $ringColor = $hs >= 85 ? '#10B981' : ($hs >= 70 ? '#F59E0B' : '#EF4444');
+        $circ = 2 * pi() * 50;
+        $dash = ($hs / 100) * $circ;
+    @endphp
+    <div class="card p-5 mb-6 grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-6 items-center">
+        <div class="flex flex-col items-center">
+            <p class="label-kicker mb-2">Health Score</p>
+            <div class="relative w-36 h-36">
+                <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#F1F5F9" stroke-width="10"/>
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="{{ $ringColor }}" stroke-width="10" stroke-linecap="round"
+                        stroke-dasharray="{{ $dash }} {{ $circ }}"
+                        style="transition: stroke-dasharray 800ms ease-out;"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="text-4xl font-bold text-ink tabular-nums leading-none">{{ $hs }}</div>
+                    <div class="mono text-[9px] text-ink-soft mt-1">/ 100</div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-3">
+            <p class="label-kicker">Contributing Factors</p>
+            @foreach($hbd as $factor => $value)
+                @php
+                    $pct = is_numeric($value) ? max(0, min(100, (int) $value)) : 0;
+                    $barColor = $pct >= 85 ? 'bg-emerald-500' : ($pct >= 70 ? 'bg-amber-500' : 'bg-red-500');
+                    $label = ucwords(str_replace('_', ' ', $factor));
+                @endphp
+                <div>
+                    <div class="flex items-center justify-between text-[12px] mb-1">
+                        <span class="text-ink-muted">{{ $label }}</span>
+                        <span class="mono tabular-nums text-ink">{{ $pct }}</span>
+                    </div>
+                    <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div class="h-full rounded-full {{ $barColor }}" style="width:{{ $pct }}%; transition: width 600ms ease-out;"></div>
+                    </div>
+                </div>
+            @endforeach
+            @if(empty($hbd))
+                <p class="text-[12px] text-ink-soft">No contributing factors available.</p>
+            @endif
+        </div>
+    </div>
+
     {{-- Info Grid --}}
     <div class="grid grid-cols-4 gap-4 mb-6">
         {{-- Manufacturer --}}
