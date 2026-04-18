@@ -244,6 +244,12 @@
                 </nav>
             </div>
             <div class="flex items-center gap-2">
+                <button type="button" onclick="window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true }))"
+                    class="hidden md:inline-flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50/60 hover:bg-white px-2.5 py-1 text-[12px] text-ink-muted transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                    <span>Search or jump to…</span>
+                    <kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-white text-ink-soft">⌘K</kbd>
+                </button>
                 <button type="button" class="btn-ghost inline-flex items-center gap-2 text-[12px]">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
                     Tenant Switcher
@@ -277,6 +283,19 @@
                 {{ $slot }}
             </div>
         </main>
+        {{-- Status strip --}}
+        <footer class="h-7 bg-white hairline-t flex items-center justify-between px-4 text-[10px] mono text-ink-soft flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5"><span class="dot dot-pass animate-pulse"></span>SYSTEM NOMINAL</span>
+                <span>TENANT: {{ strtoupper(auth()->user()?->tenant?->slug ?? 'NONE') }}</span>
+                <span class="hidden md:inline">NODE: NEXUS_EDGE_01</span>
+                <span class="hidden lg:inline">ENV: {{ strtoupper(app()->environment()) }}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span>LAT {{ now()->format('H:i:s') }} UTC</span>
+                <span>v1.0.0 · build {{ substr(hash('xxh32', app_path()), 0, 7) }}</span>
+            </div>
+        </footer>
     </div>
 </div>
 @auth

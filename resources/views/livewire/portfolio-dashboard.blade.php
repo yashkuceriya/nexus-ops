@@ -21,26 +21,57 @@
         $avgReadiness = collect($this->projects)->avg('readiness_score') ?? 0;
         $openIssues = $this->kpis['open_issues'];
         $slaBreached = $this->kpis['sla_breached'];
+        $sparks = $this->sparklines;
+
+        // Inline SVG sparkline generator — no chart lib.
+        $spark = function (array $values, string $stroke = '#4F46E5', string $fill = 'rgba(79,70,229,.08)'): string {
+            if (empty($values)) return '';
+            $w = 120; $h = 32; $pad = 2;
+            $max = max($values); $min = min($values);
+            $range = max(0.001, $max - $min);
+            $step = ($w - 2 * $pad) / max(1, count($values) - 1);
+            $points = [];
+            foreach ($values as $i => $v) {
+                $x = round($pad + $i * $step, 2);
+                $y = round($h - $pad - (($v - $min) / $range) * ($h - 2 * $pad), 2);
+                $points[] = "$x,$y";
+            }
+            $area = 'M'.$points[0].' L'.implode(' L', array_slice($points, 1))." L{$w},{$h} L0,{$h} Z";
+            $line = 'M'.implode(' L', $points);
+            return '<svg viewBox="0 0 '.$w.' '.$h.'" class="w-full h-8" preserveAspectRatio="none">'
+                .'<path d="'.$area.'" fill="'.$fill.'" />'
+                .'<path d="'.$line.'" fill="none" stroke="'.$stroke.'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+                .'</svg>';
+        };
     @endphp
 
     {{-- KPI row --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="card kpi">
             <p class="label-kicker">Readiness %</p>
-            <div class="kpi-value text-ink mt-2">{{ number_format($avgReadiness, 1) }}<span class="text-lg text-ink-soft">%</span></div>
-            <p class="text-[11px] text-emerald-600 mt-1 font-semibold">↑ Portfolio average</p>
+            <div class="flex items-end justify-between gap-3 mt-2">
+                <div class="kpi-value text-ink">{{ number_format($avgReadiness, 1) }}<span class="text-lg text-ink-soft">%</span></div>
+                <div class="w-24 opacity-90">{!! $spark($sparks['readiness'], '#4F46E5', 'rgba(79,70,229,.10)') !!}</div>
+            </div>
+            <p class="text-[11px] text-emerald-600 mt-1 font-semibold flex items-center gap-1"><span class="dot dot-pass"></span>Portfolio average</p>
         </div>
         <div class="card kpi">
             <div class="flex items-center justify-between">
                 <p class="label-kicker">Open Deficiencies</p>
                 @if($openIssues > 0)<span class="dot dot-fail"></span>@endif
             </div>
-            <div class="kpi-value text-ink mt-2">{{ $openIssues }}</div>
+            <div class="flex items-end justify-between gap-3 mt-2">
+                <div class="kpi-value text-ink">{{ $openIssues }}</div>
+                <div class="w-24 opacity-90">{!! $spark($sparks['deficiencies'], '#EF4444', 'rgba(239,68,68,.10)') !!}</div>
+            </div>
             <p class="text-[11px] text-ink-soft mt-1 mono">{{ $fpt['failed'] }} from FPT · {{ $pfc['failed'] }} from PFC</p>
         </div>
         <div class="card kpi">
             <p class="label-kicker">FPT Pass Rate</p>
-            <div class="kpi-value text-ink mt-2">{{ number_format($fpt['pass_rate'], 1) }}<span class="text-lg text-ink-soft">%</span></div>
+            <div class="flex items-end justify-between gap-3 mt-2">
+                <div class="kpi-value text-ink">{{ number_format($fpt['pass_rate'], 1) }}<span class="text-lg text-ink-soft">%</span></div>
+                <div class="w-24 opacity-90">{!! $spark($sparks['fpt_pass'], '#10B981', 'rgba(16,185,129,.10)') !!}</div>
+            </div>
             <p class="text-[11px] text-ink-soft mt-1 mono">{{ $fpt['passed'] }}/{{ $fpt['total'] }} executions</p>
         </div>
         <div class="card kpi">
@@ -48,7 +79,10 @@
                 <p class="label-kicker">SLA Breaches</p>
                 @if($slaBreached > 0)<span class="dot dot-warn"></span>@endif
             </div>
-            <div class="kpi-value {{ $slaBreached > 0 ? 'text-red-600' : 'text-ink' }} mt-2">{{ str_pad($slaBreached, 2, '0', STR_PAD_LEFT) }}</div>
+            <div class="flex items-end justify-between gap-3 mt-2">
+                <div class="kpi-value {{ $slaBreached > 0 ? 'text-red-600' : 'text-ink' }}">{{ str_pad($slaBreached, 2, '0', STR_PAD_LEFT) }}</div>
+                <div class="w-24 opacity-90">{!! $spark($sparks['sla_breaches'], '#F59E0B', 'rgba(245,158,11,.10)') !!}</div>
+            </div>
             <p class="text-[11px] text-ink-soft mt-1 mono">{{ $this->kpis['open_work_orders'] }} open work orders</p>
         </div>
     </div>
