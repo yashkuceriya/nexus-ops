@@ -57,6 +57,14 @@
 - [x] ECS task definitions (web + worker, ARM64 Graviton)
 - [x] GitHub Actions CI/CD (test + deploy with OIDC)
 
+### Design System (v6)
+- [x] Stitch/Linear-inspired light UI, indigo accent, soft lilac canvas
+- [x] `docs/DESIGN.md` with token vocabulary and component recipes
+- [x] Layout shell: left sidebar + top tab bar + tenant switcher
+- [x] Split-screen login with brand panel
+- [x] All 43 Livewire views migrated to `.card`/`.chip`/`.btn-primary`/`label-kicker` tokens
+- [x] Dark mode removed (single light theme)
+
 ### Commissioning Suite (v3–v5)
 - [x] FPT engine: TestScript/TestStep/TestExecution/TestStepResult, auto-eval (tolerance/GTE/between), witness signatures + tamper detection, parent-child retest chains, PDF reports
 - [x] FPT UI: TestScriptLibrary, TestScriptEditor, TestExecutionRunner, CxTestMatrix
@@ -105,6 +113,6 @@
 | Form Requests | 3 |
 | Factories | 6 |
 | ADRs | 4 |
-| Tests | 137 passing (450 assertions, 1 skipped) |
+| Tests | 138 passing (470 assertions, 1 skipped) |
 | Pages | 22+ (plus /fpt/*, /turnover/*) |
 | PHP files | 129 |

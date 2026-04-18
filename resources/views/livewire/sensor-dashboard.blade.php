@@ -147,7 +147,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <div class="flex items-center gap-3 mb-1">
-                                <h3 class="text-lg font-bold text-slate-900">{{ $this->selectedSensor->name }}</h3>
+                                <h3 class="text-lg font-bold text-ink">{{ $this->selectedSensor->name }}</h3>
                                 @if($sensorAlert)
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 uppercase tracking-wide">
                                         <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>

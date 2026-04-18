@@ -38,7 +38,7 @@
             <div class="grid grid-cols-5 gap-4 mt-5">
                 <div>
                     <div class="label-kicker">Total</div>
-                    <div class="text-xl font-bold text-gray-900">{{ $this->stats['total'] }}</div>
+                    <div class="text-xl font-bold text-ink">{{ $this->stats['total'] }}</div>
                 </div>
                 <div>
                     <div class="label-kicker">Approved</div>

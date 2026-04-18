@@ -17,7 +17,7 @@
                     {{ $project->name }}
                 </a>
             </div>
-            <h1 class="text-2xl font-bold text-gray-900 mt-1">Handover Readiness</h1>
+            <h1 class="text-2xl font-bold text-ink mt-1">Handover Readiness</h1>
             <p class="text-sm text-gray-500 mt-1">Preview every data point the PDF will contain, then generate & attest the package for handoff to the operations team.</p>
         </div>
         <div class="flex items-center gap-2">
@@ -129,7 +129,7 @@
                     <div class="text-xs text-gray-500">FPT execution + witness + step-level statistics</div>
                 </div>
                 <a href="{{ route('fpt.executions.index', ['projectFilter' => $project->id]) }}" wire:navigate
-                   class="text-xs font-semibold text-accent-700 hover:text-brand-700">View all executions →</a>
+                   class="text-xs font-semibold text-accent-700 hover:text-accent-700">View all executions →</a>
             </div>
             @php
                 $metrics = [

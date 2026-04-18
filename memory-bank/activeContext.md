@@ -1,7 +1,10 @@
 # Active Context — NexusOps
 
 ## Current State
-All major features are implemented and working. The app has 129 PHP files, 43 Livewire components, and 137 passing tests (450 assertions, 1 skipped).
+All major features are implemented and working. The app has 129 PHP files, 43 Livewire components, and 138 passing tests (470 assertions, 1 skipped).
+
+## Design System (v6)
+Stitch-inspired, Linear-adjacent light UI with indigo accent (`#4F46E5`), soft lilac canvas (`#F5F4F9`), Inter + JetBrains Mono. Tokens and component recipes live in `docs/DESIGN.md`. Utility classes (`.card`, `.chip*`, `.cell*`, `.btn-primary`, `.btn-ghost`, `.label-kicker`, `.mono`, hairline borders) are defined in the layout's inline `<style>`. Dark mode removed. Shell = left sidebar + top tab bar + soft canvas content area. Login is split-screen with operational-stats brand panel.
 
 ## v3–v5 Commissioning Suite (added after initial commit)
 - **FPT (Functional Performance Testing)**: TestScript/TestStep/TestExecution/TestStepResult models, auto-evaluation (tolerance/GTE/between), witness signatures with tamper detection, parent-child retest chains, PDF reports. Routes under `/fpt/*`. Livewire: TestScriptLibrary, TestScriptEditor, TestExecutionRunner, CxTestMatrix.

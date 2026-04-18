@@ -18,7 +18,7 @@
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
             @if($this->unreadCount > 0)
-                <button wire:click="markAllAsRead" class="text-xs text-accent-700 hover:text-brand-700 font-medium">
+                <button wire:click="markAllAsRead" class="text-xs text-accent-700 hover:text-accent-700 font-medium">
                     Mark all as read
                 </button>
             @endif

@@ -53,7 +53,7 @@
                         <div class="label-kicker">Pending</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-gray-900">{{ $execution->progressPercent() }}%</div>
+                        <div class="text-2xl font-bold text-ink">{{ $execution->progressPercent() }}%</div>
                         <div class="label-kicker">Complete</div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                 @php $current = $this->currentResult; @endphp
                 @if($current === null)
                     <div class="card p-10 text-center">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">All steps recorded</h3>
+                        <h3 class="text-[15px] font-semibold text-ink mb-2">All steps recorded</h3>
                         <p class="text-sm text-gray-500 mb-6">Close out the execution to lock the record.</p>
 
                         @if($execution->isInProgress())
@@ -235,7 +235,7 @@
                         <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div>
                                 <div class="text-label-kicker">Step {{ $current->step_sequence }}</div>
-                                <h2 class="text-lg font-semibold text-gray-900">{{ $current->step_title }}</h2>
+                                <h2 class="text-[15px] font-semibold text-ink">{{ $current->step_title }}</h2>
                             </div>
                             @if($current->expected_value)
                                 <div class="text-right">

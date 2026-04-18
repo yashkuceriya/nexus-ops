@@ -31,7 +31,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900">AI Analysis</h2>
+                    <h2 class="text-[15px] font-semibold text-ink">AI Analysis</h2>
                     <p class="text-xs text-gray-500">Pattern analysis across operational data</p>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                                 <span class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Confidence</span>
                                 <span class="text-[10px] font-bold text-gray-600">{{ $insight['confidence'] }}%</span>
                             </div>
-                            <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                 <div class="confidence-bar-fill h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500"
                                      x-data="{ width: 0 }"
                                      x-init="setTimeout(() => width = {{ $insight['confidence'] }}, {{ 300 + $index * 400 }})"

@@ -19,7 +19,7 @@
 
         @if($showCreateForm)
             <div class="mb-6 bg-white rounded-xl shadow-sm border border-indigo-200 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Capture a New Lesson</h2>
+                <h2 class="text-[15px] font-semibold text-ink mb-4">Capture a New Lesson</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Title</label>

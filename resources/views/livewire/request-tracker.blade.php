@@ -2,19 +2,19 @@
     @if(!$request && !$searched)
         {{-- Token Input --}}
         <div class="text-center py-10">
-            <div class="mx-auto w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mb-5">
+            <div class="mx-auto w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mb-5">
                 <svg class="w-8 h-8 text-accent-700" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Track Your Request</h2>
+            <h2 class="text-2xl font-bold text-ink mb-2">Track Your Request</h2>
             <p class="text-gray-600 mb-6">Enter the tracking code you received when you submitted your request.</p>
 
             <div class="max-w-sm mx-auto">
                 <div class="flex gap-2">
                     <input type="text" wire:model="token" wire:keydown.enter="lookup" maxlength="8"
                         placeholder="e.g. AB12CD34"
-                        class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-lg font-mono font-semibold tracking-widest text-gray-900 uppercase placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal placeholder:font-normal focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
+                        class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-lg font-mono font-semibold tracking-widest text-gray-900 uppercase placeholder:text-gray-400 placeholder:text-sm placeholder:tracking-normal placeholder:font-normal focus:border-accent-600 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                     <button wire:click="lookup"
                         class="rounded-lg bg-accent-600 px-5 py-3 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
                         Look Up
@@ -31,7 +31,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
                 </svg>
             </div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">Request Not Found</h2>
+            <h2 class="text-xl font-bold text-ink mb-2">Request Not Found</h2>
             <p class="text-gray-600 mb-6">We could not find a request with the tracking code "{{ $token }}". Please double-check and try again.</p>
 
             <button wire:click="$set('searched', false)"
@@ -66,7 +66,7 @@
                     {{ ucfirst(str_replace('_', ' ', $request->status)) }}
                 </span>
             </div>
-            <h2 class="text-xl font-bold text-gray-900 mt-2">{{ ucfirst(str_replace('_', ' ', $request->category)) }} Request</h2>
+            <h2 class="text-xl font-bold text-ink mt-2">{{ ucfirst(str_replace('_', ' ', $request->category)) }} Request</h2>
             <p class="text-sm text-gray-500 mt-1">Submitted {{ $request->created_at->format('M d, Y \a\t g:i A') }}</p>
         </div>
 
@@ -77,11 +77,11 @@
                 <div class="flex flex-col items-center flex-1 relative">
                     @if(!$loop->first)
                     <div class="absolute top-4 right-1/2 w-full h-0.5 -translate-y-1/2
-                        {{ $step['is_past'] || $step['is_current'] ? 'bg-brand-400' : 'bg-gray-200' }}"></div>
+                        {{ $step['is_past'] || $step['is_current'] ? 'bg-accent-500' : 'bg-gray-200' }}"></div>
                     @endif
                     <div class="relative z-10 flex items-center justify-center h-8 w-8 rounded-full border-2 transition-all
-                        {{ $step['is_past'] ? 'bg-accent-600 border-brand-500 text-white' : '' }}
-                        {{ $step['is_current'] ? 'bg-accent-600 border-brand-500 text-white ring-4 ring-brand-100' : '' }}
+                        {{ $step['is_past'] ? 'bg-accent-600 border-accent-600 text-white' : '' }}
+                        {{ $step['is_current'] ? 'bg-accent-600 border-accent-600 text-white ring-4 ring-accent-100' : '' }}
                         {{ $step['is_future'] ? 'bg-white border-gray-300 text-gray-400' : '' }}">
                         @if($step['is_past'])
                             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
@@ -172,7 +172,7 @@
                         @if($rating > 0)
                         <div class="space-y-3">
                             <textarea wire:model="comment" rows="2" placeholder="Any additional comments? (optional)"
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <div class="flex justify-end">
                                 <button wire:click="submitSurvey"
                                     class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">

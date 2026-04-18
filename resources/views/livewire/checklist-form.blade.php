@@ -74,7 +74,7 @@
                                     @if(isset($currentStepData['min'])) min="{{ $currentStepData['min'] }}" @endif
                                     @if(isset($currentStepData['max'])) max="{{ $currentStepData['max'] }}" @endif
                                     placeholder="Enter value..."
-                                    class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none">
+                                    class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-accent-600 focus:ring-1 focus:ring-accent-500 focus:outline-none">
                                 <button
                                     x-on:click="$wire.saveStepResponse(parseFloat(numValue))"
                                     class="rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
@@ -90,7 +90,7 @@
                                 x-model="textValue"
                                 rows="3"
                                 placeholder="Enter notes..."
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-accent-600 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(textValue)"
                                 class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
@@ -106,7 +106,7 @@
                                 x-model="photoNote"
                                 rows="2"
                                 placeholder="Describe what was observed..."
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-accent-600 focus:ring-1 focus:ring-accent-500 focus:outline-none resize-none"></textarea>
                             <button
                                 x-on:click="$wire.saveStepResponse(photoNote)"
                                 class="mt-2 rounded-lg bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-700 transition-colors">
@@ -125,7 +125,7 @@
                                     $dotColor = ($answered['passed'] === false) ? 'bg-red-500' : 'bg-emerald-500';
                                     if ($answered['passed'] === null) $dotColor = 'bg-blue-500';
                                 }
-                                if ($i === $currentStep) $dotColor .= ' ring-2 ring-offset-2 ring-brand-400';
+                                if ($i === $currentStep) $dotColor .= ' ring-2 ring-offset-2 ring-accent-500';
                             @endphp
                             <button wire:click="goToStep({{ $i }})" class="h-2.5 w-2.5 rounded-full {{ $dotColor }} transition-all" title="Step {{ $i + 1 }}: {{ $s['label'] }}"></button>
                         @endforeach
@@ -202,9 +202,9 @@
                 <p class="label-kicker mb-2">Start New Checklist</p>
                 @forelse($this->templates as $template)
                 <button wire:click="startChecklist({{ $template->id }})"
-                    class="w-full text-left flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3 hover:border-brand-300 hover:bg-accent-50/50 transition-colors mb-2 group">
+                    class="w-full text-left flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3 hover:border-accent-300 hover:bg-accent-50/50 transition-colors mb-2 group">
                     <div>
-                        <p class="text-sm font-medium text-gray-900 group-hover:text-brand-700">{{ $template->name }}</p>
+                        <p class="text-sm font-medium text-gray-900 group-hover:text-accent-700">{{ $template->name }}</p>
                         <p class="text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', $template->category)) }} &middot; {{ count($template->steps) }} steps</p>
                     </div>
                     <svg class="h-5 w-5 text-gray-400 group-hover:text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

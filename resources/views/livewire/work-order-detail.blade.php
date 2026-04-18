@@ -602,7 +602,7 @@
                             $progress = $totalSeconds > 0 ? min(100, ($elapsedSeconds / $totalSeconds) * 100) : 0;
                         @endphp
                         <div class="pt-1">
-                            <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div class="w-full bg-slate-100 rounded-full h-2">
                                 <div class="h-2 rounded-full transition-all duration-300
                                     {{ $progress >= 100 ? 'bg-red-500' : ($progress >= 75 ? 'bg-amber-500' : 'bg-emerald-500') }}"
                                     style="width: {{ $progress }}%"></div>

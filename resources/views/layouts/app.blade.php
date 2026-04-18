@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-bind:class="{ 'dark': darkMode }" x-cloak>
+<html lang="en" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -38,15 +37,12 @@
     <style>
         html, body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
         body { background: #F5F4F9; color: #0F172A; }
-        .dark body { background: #0B0D12; color: #E5E7EB; }
 
         /* Uppercase tracked label */
         .label-kicker { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: #64748B; }
-        .dark .label-kicker { color: #64748B; }
 
         /* Hairline cards */
         .card { background:#fff; border:1px solid #E5E7EB; border-radius: 12px; }
-        .dark .card { background:#11131A; border-color:#1F2430; }
 
         /* KPI card */
         .kpi { padding: 18px 20px; }

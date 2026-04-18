@@ -1,7 +1,7 @@
 <div>
     {{-- Header --}}
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Asset Health Matrix</h1>
+        <h1 class="text-2xl font-bold text-ink">Asset Health Matrix</h1>
         <p class="mt-1 text-sm text-gray-500">Health scores plotted against asset criticality across all assets</p>
     </div>
 
@@ -25,7 +25,7 @@
     {{-- Scatter Plot --}}
     <div class="card p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Criticality vs. Health Score</h2>
+            <h2 class="text-[15px] font-semibold text-ink">Criticality vs. Health Score</h2>
             <div class="flex items-center gap-3 flex-wrap">
                 @foreach($this->systemTypes as $type)
                     <span class="inline-flex items-center gap-1.5 text-xs text-gray-600">
@@ -43,7 +43,7 @@
     {{-- Asset Table --}}
     <div class="card overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-900">Assets by Health Score</h2>
+            <h2 class="text-[15px] font-semibold text-ink">Assets by Health Score</h2>
             <p class="text-xs text-gray-500 mt-0.5">Sorted by lowest health score first</p>
         </div>
         <div class="overflow-x-auto">
