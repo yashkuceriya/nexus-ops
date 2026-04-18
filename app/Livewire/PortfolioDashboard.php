@@ -83,6 +83,7 @@ class PortfolioDashboard extends Component
         Cache::forget("dashboard_fpt_{$this->tenantId}");
         Cache::forget("dashboard_pfc_{$this->tenantId}");
         Cache::forget("dashboard_sparks_{$this->tenantId}");
+        Cache::forget("dashboard_defmix_{$this->tenantId}");
         $this->updateLastUpdatedTimestamp();
     }
 
@@ -211,6 +212,26 @@ class PortfolioDashboard extends Component
                     'sla_breaches' => $bucket(WorkOrder::query()->where('sla_breached', true), 'updated_at'),
                 ];
             }
+        );
+    }
+
+    /**
+     * Priority mix of open deficiencies — feeds the dashboard donut.
+     *
+     * @return array<string, int>
+     */
+    #[Computed]
+    public function deficiencyMix(): array
+    {
+        return Cache::remember(
+            "dashboard_defmix_{$this->tenantId}",
+            now()->addMinutes(5),
+            fn () => Issue::query()
+                ->whereIn('status', ['open', 'in_progress'])
+                ->selectRaw('priority, COUNT(*) as c')
+                ->groupBy('priority')
+                ->pluck('c', 'priority')
+                ->toArray()
         );
     }
 
