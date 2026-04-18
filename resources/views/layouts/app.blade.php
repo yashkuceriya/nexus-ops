@@ -207,11 +207,31 @@
         </nav>
 
         {{-- Pinned CTA + user --}}
-        <div class="px-3 pb-3">
-            <a href="{{ route('projects.index') }}" class="btn-primary w-full inline-flex items-center justify-center gap-2">
+        <div class="px-3 pb-3 relative" x-data="{ quickOpen: false }" @click.outside="quickOpen = false">
+            <button type="button" @click="quickOpen = !quickOpen" class="btn-primary w-full inline-flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                 New Commission
-            </a>
+            </button>
+            <div x-show="quickOpen" x-transition.origin.bottom.left x-cloak
+                 class="absolute bottom-full left-3 right-3 mb-2 card p-1.5 shadow-lg z-50">
+                <p class="label-kicker px-2 pt-1 pb-1.5">Quick Create</p>
+                <a href="{{ route('work-orders.index') }}?action=new" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-accent-50 text-[13px] text-ink">
+                    <svg class="w-4 h-4 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75h.008v.008h-.008V18.75zM12 5.625c0-.621.504-1.125 1.125-1.125h1.5c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125h-1.5A1.125 1.125 0 0112 7.125v-1.5z"/></svg>
+                    Work Order
+                </a>
+                <a href="{{ route('projects.index') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-accent-50 text-[13px] text-ink">
+                    <svg class="w-4 h-4 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75"/></svg>
+                    Project
+                </a>
+                <a href="{{ route('fpt.scripts.index') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-accent-50 text-[13px] text-ink">
+                    <svg class="w-4 h-4 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75"/></svg>
+                    FPT Script
+                </a>
+                <a href="{{ route('automation.create') }}" class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-accent-50 text-[13px] text-ink">
+                    <svg class="w-4 h-4 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    Automation Rule
+                </a>
+            </div>
         </div>
         <div class="hairline-t p-3">
             <div class="flex items-center gap-3">
@@ -250,19 +270,88 @@
                     <span>Search or jump to…</span>
                     <kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-white text-ink-soft">⌘K</kbd>
                 </button>
-                <button type="button" class="btn-ghost inline-flex items-center gap-2 text-[12px]">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
-                    Tenant Switcher
-                    <svg class="w-3 h-3 text-ink-soft" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 011.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"/></svg>
-                </button>
+                {{-- Tenant switcher --}}
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button type="button" @click="open = !open" class="btn-ghost inline-flex items-center gap-2 text-[12px]">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+                        <span class="truncate max-w-[140px]">{{ auth()->user()?->tenant?->name ?? 'Tenant' }}</span>
+                        <svg class="w-3 h-3 text-ink-soft transition-transform" :class="open && 'rotate-180'" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 011.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"/></svg>
+                    </button>
+                    <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full mt-1 w-72 card p-2 shadow-lg z-50">
+                        <p class="label-kicker px-2 pt-1 pb-1.5">Active Tenant</p>
+                        <div class="flex items-center gap-2.5 px-2.5 py-2 rounded-md bg-accent-50">
+                            <div class="w-7 h-7 rounded-md bg-accent-600 text-white flex items-center justify-center text-[11px] font-bold">
+                                {{ strtoupper(substr(auth()->user()?->tenant?->name ?? 'N', 0, 2)) }}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[13px] font-semibold text-ink truncate">{{ auth()->user()?->tenant?->name ?? 'No tenant' }}</p>
+                                <p class="text-[11px] text-ink-soft mono truncate">{{ auth()->user()?->tenant?->slug ?? '—' }}</p>
+                            </div>
+                            <svg class="w-4 h-4 text-accent-600" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        </div>
+                        <div class="hairline-t my-2"></div>
+                        <button type="button" disabled class="w-full text-left px-2.5 py-1.5 rounded-md text-[12px] text-ink-soft flex items-center gap-2 cursor-not-allowed opacity-60" title="Multi-tenant switching available on Enterprise plan">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                            Add tenant <span class="ml-auto chip chip-accent text-[9px]">ENTERPRISE</span>
+                        </button>
+                    </div>
+                </div>
+
                 @auth
                     @livewire('notification-bell')
                 @endauth
-                <button type="button" class="w-8 h-8 rounded-full hover:bg-slate-100 inline-flex items-center justify-center text-ink-soft" title="Help">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
-                </button>
-                <div class="w-8 h-8 rounded-full bg-accent-600 flex items-center justify-center text-white text-[11px] font-bold ring-2 ring-white" title="{{ auth()->user()->name ?? 'Guest' }}">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}{{ strtoupper(substr(explode(' ', auth()->user()->name ?? 'U ')[1] ?? '', 0, 1)) }}
+
+                {{-- Help popover --}}
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button type="button" @click="open = !open" class="w-8 h-8 rounded-full hover:bg-slate-100 inline-flex items-center justify-center text-ink-soft" title="Help and shortcuts">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
+                    </button>
+                    <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full mt-1 w-72 card p-3 shadow-lg z-50">
+                        <p class="label-kicker mb-2">Keyboard Shortcuts</p>
+                        <ul class="text-[12px] text-ink-muted space-y-1.5">
+                            <li class="flex items-center justify-between"><span>Open command palette</span><kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50">⌘K</kbd></li>
+                            <li class="flex items-center justify-between"><span>Close modal / palette</span><kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50">ESC</kbd></li>
+                            <li class="flex items-center justify-between"><span>Navigate palette results</span><kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50">↑ ↓</kbd></li>
+                            <li class="flex items-center justify-between"><span>Jump to selection</span><kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50">ENTER</kbd></li>
+                        </ul>
+                        <div class="hairline-t my-3"></div>
+                        <a href="{{ route('docs.index') }}" class="flex items-center justify-between px-1 text-[12px] text-accent-700 font-semibold hover:text-accent-800">API & integrations reference →</a>
+                    </div>
+                </div>
+
+                {{-- Avatar menu --}}
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button type="button" @click="open = !open" class="w-8 h-8 rounded-full bg-accent-600 flex items-center justify-center text-white text-[11px] font-bold ring-2 ring-white hover:ring-accent-200 transition-all" title="{{ auth()->user()->name ?? 'Guest' }}">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}{{ strtoupper(substr(explode(' ', auth()->user()->name ?? 'U ')[1] ?? '', 0, 1)) }}
+                    </button>
+                    <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full mt-1 w-60 card p-2 shadow-lg z-50">
+                        <div class="px-2.5 py-2">
+                            <p class="text-[13px] font-semibold text-ink truncate">{{ auth()->user()->name ?? 'Guest' }}</p>
+                            <p class="text-[11px] text-ink-soft truncate">{{ auth()->user()->email ?? '' }}</p>
+                            <span class="chip chip-accent mt-1.5 text-[10px]">{{ strtoupper(auth()->user()->role ?? 'USER') }}</span>
+                        </div>
+                        <div class="hairline-t my-1"></div>
+                        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-slate-50 text-[13px] text-ink">
+                            <svg class="w-4 h-4 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                            Profile
+                        </a>
+                        <a href="{{ route('audit-log.index') }}" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-slate-50 text-[13px] text-ink">
+                            <svg class="w-4 h-4 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25"/></svg>
+                            Activity log
+                        </a>
+                        <a href="{{ route('docs.index') }}" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-slate-50 text-[13px] text-ink">
+                            <svg class="w-4 h-4 text-ink-soft" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25"/></svg>
+                            API Docs
+                        </a>
+                        <div class="hairline-t my-1"></div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-red-50 hover:text-red-600 text-[13px] text-ink transition">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </header>
