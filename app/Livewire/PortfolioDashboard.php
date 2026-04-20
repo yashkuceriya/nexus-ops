@@ -192,8 +192,12 @@ class PortfolioDashboard extends Component
                 $days = collect(range(13, 0))->map(fn ($i) => now()->subDays($i)->toDateString());
 
                 $bucket = function ($query, string $column = 'created_at') use ($days) {
-                    $rows = $query->selectRaw("strftime('%Y-%m-%d', {$column}) as d, COUNT(*) as c")
-                        ->groupBy('d')->pluck('c', 'd');
+                    // Bucket in PHP rather than with driver-specific date functions
+                    // so the same code runs on SQLite (dev), MySQL, and Postgres.
+                    $rows = $query->where($column, '>=', now()->subDays(14)->startOfDay())
+                        ->get([$column])
+                        ->groupBy(fn ($r) => $r->{$column}?->toDateString())
+                        ->map->count();
                     return $days->map(fn ($d) => (float) ($rows[$d] ?? 0))->values()->all();
                 };
 

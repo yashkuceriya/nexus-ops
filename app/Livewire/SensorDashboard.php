@@ -79,13 +79,13 @@ class SensorDashboard extends Component
         $sensorIds = SensorSource::pluck('id');
         $since = now()->subDays(7)->startOfHour();
 
-        $rows = SensorReading::query()
+        // Bucket in PHP so the same code runs on SQLite, MySQL, and Postgres
+        // without driver-specific date functions.
+        $readings = SensorReading::query()
             ->whereIn('sensor_source_id', $sensorIds)
             ->where('is_anomaly', true)
             ->where('recorded_at', '>=', $since)
-            ->selectRaw("strftime('%Y-%m-%d', recorded_at) as d, CAST(strftime('%H', recorded_at) AS INTEGER) as h, COUNT(*) as c")
-            ->groupBy('d', 'h')
-            ->get();
+            ->get(['recorded_at']);
 
         $grid = [];
         $max = 0;
@@ -93,10 +93,12 @@ class SensorDashboard extends Component
             $day = now()->subDays($i)->toDateString();
             $grid[$day] = array_fill(0, 24, 0);
         }
-        foreach ($rows as $r) {
-            if (isset($grid[$r->d])) {
-                $grid[$r->d][(int) $r->h] = (int) $r->c;
-                $max = max($max, (int) $r->c);
+        foreach ($readings as $r) {
+            $day = $r->recorded_at->toDateString();
+            $hour = (int) $r->recorded_at->format('G');
+            if (isset($grid[$day])) {
+                $grid[$day][$hour]++;
+                $max = max($max, $grid[$day][$hour]);
             }
         }
         return ['max' => $max, 'grid' => $grid];
