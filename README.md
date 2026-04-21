@@ -1,204 +1,196 @@
+<div align="center">
+
 # NexusOps
 
-> Intelligent Facility Operations Platform
+**A commissioning and operations platform for high-stakes facilities — data centers, hospitals, research labs.**
 
-NexusOps bridges building commissioning and closeout data into day-one facility operations. It provides a unified dashboard for readiness tracking, work order management, IoT sensor monitoring, asset health scoring, vendor oversight, and workflow automation — designed to feel like a premium SaaS product rather than a typical CRUD application.
+[![Live demo](https://img.shields.io/badge/live%20demo-nexusops.up.railway.app-4F46E5?style=for-the-badge)](https://REPLACE_WITH_RAILWAY_URL)
+[![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel)](https://laravel.com)
+[![Livewire 4.2](https://img.shields.io/badge/Livewire-4.2-4E56A6?style=flat)](https://livewire.laravel.com)
+[![PHP 8.5](https://img.shields.io/badge/PHP-8.5-777BB4?style=flat&logo=php)](https://www.php.net)
+[![Tests](https://img.shields.io/badge/tests-138%20passing-10B981?style=flat)](./tests)
 
-## Features
+</div>
 
-**Operations**
-- Portfolio dashboard with KPI counters, readiness rings, sparklines, and activity feed
-- Work order full lifecycle (create, assign, status transitions, SLA tracking)
-- Inspection checklists with pass/fail, numeric, and text steps
-- Preventive maintenance scheduler with automatic work order generation
+> Login: `admin@acme.com` / `password`
 
-**Monitoring**
-- Real-time IoT sensor dashboard with 5-second polling and anomaly detection
-- Interactive SVG floor plan with asset pins
-- Asset health matrix (scatter plot with danger zone highlighting)
-- Mapbox 3D facility map with dark theme, pulsing markers, and fly-to navigation
+NexusOps takes a commissioning project through the final 20% — Functional Performance Tests, Pre-Functional Checklists, deficiency resolution, turnover packages — and hands it off to day-one operations with work orders, IoT telemetry, and a living audit trail. Multi-tenant. Role-aware. Offline-tolerant where it matters.
 
-**Management**
-- Vendor management with contracts, scorecards, and NTE pricing
-- Analytics and reports with six chart types and date filtering
-- Visual workflow automation builder (7 triggers, 5 actions)
+---
 
-**Public Portal**
-- Occupant request submission (no authentication required)
-- Token-based request status tracking with satisfaction survey
-- SaaS landing page with animated hero section
+## Screenshots
 
-**Developer**
-- REST API with 17 endpoints and Sanctum token authentication
-- Interactive API documentation page with syntax highlighting
-- Audit log viewer with old/new value diff display
+| | |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![FPT Runner](docs/screenshots/fpt-runner.png) |
+| **Portfolio dashboard** — KPI sparklines, velocity chart, deficiency donut, readiness heatmap | **FPT runner** — witness signature pad, auto-eval preview, retest chaining |
+| ![Turnover Console](docs/screenshots/turnover.png) | ![Deficiency Board](docs/screenshots/deficiencies.png) |
+| **Turnover console** — animated readiness ring, blockers, signed stakeholder share | **Deficiency board** — kanban with state machine + audit trail |
+| ![Sensor Heatmap](docs/screenshots/sensors.png) | ![Login](docs/screenshots/login.png) |
+| **Anomaly heatmap** — 7d × 24h density across sensors | **Login** — split-screen, operational stats panel |
 
-**Technical Polish**
-- CMD+K command palette with fuzzy search
-- Dark mode toggle with localStorage persistence
-- Skeleton loaders, toast notifications, and micro-interactions
-- Livewire polling at 5s/10s/15s intervals for real-time updates
+---
 
-## Tech Stack
+## What this project demonstrates
 
-| Layer | Technology |
-|-----------|--------------------------------------------------|
-| Backend | Laravel 13, PHP 8.5, Livewire 4.2 |
-| Frontend | Tailwind CSS v4, Alpine.js v3, Chart.js v4, Mapbox GL JS v3 |
-| Database | SQLite (dev), Aurora MySQL (prod) |
-| Queue | Redis / Amazon SQS |
-| Auth | Laravel Sanctum (API tokens + session) |
-| Multi-tenant | spatie/laravel-multitenancy |
-| Testing | Pest v4 |
-| Deploy | Docker (PHP 8.3-FPM + Nginx), AWS ECS Fargate (ARM64 Graviton) |
-| CI/CD | GitHub Actions with OIDC |
+- **Domain-driven design.** Value objects (`SlaPolicy`, `ReadinessScore`), PHP 8 enums (`WorkOrderStatus`, `Priority`), and a real state machine on work orders — not string comparisons scattered through controllers.
+- **Multi-tenancy done properly.** `BelongsToTenant` global scope trait on every model, `EnsureTenantActive` middleware for web, `EnsureTenantActiveApi` for JSON APIs, and cross-tenant isolation covered by integration tests.
+- **Commissioning as code.** FPT engine with auto-evaluation modes (tolerance / GTE / between), witness signature + tamper detection, parent-child retest chains, and a signed public URL for stakeholder preview.
+- **Reactive UI without a SPA.** Livewire 4.2 components with `wire:poll` for the IoT dashboard, Alpine for dropdowns/modals, CMD+K command palette, and SVG-based visualizations (sparklines, donuts, rings, heatmap) — no React, no build step.
+- **Production shape.** Sanctum-authenticated REST API under `/api/v1`, PDF generation (turnover package + FPT reports), notifications (in-app + email), scheduled jobs (`cx:weekly-digest`, `pm:generate`), audit log with old/new diffs, and role-based policies.
+- **Ops-ready.** Driver-agnostic SQL (SQLite in dev, Postgres/MySQL in prod), Docker multi-stage build, ECS task definitions in `deploy/`, Railway one-click deploy, GitHub Actions CI stub.
 
-## Quick Start
+---
 
-```bash
-# Clone the repository
-git clone <repo-url> nexus-ops && cd nexus-ops
+## Stack
 
-# Install dependencies
-composer install
-npm install && npm run build
+| Layer | Tech |
+|---|---|
+| Backend | Laravel 13, PHP 8.5 |
+| UI | Livewire 4.2, Alpine.js, Tailwind CSS |
+| Charts | Chart.js (velocity trend) + inline SVG (sparklines, donut, ring, heatmap) |
+| Data | SQLite (dev), Postgres/MySQL (prod), driver-agnostic migrations |
+| Auth | Sanctum (API, 24h tokens), session (web), 5 role levels |
+| Jobs | Laravel queue + scheduler (`cx:weekly-digest` weekly, `pm:generate` daily) |
+| PDFs | dompdf (turnover packages, FPT reports) |
+| Deploy | Docker, Railway (recommended), AWS Fargate (configs in `deploy/`) |
 
-# Configure environment
-cp .env.example .env
-php artisan key:generate
-
-# Set up database and seed demo data
-php artisan migrate --seed
-
-# Start the development server
-php artisan serve --port=8001
-```
-
-Open [http://localhost:8001](http://localhost:8001) in your browser.
-
-## Demo Credentials
-
-| Email | Password | Role |
-|--------------------|----------|------------|
-| admin@acme.com | password | Admin |
-| manager@acme.com | password | Manager |
-| tech1@acme.com | password | Technician |
+---
 
 ## Architecture
 
-NexusOps is a multi-tenant Laravel application using Livewire for reactive server-rendered UI. All data is scoped by `tenant_id` with middleware enforcement. The event-driven backend uses observers and listeners for audit logging, SLA breach detection, and sensor anomaly alerts. A REST API layer provides external integration points secured by Sanctum tokens.
-
-### Directory Structure
-
 ```
-app/
-  Http/Controllers/Api/   # 8 API controllers
-  Livewire/               # 30 reactive components
-  Models/                 # 21 Eloquent models
-  Services/               # 9 service classes
-  Events/                 # 5 domain events
-  Notifications/          # 3 notification types
-  Policies/               # 3 authorization policies
-routes/
-  web.php                 # 59 routes (22 pages)
-  api.php                 # 17 API endpoints
-database/
-  migrations/             # 26 migration files
-  seeders/                # Demo data seeder
-resources/views/          # 38 Blade templates
+┌───────────────────────────────────────────────────────────────────┐
+│                          Browser (Livewire)                        │
+│    ⌘K palette · sidebar · top tabs · 43 reactive components        │
+└───────────────▲───────────────────────────────────────▲────────────┘
+                │ Livewire XHR                  session │ Sanctum
+                │                                       │
+┌───────────────┴───────────────────────────────────────┴────────────┐
+│                          Laravel 13 app                            │
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────────┐    │
+│  │ Livewire    │  │ REST API v1  │  │ Domain                  │    │
+│  │ (web)       │  │ (/api/v1/*)  │  │   Enums, Value Objects  │    │
+│  └──────┬──────┘  └──────┬───────┘  └──────────────┬──────────┘    │
+│         │                │                         │               │
+│  ┌──────▼────────────────▼─────────────────────────▼─────────┐     │
+│  │ Services: WorkOrder, TestExecution, Turnover, Signoff,    │     │
+│  │           Checklist, Sensor, Automation, ReportPdf, ...   │     │
+│  └───┬────────────────────┬────────────────────┬──────────────┘    │
+│      │ tenant scope       │ events             │ policies          │
+│  ┌───▼──────────┐  ┌──────▼──────────┐  ┌──────▼───────────┐       │
+│  │ Eloquent     │  │ Queue (db/redis)│  │ Scheduler        │       │
+│  │ 27 models,   │  │ notifications,  │  │ pm:generate,     │       │
+│  │ soft-delete, │  │ digests,        │  │ cx:weekly-digest │       │
+│  │ audit log    │  │ sensor ingest   │  │                  │       │
+│  └──────────────┘  └─────────────────┘  └──────────────────┘       │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-### Models (21)
+---
 
-Tenant, User, Project, Location, Asset, WorkOrder, Issue, SensorSource, SensorReading, CloseoutRequirement, Document, AuditLog, StatusMapping, SyncWatermark, MaintenanceSchedule, ChecklistTemplate, ChecklistCompletion, OccupantRequest, AutomationRule, Vendor, VendorContract
+## Features
 
-## Pages (22)
+<details>
+<summary><b>Commissioning</b></summary>
 
-| Route | Page | Auth |
-|-------------------------------|----------------------------------------|------|
-| `/` | Landing page | No |
-| `/login` | Login | No |
-| `/request` | Occupant request form | No |
-| `/request/{token}` | Request status tracker | No |
-| `/dashboard` | Portfolio dashboard with KPIs | Yes |
-| `/projects` | Project list | Yes |
-| `/projects/{id}` | Project detail with readiness scoring | Yes |
-| `/work-orders` | Work order list with filters | Yes |
-| `/work-orders/{id}` | Work order detail and status management | Yes |
-| `/assets` | Asset registry | Yes |
-| `/assets/{id}` | Asset detail with QR code and history | Yes |
-| `/sensors` | IoT sensor dashboard | Yes |
-| `/floor-plan` | Interactive SVG floor plan | Yes |
-| `/health-matrix` | Asset health scatter plot | Yes |
-| `/map` | Mapbox 3D facility map | Yes |
-| `/vendors` | Vendor list | Yes |
-| `/vendors/{id}` | Vendor detail with contracts | Yes |
-| `/reports` | Analytics and reports | Yes |
-| `/automation` | Automation rule list | Yes |
-| `/automation/create` | Visual rule builder | Yes |
-| `/automation/{id}/edit` | Edit automation rule | Yes |
-| `/audit-log` | Audit log viewer | Yes |
-| `/docs` | API documentation | Yes |
+- FPT engine with test scripts, executions, witness signatures, tamper detection
+- Auto-evaluation rules (tolerance, GTE, between) with pass/fail preview on input
+- Retest chains linked to parent failed executions
+- Pre-Functional Checklists (PFC) with multi-session resume, auto-opens deficiencies on fail
+- Turnover packages with PDF, QR codes, signed public stakeholder URLs
+- Commissioning analytics: 6-month trend, aging buckets, top-failing scripts
+- Deficiency board (kanban) with state machine and audit trail
+- Lessons Learned knowledge base (7 categories)
+- Closeout tracker per project
+</details>
 
-## API Endpoints
+<details>
+<summary><b>Operations</b></summary>
 
-All endpoints are prefixed with `/api` and return JSON. Authenticated routes require a Sanctum bearer token.
+- Work orders full lifecycle (create, assign, status transitions, SLA)
+- Preventive maintenance scheduler (daily cron)
+- Inspection checklists (pass/fail, numeric, text)
+- Asset hierarchy (parent/child components), health scoring
+- Vendor management (contracts, scorecards, NTE pricing)
+- Workflow automation rules (visual builder, 7 triggers, 5 actions)
+</details>
 
-| Method | Path | Description |
-|--------|----------------------------------------------|----------------------------------------------|
-| POST | `/api/auth/login` | Authenticate and receive API token |
-| GET | `/api/auth/me` | Get current user profile |
-| POST | `/api/auth/logout` | Revoke current token |
-| GET | `/api/dashboard` | Dashboard summary data |
-| GET | `/api/dashboard/kpis` | Key performance indicators |
-| GET | `/api/dashboard/sensors` | Sensor overview stats |
-| GET | `/api/dashboard/projects/{id}/readiness` | Project readiness score |
-| GET | `/api/work-orders` | List work orders (filtered, paginated) |
-| POST | `/api/work-orders` | Create a work order |
-| GET | `/api/work-orders/{id}` | Get work order detail |
-| PUT | `/api/work-orders/{id}` | Update a work order |
-| PATCH | `/api/work-orders/{id}/status` | Transition work order status |
-| GET | `/api/assets` | List assets |
-| GET | `/api/assets/{id}` | Get asset detail |
-| GET | `/api/assets/qr/{code}` | Look up asset by QR code |
-| GET | `/api/sensors` | List sensor sources |
-| POST | `/api/sensors/ingest` | Ingest sensor readings |
-| GET | `/api/sensors/{id}/readings` | Get readings for a sensor |
-| POST | `/api/sync/trigger` | Trigger data sync |
-| GET | `/api/sync/status` | Get sync watermark status |
+<details>
+<summary><b>Monitoring</b></summary>
+
+- IoT sensor dashboard with 5-second polling, anomaly detection
+- 7d × 24h anomaly density heatmap
+- Interactive SVG floor plan with asset pins
+- Asset health matrix (scatter plot with danger zone)
+- Mapbox 3D facility map
+</details>
+
+<details>
+<summary><b>Developer</b></summary>
+
+- REST API v1 with Sanctum auth (17 endpoints)
+- API documentation page (dark theme, syntax highlighting)
+- Audit log viewer with old/new diff
+- CMD+K command palette (fuzzy search across entities)
+- 138 passing tests (470 assertions) covering full workflows and tenant isolation
+</details>
+
+---
+
+## Run locally
+
+```bash
+git clone git@github.com:yashkuceriya/nexus-ops.git
+cd nexus-ops
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan serve --port=8001
+```
+
+Open http://localhost:8001, login `admin@acme.com` / `password`.
+
+**Tests:** `php artisan test` → 138 passing.
+
+---
 
 ## Deployment
 
-### Docker
+Two documented paths in [`docs/DEPLOY.md`](docs/DEPLOY.md):
 
-```bash
-docker-compose up -d
+- **Railway** (recommended for demos) — one-click GitHub deploy, Postgres plugin, ~$5–15/mo, 15 min setup
+- **AWS Fargate** — task defs + nginx + supervisord configs ready in `deploy/`; bring your own RDS + ALB + ECR
+
+---
+
+## Project structure
+
+```
+app/
+├── Domain/                   Value objects + enums
+├── Http/
+│   ├── Controllers/Api/      REST API
+│   └── Middleware/           Tenant guards (web + api)
+├── Livewire/                 43 reactive components
+├── Models/                   27 Eloquent models, all tenant-scoped
+├── Services/
+│   ├── TestExecution/        FPT engine
+│   ├── Turnover/             Handover package builder
+│   ├── Signoff/              Asset signoff workflow
+│   ├── Checklist/            PFC runner
+│   └── ...
+├── Events/ Listeners/ Jobs/  Async pipeline
+└── Console/Commands/         cx:weekly-digest, pm:generate
+docs/
+├── DESIGN.md                 Design system tokens + recipes
+├── DEPLOY.md                 Railway + AWS playbooks
+└── adr/                      Architecture decision records
 ```
 
-The compose file starts five services: app (PHP-FPM + Nginx), queue worker, scheduler, MySQL, and Redis.
-
-### AWS Fargate
-
-The project includes ECS task definitions for web and worker containers targeting ARM64 Graviton instances. GitHub Actions handles CI/CD with OIDC authentication to push images to ECR and deploy to ECS.
-
-## Environment Variables
-
-See `.env.production.example` for the full list. Key categories:
-
-- **App** -- `APP_NAME`, `APP_ENV`, `APP_KEY`, `APP_URL`
-- **Database** -- `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
-- **Queue** -- `QUEUE_CONNECTION`, `REDIS_HOST`, `SQS_QUEUE`
-- **Services** -- `MAPBOX_TOKEN`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
-- **Auth** -- `SANCTUM_STATEFUL_DOMAINS`
-
-## Testing
-
-```bash
-php artisan test
-```
-
-29 tests with 56 assertions covering API endpoints, services, and model relationships. Tests use Pest v4 with SQLite in-memory database.
+---
 
 ## License
 
-MIT
+MIT.
