@@ -8,7 +8,7 @@
 [![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel)](https://laravel.com)
 [![Livewire 4.2](https://img.shields.io/badge/Livewire-4.2-4E56A6?style=flat)](https://livewire.laravel.com)
 [![PHP 8.5](https://img.shields.io/badge/PHP-8.5-777BB4?style=flat&logo=php)](https://www.php.net)
-[![Tests](https://img.shields.io/badge/tests-138%20passing-10B981?style=flat)](./tests)
+[![Tests](https://img.shields.io/badge/tests-141%20passing-10B981?style=flat)](./tests)
 
 </div>
 
@@ -133,7 +133,7 @@ NexusOps takes a commissioning project through the final 20% — Functional Perf
 - API documentation page (dark theme, syntax highlighting)
 - Audit log viewer with old/new diff
 - CMD+K command palette (fuzzy search across entities)
-- 138 passing tests (470 assertions) covering full workflows and tenant isolation
+- 141 passing tests (485 assertions) covering full workflows and tenant isolation
 </details>
 
 ---
@@ -152,7 +152,7 @@ php artisan serve --port=8001
 
 Open http://localhost:8001, login `admin@acme.com` / `password`.
 
-**Tests:** `php artisan test` → 138 passing.
+**Tests:** `php artisan test` → 141 passing.
 
 ---
 

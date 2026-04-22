@@ -10,7 +10,7 @@ Spent the last few weeks building **NexusOps** — a multi-tenant facility commi
 
 It takes a construction project through the final 20% (Functional Performance Tests, Pre-Functional Checklists, deficiency resolution, turnover packages) and hands it off to day-one ops with work orders, IoT telemetry, and a living audit trail.
 
-Built with Laravel 13, Livewire 4.2, Tailwind, Alpine, Postgres. 138 passing tests. Multi-tenant by default.
+Built with Laravel 13, Livewire 4.2, Tailwind, Alpine, Postgres. 141 passing tests. Multi-tenant by default.
 
 Live demo (admin@acme.com / password): https://REPLACE_WITH_RAILWAY_URL
 Code: https://github.com/yashkuceriya/nexus-ops
@@ -39,7 +39,7 @@ I shipped a portfolio project I'm genuinely proud of: **NexusOps**, a facility c
 • Domain-driven: value objects, PHP 8 enums, a real work-order state machine
 • 43 Livewire components, CMD+K palette, no build step (Tailwind CDN, Alpine CDN)
 • Sanctum API (20 endpoints, 24h tokens), role-based policies, audit log with diff
-• 138 passing tests, 470 assertions, driver-agnostic SQL (SQLite dev → Postgres prod)
+• 141 passing tests, 485 assertions, driver-agnostic SQL (SQLite dev → Postgres prod)
 
 **What I learned:**
 Domain modeling pays off. The moment I introduced `WorkOrderStatus` enum + `SlaPolicy` value object, tests got tighter, bugs got rarer, and every feature after that was cheaper.
@@ -81,7 +81,7 @@ Building commissioning — the final 20% of a construction project where every s
 ✓ Event-driven async: `TestExecutionCompleted` → notification listener, queue worker, scheduler
 ✓ PDF generation for turnover packages and FPT reports with signature-aware layouts
 ✓ REST API v1 under Sanctum (24h token expiry), role-based policies
-✓ 138 passing tests (470 assertions): lifecycle, tenant isolation, FPT engine, retest chains, tamper detection
+✓ 141 passing tests (485 assertions): lifecycle, tenant isolation, FPT engine, retest chains, tamper detection
 
 **Stack**
 Laravel 13 · Livewire 4.2 · PHP 8.5 · Tailwind · Alpine · Chart.js · Postgres · Docker · Railway (deployed) · AWS Fargate configs (in repo)

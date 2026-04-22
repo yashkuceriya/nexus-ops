@@ -3,7 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <title>NexusOps — Intelligent Facility Operations</title>
+    <meta name="description" content="Multi-tenant facility commissioning and operations platform. FPT, Pre-Functional Checklists, turnover packages, work orders, IoT telemetry — built on Laravel 13 and Livewire 4.2.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NexusOps">
+    <meta property="og:title" content="NexusOps — Facility commissioning and operations">
+    <meta property="og:description" content="FPT engine, Pre-Functional Checklists, turnover packages, and day-one ops — multi-tenant Laravel SaaS. Demo login: admin@acme.com / password.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NexusOps — Facility commissioning and operations">
+    <meta name="twitter:description" content="FPT engine, Pre-Functional Checklists, turnover packages, and day-one ops. Multi-tenant Laravel SaaS.">
+    <meta name="twitter:image" content="{{ asset('og-image.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -164,7 +180,7 @@
                 <div class="hidden md:flex items-center gap-8">
                     <a href="#features" class="text-sm text-zinc-400 hover:text-white transition-colors duration-200">Features</a>
                     <a href="#pricing" class="text-sm text-zinc-400 hover:text-white transition-colors duration-200">Pricing</a>
-                    <a href="#" class="text-sm text-zinc-400 hover:text-white transition-colors duration-200">Docs</a>
+                    <a href="https://github.com/yashkuceriya/nexus-ops#readme" target="_blank" rel="noopener" class="text-sm text-zinc-400 hover:text-white transition-colors duration-200">Docs</a>
                 </div>
 
                 {{-- Auth Buttons --}}
@@ -190,7 +206,7 @@
             <div x-show="mobileOpen" x-transition class="md:hidden pb-4 space-y-2">
                 <a href="#features" class="block text-sm text-zinc-400 hover:text-white py-2">Features</a>
                 <a href="#pricing" class="block text-sm text-zinc-400 hover:text-white py-2">Pricing</a>
-                <a href="#" class="block text-sm text-zinc-400 hover:text-white py-2">Docs</a>
+                <a href="https://github.com/yashkuceriya/nexus-ops#readme" target="_blank" rel="noopener" class="block text-sm text-zinc-400 hover:text-white py-2">Docs</a>
                 <div class="pt-2 flex flex-col gap-2">
                     <a href="{{ route('login') }}" class="text-sm text-center font-medium text-zinc-300 px-4 py-2 rounded-lg border border-zinc-700">Sign In</a>
                     <a href="{{ route('login') }}" class="text-sm text-center font-medium text-white bg-emerald-600 px-4 py-2 rounded-lg">Get Started</a>
@@ -225,11 +241,11 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                             </svg>
                         </a>
-                        <a href="#" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all hover:bg-white/5">
+                        <a href="#features" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all hover:bg-white/5">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                             </svg>
-                            Watch Demo
+                            See Features
                         </a>
                     </div>
 
@@ -552,8 +568,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
                 </a>
-                <a href="#" class="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all hover:bg-white/5">
-                    Contact Sales
+                <a href="https://github.com/yashkuceriya/nexus-ops" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-zinc-300 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-all hover:bg-white/5">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    View Source
                 </a>
             </div>
         </div>
@@ -582,25 +599,24 @@
                     <ul class="space-y-2.5">
                         <li><a href="#features" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Features</a></li>
                         <li><a href="#pricing" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Pricing</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Integrations</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Changelog</a></li>
+                        <li><a href="{{ route('login') }}" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Live Demo</a></li>
+                        <li><a href="https://github.com/yashkuceriya/nexus-ops/commits/main" target="_blank" rel="noopener" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Changelog</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold text-zinc-300 mb-4">Company</h4>
+                    <h4 class="text-sm font-semibold text-zinc-300 mb-4">Project</h4>
                     <ul class="space-y-2.5">
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">About</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Blog</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Careers</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Contact</a></li>
+                        <li><a href="https://github.com/yashkuceriya/nexus-ops#readme" target="_blank" rel="noopener" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">About</a></li>
+                        <li><a href="https://github.com/yashkuceriya/nexus-ops" target="_blank" rel="noopener" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Source Code</a></li>
+                        <li><a href="https://github.com/yashkuceriya/nexus-ops/issues" target="_blank" rel="noopener" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Issues</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold text-zinc-300 mb-4">Legal</h4>
+                    <h4 class="text-sm font-semibold text-zinc-300 mb-4">Portfolio</h4>
                     <ul class="space-y-2.5">
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Terms of Service</a></li>
-                        <li><a href="#" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Security</a></li>
+                        <li><span class="text-sm text-zinc-500">This is a portfolio project —</span></li>
+                        <li><span class="text-sm text-zinc-500">no tenant data is collected.</span></li>
+                        <li><a href="https://github.com/yashkuceriya/nexus-ops/blob/main/README.md" target="_blank" rel="noopener" class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Full architecture notes</a></li>
                     </ul>
                 </div>
             </div>
@@ -608,16 +624,8 @@
             <div class="mt-12 pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row items-center justify-between gap-4">
                 <p class="text-sm text-zinc-600">&copy; 2026 NexusOps. All rights reserved.</p>
                 <div class="flex items-center gap-4">
-                    {{-- Twitter/X --}}
-                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
-                    {{-- LinkedIn --}}
-                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                    </a>
                     {{-- GitHub --}}
-                    <a href="#" class="text-zinc-600 hover:text-zinc-400 transition-colors">
+                    <a href="https://github.com/yashkuceriya/nexus-ops" target="_blank" rel="noopener" aria-label="View source on GitHub" class="text-zinc-600 hover:text-zinc-300 transition-colors">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
                     </a>
                 </div>
