@@ -26,7 +26,7 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: { 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' }
+                        brand: { 50: '#EEF2FF', 100: '#E0E7FF', 200: '#C7D2FE', 300: '#A5B4FC', 400: '#818CF8', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA', 800: '#3730A3', 900: '#312E81' }
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -55,10 +55,10 @@
             width: 200%;
             height: 200%;
             background:
-                radial-gradient(ellipse 600px 600px at 20% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 800px 800px at 80% 10%, rgba(6, 182, 212, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 600px 600px at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 800px 800px at 80% 10%, rgba(139, 92, 246, 0.06) 0%, transparent 70%),
                 radial-gradient(ellipse 600px 600px at 60% 60%, rgba(59, 130, 246, 0.05) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 500px at 10% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
+                radial-gradient(ellipse 500px 500px at 10% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 70%);
             animation: meshMove 20s ease-in-out infinite alternate;
             z-index: 0;
             pointer-events: none;
@@ -83,7 +83,7 @@
 
         /* Gradient text utility */
         .text-gradient {
-            background: linear-gradient(135deg, #34d399 0%, #22d3ee 40%, #3b82f6 100%);
+            background: linear-gradient(135deg, #818CF8 0%, #22d3ee 40%, #3b82f6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -99,17 +99,17 @@
             position: absolute;
             inset: -1px;
             border-radius: inherit;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.0), rgba(6, 182, 212, 0.0));
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.0), rgba(139, 92, 246, 0.0));
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: -1;
         }
         .card-glow:hover::before {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
         }
         .card-glow:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.15);
-            border-color: rgba(16, 185, 129, 0.3) !important;
+            box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3) !important;
         }
 
         /* Browser frame for mock dashboard */
@@ -139,7 +139,7 @@
             position: absolute;
             inset: -2px;
             border-radius: inherit;
-            background: linear-gradient(135deg, #10b981, #06b6d4, #3b82f6);
+            background: linear-gradient(135deg, #6366F1, #06b6d4, #3b82f6);
             opacity: 0;
             z-index: -1;
             filter: blur(12px);
@@ -168,12 +168,12 @@
             <div class="flex items-center justify-between h-16">
                 {{-- Logo --}}
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
                         <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008V7.5z" />
                         </svg>
                     </div>
-                    <span class="text-lg font-bold text-white">Nexus<span class="text-emerald-400">Ops</span></span>
+                    <span class="text-lg font-bold text-white">Nexus<span class="text-indigo-300">Ops</span></span>
                 </div>
 
                 {{-- Desktop Nav Links --}}
@@ -188,7 +188,7 @@
                     <a href="{{ route('login') }}" class="text-sm font-medium text-zinc-300 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5">
                         Sign In
                     </a>
-                    <a href="{{ route('login') }}" class="text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30">
+                    <a href="{{ route('login') }}" class="text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-300 px-4 py-2 rounded-lg transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30">
                         Get Started
                     </a>
                 </div>
@@ -209,7 +209,7 @@
                 <a href="https://github.com/yashkuceriya/nexus-ops#readme" target="_blank" rel="noopener" class="block text-sm text-zinc-400 hover:text-white py-2">Docs</a>
                 <div class="pt-2 flex flex-col gap-2">
                     <a href="{{ route('login') }}" class="text-sm text-center font-medium text-zinc-300 px-4 py-2 rounded-lg border border-zinc-700">Sign In</a>
-                    <a href="{{ route('login') }}" class="text-sm text-center font-medium text-white bg-emerald-600 px-4 py-2 rounded-lg">Get Started</a>
+                    <a href="{{ route('login') }}" class="text-sm text-center font-medium text-white bg-indigo-600 px-4 py-2 rounded-lg">Get Started</a>
                 </div>
             </div>
         </div>
@@ -221,9 +221,9 @@
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 {{-- Hero text --}}
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 mb-8">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span class="text-xs font-medium text-emerald-400">Platform v3.0 now available</span>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 mb-8">
+                        <span class="w-2 h-2 rounded-full bg-indigo-300 animate-pulse"></span>
+                        <span class="text-xs font-medium text-indigo-300">Platform v3.0 now available</span>
                     </div>
 
                     <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
@@ -235,7 +235,7 @@
                     </p>
 
                     <div class="flex flex-wrap items-center gap-4 mb-12">
-                        <a href="{{ route('login') }}" class="glow-btn relative inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 rounded-xl transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:scale-[1.02]">
+                        <a href="{{ route('login') }}" class="glow-btn relative inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 rounded-xl transition-all shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:scale-[1.02]">
                             Start Free Trial
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -253,7 +253,7 @@
                         <div class="flex -space-x-2">
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 border-2 border-zinc-900 flex items-center justify-center text-[10px] font-bold">JK</div>
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 border-2 border-zinc-900 flex items-center justify-center text-[10px] font-bold">AM</div>
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 border-2 border-zinc-900 flex items-center justify-center text-[10px] font-bold">RL</div>
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 border-2 border-zinc-900 flex items-center justify-center text-[10px] font-bold">RL</div>
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 border-2 border-zinc-900 flex items-center justify-center text-[10px] font-bold">SP</div>
                         </div>
                         <div class="text-sm text-zinc-500">
@@ -266,7 +266,7 @@
                 <div class="hidden lg:block">
                     <div class="browser-frame relative">
                         {{-- Glow behind the frame --}}
-                        <div class="absolute -inset-4 bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-blue-500/10 rounded-2xl blur-2xl"></div>
+                        <div class="absolute -inset-4 bg-gradient-to-r from-indigo-500/10 via-cyan-500/10 to-blue-500/10 rounded-2xl blur-2xl"></div>
 
                         <div class="relative bg-zinc-900 rounded-xl border border-zinc-800 shadow-2xl shadow-black/50 overflow-hidden">
                             {{-- Browser chrome --}}
@@ -286,14 +286,14 @@
                                 {{-- Mock top bar --}}
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 bg-emerald-500/20 rounded flex items-center justify-center">
-                                            <div class="w-3 h-3 bg-emerald-500 rounded-sm"></div>
+                                        <div class="w-6 h-6 bg-indigo-500/20 rounded flex items-center justify-center">
+                                            <div class="w-3 h-3 bg-indigo-500 rounded-sm"></div>
                                         </div>
                                         <div class="h-2.5 w-20 bg-zinc-700 rounded"></div>
                                     </div>
                                     <div class="flex gap-2">
                                         <div class="h-7 w-20 bg-zinc-800 rounded border border-zinc-700"></div>
-                                        <div class="h-7 w-7 bg-emerald-500/20 rounded"></div>
+                                        <div class="h-7 w-7 bg-indigo-500/20 rounded"></div>
                                     </div>
                                 </div>
 
@@ -301,7 +301,7 @@
                                 <div class="grid grid-cols-4 gap-2">
                                     <div class="bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/30">
                                         <div class="h-2 w-12 bg-zinc-600 rounded mb-2"></div>
-                                        <div class="h-4 w-8 bg-emerald-500/30 rounded"></div>
+                                        <div class="h-4 w-8 bg-indigo-500/30 rounded"></div>
                                     </div>
                                     <div class="bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/30">
                                         <div class="h-2 w-10 bg-zinc-600 rounded mb-2"></div>
@@ -321,11 +321,11 @@
                                 <div class="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/30">
                                     <div class="h-2 w-24 bg-zinc-600 rounded mb-4"></div>
                                     <div class="flex items-end gap-1 h-24">
-                                        <div class="flex-1 bg-emerald-500/20 rounded-t" style="height:40%"></div>
-                                        <div class="flex-1 bg-emerald-500/30 rounded-t" style="height:65%"></div>
-                                        <div class="flex-1 bg-emerald-500/20 rounded-t" style="height:45%"></div>
-                                        <div class="flex-1 bg-emerald-500/40 rounded-t" style="height:80%"></div>
-                                        <div class="flex-1 bg-emerald-500/30 rounded-t" style="height:60%"></div>
+                                        <div class="flex-1 bg-indigo-500/20 rounded-t" style="height:40%"></div>
+                                        <div class="flex-1 bg-indigo-500/30 rounded-t" style="height:65%"></div>
+                                        <div class="flex-1 bg-indigo-500/20 rounded-t" style="height:45%"></div>
+                                        <div class="flex-1 bg-indigo-500/40 rounded-t" style="height:80%"></div>
+                                        <div class="flex-1 bg-indigo-500/30 rounded-t" style="height:60%"></div>
                                         <div class="flex-1 bg-cyan-500/40 rounded-t" style="height:90%"></div>
                                         <div class="flex-1 bg-cyan-500/30 rounded-t" style="height:70%"></div>
                                         <div class="flex-1 bg-cyan-500/20 rounded-t" style="height:55%"></div>
@@ -347,7 +347,7 @@
                                     <div class="grid grid-cols-4 gap-4 px-3 py-2 border-b border-zinc-700/20">
                                         <div class="h-2 w-14 bg-zinc-700 rounded"></div>
                                         <div class="h-2 w-20 bg-zinc-700 rounded"></div>
-                                        <div class="h-4 w-12 bg-emerald-500/20 rounded-full"></div>
+                                        <div class="h-4 w-12 bg-indigo-500/20 rounded-full"></div>
                                         <div class="h-2 w-8 bg-zinc-700 rounded"></div>
                                     </div>
                                     <div class="grid grid-cols-4 gap-4 px-3 py-2 border-b border-zinc-700/20">
@@ -411,7 +411,7 @@
                 <template x-for="(stat, index) in stats" :key="index">
                     <div class="text-center">
                         <div class="text-3xl sm:text-4xl font-bold text-white tabular-nums">
-                            <span x-text="stat.decimal ? stat.current.toFixed(1) : stat.current.toLocaleString()"></span><span class="text-emerald-400" x-text="stat.suffix"></span>
+                            <span x-text="stat.decimal ? stat.current.toFixed(1) : stat.current.toLocaleString()"></span><span class="text-indigo-300" x-text="stat.suffix"></span>
                         </div>
                         <div class="text-sm text-zinc-500 mt-1" x-text="stat.label"></div>
                     </div>
@@ -429,7 +429,7 @@
                  x-init="const o = new IntersectionObserver(e => { e.forEach(en => { if(en.isIntersecting) { shown = true; } }); }, { threshold: 0.2 }); o.observe($el);"
                  :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
                  style="transition: all 0.7s ease-out;">
-                <p class="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-3">Everything you need</p>
+                <p class="text-sm font-semibold text-indigo-300 uppercase tracking-wider mb-3">Everything you need</p>
                 <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Built for modern facility teams</h2>
                 <p class="text-zinc-400 text-lg">A unified command center for every aspect of facility operations, from IoT sensors to vendor compliance.</p>
             </div>
@@ -442,8 +442,8 @@
                      x-init="const o = new IntersectionObserver(e => { e.forEach(en => { if(en.isIntersecting) shown = true; }); }, { threshold: 0.15 }); o.observe($el);"
                      :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                      style="transition: all 0.6s ease-out; transition-delay: 0ms;">
-                    <div class="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M5.106 18.894c-3.808-3.808-3.808-9.98 0-13.788m13.788 0c3.808 3.808 3.808 9.98 0 13.788M12 12h.008v.008H12V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                         </svg>
                     </div>
@@ -562,7 +562,7 @@
             <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to transform your operations?</h2>
             <p class="text-lg text-zinc-400 mb-10">Start your 14-day free trial. No credit card required. Full access to all features.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="{{ route('login') }}" class="glow-btn relative inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 rounded-xl transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:scale-[1.02]">
+                <a href="{{ route('login') }}" class="glow-btn relative inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 rounded-xl transition-all shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:scale-[1.02]">
                     Start Free Trial
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -583,12 +583,12 @@
                 {{-- Brand column --}}
                 <div class="md:col-span-1">
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-7 h-7 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                        <div class="w-7 h-7 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008V7.5z" />
                             </svg>
                         </div>
-                        <span class="text-base font-bold text-white">Nexus<span class="text-emerald-400">Ops</span></span>
+                        <span class="text-base font-bold text-white">Nexus<span class="text-indigo-300">Ops</span></span>
                     </div>
                     <p class="text-sm text-zinc-500 leading-relaxed">Intelligent facility operations platform for the modern enterprise.</p>
                 </div>

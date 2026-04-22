@@ -56,6 +56,23 @@
     </div>
 
     {{-- Columns --}}
+    @if(array_sum($counts) === 0)
+        <div class="card p-10 text-center">
+            <div class="mx-auto w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center">
+                <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                </svg>
+            </div>
+            <h2 class="mt-4 text-base font-semibold text-ink">No open deficiencies</h2>
+            <p class="mt-1 text-[13px] text-ink-muted max-w-sm mx-auto">
+                Either there are no tracked projects with open issues right now, or every deficiency has been closed out. Failed FPT steps will auto-open new cards here.
+            </p>
+            <a href="{{ route('fpt.executions.index') }}" class="mt-5 btn-ghost inline-flex items-center gap-2 text-[12px]">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Review test executions
+            </a>
+        </div>
+    @else
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         @foreach($columns as $key => $col)
             <div class="card p-0 overflow-hidden flex flex-col min-h-[300px]">
@@ -133,4 +150,5 @@
             </div>
         @endforeach
     </div>
+    @endif
 </div>

@@ -151,6 +151,7 @@
                                             <button wire:click="approve({{ $req->id }})"
                                                 class="text-xs text-emerald-600 hover:text-emerald-800 font-medium">Approve</button>
                                             <button wire:click="reject({{ $req->id }})"
+                                                wire:confirm="Reject this closeout requirement? It will return to the submitter for rework."
                                                 class="text-xs text-red-600 hover:text-red-800 font-medium">Reject</button>
                                         @endif
                                         @if($req->status === 'rejected')

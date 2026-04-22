@@ -7,10 +7,18 @@
             <p class="text-[13px] text-ink-muted mt-0.5">Live rollup across {{ count($this->projects) }} active commissioning projects.</p>
         </div>
         <div class="flex items-center gap-2">
-            <span class="mono text-ink-soft">Updated {{ \Carbon\Carbon::parse($lastUpdated)->diffForHumans() }}</span>
+            <span wire:loading.remove wire:target="refreshKpis" class="mono text-ink-soft">Updated {{ \Carbon\Carbon::parse($lastUpdated)->diffForHumans() }}</span>
+            <span wire:loading wire:target="refreshKpis" class="mono text-accent-700 inline-flex items-center gap-1.5">
+                <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+                Refreshing…
+            </span>
+            <button type="button" wire:click="refreshKpis" wire:loading.attr="disabled" class="btn-ghost inline-flex items-center gap-2" title="Refresh now">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                <span class="hidden sm:inline">Refresh</span>
+            </button>
             <a href="{{ route('reports.export-pdf') }}" class="btn-ghost inline-flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg>
-                Generate PDF
+                <span class="hidden sm:inline">Generate PDF</span>
             </a>
         </div>
     </div>

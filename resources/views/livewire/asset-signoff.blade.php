@@ -128,6 +128,7 @@
                                             </button>
                                             <button type="button"
                                                 wire:click="reject({{ $signoff->id }})"
+                                                wire:confirm="Reject this sign-off? The requester will be notified."
                                                 class="flex-1 rounded-md bg-red-600 px-2 py-1.5 text-xs font-medium text-white hover:bg-red-500">
                                                 Reject
                                             </button>

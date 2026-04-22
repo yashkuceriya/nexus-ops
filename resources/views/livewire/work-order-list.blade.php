@@ -137,7 +137,9 @@
                                 <a href="{{ route('work-orders.show', $wo) }}" class="block px-4 py-2 text-[13px] text-ink-muted hover:bg-slate-50">View Details</a>
                                 <a href="{{ route('work-orders.show', $wo) }}?edit=1" class="block px-4 py-2 text-[13px] text-ink-muted hover:bg-slate-50">Edit</a>
                                 <a href="{{ route('work-orders.show', $wo) }}?reassign=1" class="block px-4 py-2 text-[13px] text-ink-muted hover:bg-slate-50">Reassign</a>
-                                <button wire:click="$dispatch('cancel-work-order', { id: {{ $wo->id }} })" class="block w-full text-left px-4 py-2 text-[13px] text-red-600 hover:bg-red-50">Cancel</button>
+                                <button wire:click="$dispatch('cancel-work-order', { id: {{ $wo->id }} })"
+                                        wire:confirm="Cancel WO-{{ $wo->number ?? $wo->id }}? This will stop any assigned technician and close the work order."
+                                        class="block w-full text-left px-4 py-2 text-[13px] text-red-600 hover:bg-red-50">Cancel</button>
                             </div>
                         </div>
                     </div>

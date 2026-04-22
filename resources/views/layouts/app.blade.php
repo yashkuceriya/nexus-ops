@@ -85,6 +85,21 @@
         .nav-icon { width:18px; height:18px; color:#94A3B8; flex-shrink:0; }
         .nav-section { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; color:#94A3B8; padding: 14px 14px 6px; }
 
+        /* Visible focus rings for keyboard navigation */
+        .btn-primary:focus-visible,
+        .btn-ghost:focus-visible,
+        .nav-item:focus-visible,
+        .chip:focus-visible,
+        .input:focus-visible,
+        button:focus-visible,
+        a:focus-visible,
+        [role="button"]:focus-visible {
+            outline: 2px solid #4F46E5;
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+        .input:focus { outline: none; border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12); }
+
         /* Mono text */
         .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.02em; }
 
@@ -108,9 +123,16 @@
     </style>
 </head>
 <body class="h-full overflow-hidden">
-<div class="flex h-full">
+<div class="flex h-full" x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false">
+    {{-- Mobile backdrop --}}
+    <div x-show="sidebarOpen" x-transition.opacity.duration.200ms
+         @click="sidebarOpen = false"
+         x-cloak
+         class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden"></div>
+
     {{-- Sidebar --}}
-    <aside class="w-60 bg-white hairline-r flex flex-col flex-shrink-0">
+    <aside class="w-60 bg-white hairline-r flex flex-col flex-shrink-0 fixed inset-y-0 left-0 z-50 lg:static lg:translate-x-0 transition-transform duration-200 ease-out"
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
         {{-- Brand --}}
         <a href="{{ route('dashboard') }}" class="h-16 flex items-center px-5 hairline-b">
             <div class="flex items-center gap-2.5">
@@ -208,7 +230,7 @@
         </nav>
 
         {{-- Pinned CTA + user --}}
-        <div class="px-3 pb-3 relative" x-data="{ quickOpen: false }" @click.outside="quickOpen = false">
+        <div class="px-3 pb-3 relative" x-data="{ quickOpen: false }" @click.outside="quickOpen = false" @keydown.escape.window="quickOpen = false">
             <button type="button" @click="quickOpen = !quickOpen" class="btn-primary w-full inline-flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                 New Commission
@@ -256,9 +278,15 @@
     {{-- Main Content --}}
     <div class="flex-1 flex flex-col overflow-hidden">
         {{-- Top Bar --}}
-        <header class="h-14 bg-white hairline-b flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-6">
-                <nav class="flex items-center gap-1">
+        <header class="h-14 bg-white hairline-b flex items-center justify-between px-4 lg:px-6 flex-shrink-0">
+            <div class="flex items-center gap-3 lg:gap-6">
+                <button type="button"
+                        @click="sidebarOpen = !sidebarOpen"
+                        aria-label="Toggle navigation"
+                        class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-md text-ink-muted hover:text-ink hover:bg-slate-100 transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                </button>
+                <nav class="hidden sm:flex items-center gap-1">
                     <a href="{{ route('projects.index') }}" class="px-3 py-1.5 rounded-md text-[13px] font-semibold {{ request()->routeIs('projects.*') ? 'text-accent-700 bg-accent-50' : 'text-ink-muted hover:text-ink hover:bg-slate-50' }}">Projects</a>
                     <a href="{{ route('assets.index') }}" class="px-3 py-1.5 rounded-md text-[13px] font-semibold {{ request()->routeIs('assets.*') ? 'text-accent-700 bg-accent-50' : 'text-ink-muted hover:text-ink hover:bg-slate-50' }}">Assets</a>
                     <a href="{{ route('reports.commissioning') }}" class="px-3 py-1.5 rounded-md text-[13px] font-semibold {{ request()->routeIs('reports.*') ? 'text-accent-700 bg-accent-50' : 'text-ink-muted hover:text-ink hover:bg-slate-50' }}">Analytics</a>
@@ -272,7 +300,7 @@
                     <kbd class="mono text-[10px] px-1.5 py-0.5 rounded border border-slate-200 bg-white text-ink-soft">⌘K</kbd>
                 </button>
                 {{-- Tenant switcher --}}
-                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false" @keydown.escape.window="open = false">
                     <button type="button" @click="open = !open" class="btn-ghost inline-flex items-center gap-2 text-[12px]">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
                         <span class="truncate max-w-[140px]">{{ auth()->user()?->tenant?->name ?? 'Tenant' }}</span>
@@ -303,8 +331,8 @@
                 @endauth
 
                 {{-- Help popover --}}
-                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
-                    <button type="button" @click="open = !open" class="w-8 h-8 rounded-full hover:bg-slate-100 inline-flex items-center justify-center text-ink-soft" title="Help and shortcuts">
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false" @keydown.escape.window="open = false">
+                    <button type="button" @click="open = !open" class="w-8 h-8 rounded-full hover:bg-slate-100 inline-flex items-center justify-center text-ink-soft" title="Help and shortcuts" aria-label="Help and shortcuts">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
                     </button>
                     <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full mt-1 w-72 card p-3 shadow-lg z-50">
@@ -321,7 +349,7 @@
                 </div>
 
                 {{-- Avatar menu --}}
-                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false" @keydown.escape.window="open = false">
                     <button type="button" @click="open = !open" class="w-8 h-8 rounded-full bg-accent-600 flex items-center justify-center text-white text-[11px] font-bold ring-2 ring-white hover:ring-accent-200 transition-all" title="{{ auth()->user()->name ?? 'Guest' }}">
                         {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}{{ strtoupper(substr(explode(' ', auth()->user()->name ?? 'U ')[1] ?? '', 0, 1)) }}
                     </button>
