@@ -1,5 +1,5 @@
 {
-  "family": "facility-grid-bridge-worker",
+  "family": "nexusops-worker",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
@@ -80,7 +80,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/facility-grid-bridge-worker",
+          "awslogs-group": "/ecs/nexusops-worker",
           "awslogs-region": "${AWS_REGION}",
           "awslogs-stream-prefix": "worker",
           "awslogs-create-group": "true"

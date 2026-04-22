@@ -38,7 +38,7 @@ I shipped a portfolio project I'm genuinely proud of: **NexusOps**, a facility c
 • Multi-tenancy via a global scope trait + web/API middleware — cross-tenant isolation covered by integration tests
 • Domain-driven: value objects, PHP 8 enums, a real work-order state machine
 • 43 Livewire components, CMD+K palette, no build step (Tailwind CDN, Alpine CDN)
-• Sanctum API (17 endpoints, 24h tokens), role-based policies, audit log with diff
+• Sanctum API (20 endpoints, 24h tokens), role-based policies, audit log with diff
 • 138 passing tests, 470 assertions, driver-agnostic SQL (SQLite dev → Postgres prod)
 
 **What I learned:**

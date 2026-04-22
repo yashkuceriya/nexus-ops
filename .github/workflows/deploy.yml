@@ -10,12 +10,12 @@ concurrency:
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
-  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY || 'facility-grid-bridge' }}
-  ECS_CLUSTER: ${{ vars.ECS_CLUSTER || 'facility-grid-bridge' }}
-  ECS_SERVICE_WEB: ${{ vars.ECS_SERVICE_WEB || 'facility-grid-bridge-web' }}
-  ECS_SERVICE_WORKER: ${{ vars.ECS_SERVICE_WORKER || 'facility-grid-bridge-worker' }}
-  TASK_FAMILY_WEB: ${{ vars.TASK_FAMILY_WEB || 'facility-grid-bridge-web' }}
-  TASK_FAMILY_WORKER: ${{ vars.TASK_FAMILY_WORKER || 'facility-grid-bridge-worker' }}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY || 'nexusops' }}
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER || 'nexusops' }}
+  ECS_SERVICE_WEB: ${{ vars.ECS_SERVICE_WEB || 'nexusops-web' }}
+  ECS_SERVICE_WORKER: ${{ vars.ECS_SERVICE_WORKER || 'nexusops-worker' }}
+  TASK_FAMILY_WEB: ${{ vars.TASK_FAMILY_WEB || 'nexusops-web' }}
+  TASK_FAMILY_WORKER: ${{ vars.TASK_FAMILY_WORKER || 'nexusops-worker' }}
   EXECUTION_ROLE_ARN: ${{ vars.EXECUTION_ROLE_ARN }}
   TASK_ROLE_ARN: ${{ vars.TASK_ROLE_ARN }}
   SECRETS_ARN: ${{ vars.SECRETS_ARN }}

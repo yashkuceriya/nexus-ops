@@ -40,7 +40,7 @@ RUN npm run build
 # =============================================================================
 FROM php:8.3-fpm-alpine AS runtime
 
-LABEL maintainer="facility-grid-bridge"
+LABEL maintainer="nexusops"
 
 # Install system dependencies
 RUN apk add --no-cache \

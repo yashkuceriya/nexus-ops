@@ -1,5 +1,5 @@
 {
-  "family": "facility-grid-bridge-web",
+  "family": "nexusops-web",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
@@ -76,7 +76,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/facility-grid-bridge-web",
+          "awslogs-group": "/ecs/nexusops-web",
           "awslogs-region": "${AWS_REGION}",
           "awslogs-stream-prefix": "web",
           "awslogs-create-group": "true"

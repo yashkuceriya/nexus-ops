@@ -129,7 +129,7 @@ NexusOps takes a commissioning project through the final 20% — Functional Perf
 <details>
 <summary><b>Developer</b></summary>
 
-- REST API v1 with Sanctum auth (17 endpoints)
+- REST API v1 with Sanctum auth (20 endpoints)
 - API documentation page (dark theme, syntax highlighting)
 - Audit log viewer with old/new diff
 - CMD+K command palette (fuzzy search across entities)
